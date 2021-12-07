@@ -1,7 +1,7 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
-export default function Button({
+export default function AccentButton({
   children,
   onPress,
   style: providedStyles,
@@ -9,8 +9,8 @@ export default function Button({
 }) {
   return (
     <TouchableOpacity
-      style={[styles.button, full && styles.full, providedStyles]}
-      onPress={onPress}>
+      onPress={onPress}
+      style={[styles.button, full && styles.full, providedStyles]}>
       <Text style={styles.buttonText}>{children}</Text>
     </TouchableOpacity>
   );
@@ -18,14 +18,14 @@ export default function Button({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#2464eb',
+    backgroundColor: '#eaeaea',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#2464eb',
     fontWeight: '700',
     fontSize: 15,
   },

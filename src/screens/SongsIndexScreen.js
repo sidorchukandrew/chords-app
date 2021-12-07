@@ -34,7 +34,6 @@ export default function SongsIndexScreen({navigation}) {
   }
 
   function handleCreateSong() {
-    console.log('creating');
     navigation.navigate('Create Song');
   }
 
