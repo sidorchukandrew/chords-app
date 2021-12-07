@@ -64,8 +64,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modal: {
-    width: 600,
+    maxWidth: 600,
+    width: '100%',
     padding: 20,
+    marginHorizontal: 10,
   },
   qualityPicker: {
     width: 200,

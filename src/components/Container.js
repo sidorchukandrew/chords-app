@@ -12,10 +12,11 @@ export default function Container({children}) {
 const styles = StyleSheet.create({
   spacing: {
     alignItems: 'center',
+    flex: 1,
   },
   container: {
     maxWidth: 550,
     width: '100%',
-    margin: 10,
+    paddingHorizontal: 20,
   },
 });

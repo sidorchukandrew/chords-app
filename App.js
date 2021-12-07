@@ -12,7 +12,7 @@ import SongDetailScreen from './src/screens/SongDetailScreen';
 import TabBar from './src/components/TabBar';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CreateSongModal from './src/modals/CreateSongModal';
-import ScreenModalHeader from './src/components/ScreenModalHeader';
+import CreateBinderModal from './src/modals/CreateBinderModal';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -47,6 +47,14 @@ export default function App() {
         <Stack.Screen
           name="Create Song"
           component={CreateSongModal}
+          options={{
+            headerShown: false,
+            presentation: 'fullScreenModal',
+          }}
+        />
+        <Stack.Screen
+          name="Create Binder"
+          component={CreateBinderModal}
           options={{
             headerShown: false,
             presentation: 'fullScreenModal',

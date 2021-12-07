@@ -7,7 +7,7 @@ import List from '../components/List';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BinderColorSwatch from '../components/BinderColorSwatch';
 
-export default function BindersIndexScreen() {
+export default function BindersIndexScreen({navigation}) {
   const [query, setQuery] = useState('');
   function renderLargeScreen({item: binder}) {
     return (
@@ -29,6 +29,10 @@ export default function BindersIndexScreen() {
     );
   }
 
+  function handleCreateBinder() {
+    navigation.navigate('Create Binder');
+  }
+
   return (
     <View style={styles.container}>
       <Input
@@ -43,7 +47,7 @@ export default function BindersIndexScreen() {
         renderSmallScreen={renderSmallScreen}
       />
 
-      <CircleButton style={styles.addButton}>
+      <CircleButton style={styles.addButton} onPress={handleCreateBinder}>
         <Icon name="plus" size={35} color="white" />
       </CircleButton>
     </View>

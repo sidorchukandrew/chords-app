@@ -72,14 +72,7 @@ export default function CreateSongModal({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  field: {
-    marginBottom: 10,
-  },
   fieldsContainer: {
     marginVertical: 20,
-  },
-  saveButtonText: {
-    color: 'white',
-    fontWeight: '700',
   },
 });
