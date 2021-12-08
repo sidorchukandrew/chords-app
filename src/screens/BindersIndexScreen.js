@@ -1,25 +1,32 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import CircleButton from '../components/CircleButton';
-import Input from '../components/Input';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import List from '../components/List';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BinderColorSwatch from '../components/BinderColorSwatch';
+import Container from '../components/Container';
+import SearchFilterBar from '../components/SearchFilterBar';
 
 export default function BindersIndexScreen({navigation}) {
   const [query, setQuery] = useState('');
-  function renderLargeScreen({item: binder}) {
-    return (
-      <Pressable style={styles.row}>
-        <BinderColorSwatch color={binder.color} style={styles.colorSwatch} />
-        <Text style={styles.name}>{binder.name}</Text>
-      </Pressable>
-    );
-  }
 
-  function renderSmallScreen({item: binder}) {
-    return <Text>{binder.name}</Text>;
+  function renderBinderRow({item: binder}) {
+    return (
+      <TouchableOpacity style={styles.row}>
+        <BinderColorSwatch color={binder.color} style={styles.colorSwatch} />
+        <View style={{width: '100%'}}>
+          <Text style={styles.name}>{binder.name}</Text>
+          {/* <View style={styles.binderDetailsContainer}>
+            <View style={styles.detailContainer}>
+              <IonIcon name="musical-notes" size={18} color="#505050" />
+              <Text style={styles.detailText}>{binder.songs?.length}</Text>
+            </View>
+          </View> */}
+        </View>
+      </TouchableOpacity>
+    );
   }
 
   function filteredBinders() {
@@ -35,18 +42,18 @@ export default function BindersIndexScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Input
-        placeholder="Search your binders"
-        style={styles.searchInput}
-        onChange={setQuery}
-        value={query}
+      <SearchFilterBar
+        query={query}
+        onQueryChange={setQuery}
+        placeholder={`Search ${binders?.length} binders`}
       />
-      <List
-        items={filteredBinders()}
-        renderLargeScreen={renderLargeScreen}
-        renderSmallScreen={renderSmallScreen}
-      />
-
+      <Container size="lg">
+        <List
+          items={filteredBinders()}
+          renderLargeScreen={renderBinderRow}
+          renderSmallScreen={renderBinderRow}
+        />
+      </Container>
       <CircleButton style={styles.addButton} onPress={handleCreateBinder}>
         <Icon name="plus" size={35} color="white" />
       </CircleButton>
@@ -67,14 +74,16 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 17,
     fontWeight: '600',
+    color: 'black',
+    paddingLeft: 10,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    paddingTop: 10,
+    paddingBottom: 10, //remove later
+    borderBottomWidth: 1, // remove later
+    borderBottomColor: '#e0e0e0', // remove later
   },
   addButton: {
     position: 'absolute',
@@ -84,12 +93,118 @@ const styles = StyleSheet.create({
   colorSwatch: {
     marginRight: 15,
   },
+  binderDetailsContainer: {
+    marginTop: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingBottom: 10,
+    paddingLeft: 10,
+  },
+  detailContainer: {
+    flexDirection: 'row',
+  },
+  detailText: {
+    marginLeft: 7,
+    color: '#505050',
+  },
 });
 
 const binders = [
-  {id: 1, name: 'English Hymns', color: 'red'},
-  {id: 2, name: 'Christmas', color: 'green'},
-  {id: 3, name: 'Easter', color: 'blue'},
-  {id: 4, name: 'Ukrainian Hymns', color: 'yellow'},
-  {id: 5, name: 'English Contemporary', color: 'purple'},
+  {id: 1, name: 'English Hymns', color: 'red', songs: ['', '', '']},
+  {
+    id: 2,
+    name: 'Christmas',
+    color: 'green',
+    songs: [
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+    ],
+  },
+  {id: 3, name: 'Easter', color: 'blue', songs: []},
+  {
+    id: 4,
+    name: 'Ukrainian Hymns',
+    color: 'yellow',
+    songs: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+  },
+  {
+    id: 5,
+    name: 'English Contemporary',
+    color: 'purple',
+    songs: [
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+    ],
+  },
 ];

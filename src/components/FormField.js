@@ -8,6 +8,7 @@ export default function FormField({
   onChange,
   keyboardType = 'default',
   onPress,
+  ...remainingProps
 }) {
   const inputRef = useRef();
 
@@ -23,12 +24,13 @@ export default function FormField({
         label={label}
         value={value}
         onChangeText={onChange}
-        fontSize={18}
+        fontSize={16}
         keyboardType={keyboardType}
         keyboardAppearance="dark"
         tintColor="#2464eb"
         onFocus={onPress && handleFocus}
         showSoftInputOnFocus={!onPress}
+        {...remainingProps}
       />
     </View>
   );

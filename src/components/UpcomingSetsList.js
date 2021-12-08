@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import Container from './Container';
 import List from './List';
 
 export default function UpcomingSetsList({
@@ -8,18 +9,12 @@ export default function UpcomingSetsList({
   renderLargeScreen,
 }) {
   return (
-    <View style={styles.container}>
+    <Container size="lg">
       <List
         items={sets}
         renderLargeScreen={renderLargeScreen}
         renderSmallScreen={renderSmallScreen}
       />
-    </View>
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

@@ -13,13 +13,16 @@ import TabBar from './src/components/TabBar';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CreateSongModal from './src/modals/CreateSongModal';
 import CreateBinderModal from './src/modals/CreateBinderModal';
+import CreateSetlistModal from './src/modals/CreateSetlistModal';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function HomeTabs() {
   return (
-    <Tab.Navigator tabBar={props => <TabBar {...props} />}>
+    <Tab.Navigator
+      tabBar={props => <TabBar {...props} />}
+      screenOptions={{headerShadowVisible: false, headerTitleAlign: 'center'}}>
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Account" component={AccountScreen} />
@@ -55,6 +58,14 @@ export default function App() {
         <Stack.Screen
           name="Create Binder"
           component={CreateBinderModal}
+          options={{
+            headerShown: false,
+            presentation: 'fullScreenModal',
+          }}
+        />
+        <Stack.Screen
+          name="Create Setlist"
+          component={CreateSetlistModal}
           options={{
             headerShown: false,
             presentation: 'fullScreenModal',

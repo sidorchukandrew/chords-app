@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppMenu from './AppMenu';
 
 export default function TabBar({state, descriptors, navigation}) {
-  console.log(state.index);
   const [menuVisible, setMenuVisible] = useState(false);
+  const shouldShowLabels = Dimensions.get('window').width > 500;
 
   function isFocused(routeIndex) {
     return state.index === routeIndex;
@@ -26,11 +26,15 @@ export default function TabBar({state, descriptors, navigation}) {
         style={styles.button}
         onPress={() => navigation.navigate('Search')}>
         <Icon name="magnify" size={20} style={searchColors} />
-        <Text style={[searchColors, styles.buttonText]}>Search</Text>
+        {shouldShowLabels && (
+          <Text style={[searchColors, styles.buttonText]}>Search</Text>
+        )}
       </Pressable>
       <Pressable style={styles.button} onPress={() => setMenuVisible(true)}>
         <Icon name="menu" size={20} style={styles.gray} />
-        <Text style={[styles.gray, styles.buttonText]}>Menu</Text>
+        {shouldShowLabels && (
+          <Text style={[styles.gray, styles.buttonText]}>Menu</Text>
+        )}
         <AppMenu
           visible={menuVisible}
           onClose={() => setMenuVisible(false)}
@@ -41,7 +45,9 @@ export default function TabBar({state, descriptors, navigation}) {
         style={styles.button}
         onPress={() => navigation.navigate('Account')}>
         <Icon name="account" size={20} style={accountColors} />
-        <Text style={[accountColors, styles.buttonText]}>Account</Text>
+        {shouldShowLabels && (
+          <Text style={[accountColors, styles.buttonText]}>Account</Text>
+        )}
       </Pressable>
     </View>
   );

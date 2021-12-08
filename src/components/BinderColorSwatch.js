@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 
 export default function BinderColorSwatch({color, style: providedStyles}) {
   return (
-    <View style={[styles.container, styles[color], providedStyles]}></View>
+    <View style={[styles.container, SWATCH_COLORS[color], providedStyles]} />
   );
 }
 
@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 8,
   },
+});
+
+export const SWATCH_COLORS = {
   blue: {
     backgroundColor: '#5fa5f9',
   },
@@ -34,4 +37,7 @@ const styles = StyleSheet.create({
   pink: {
     backgroundColor: '#F472B6',
   },
-});
+  gray: {
+    backgroundColor: '#9ca3af',
+  },
+};

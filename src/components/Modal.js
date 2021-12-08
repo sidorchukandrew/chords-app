@@ -15,16 +15,17 @@ export default function Modal({
   options = {showCloseButton: false},
   children,
   style: providedStyles,
+  position = 'center',
 }) {
   return (
     <GestureRecognizer onSwipeDown={onClose}>
       <CoreModal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={visible}
         onRequestClose={onClose}
         onDismiss={onClose}>
-        <View style={styles.centeredView}>
+        <View style={[styles.centeredView, flexPositions[position]]}>
           <View style={[styles.modalView, providedStyles]}>
             <View style={styles.header}>
               <Text> </Text>
@@ -42,12 +43,17 @@ export default function Modal({
   );
 }
 
+const flexPositions = {
+  bottom: {justifyContent: 'flex-end', paddingBottom: 20},
+  center: {justifyContent: 'center'},
+};
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, .25)',
   },
   modalView: {
     width: '100%',

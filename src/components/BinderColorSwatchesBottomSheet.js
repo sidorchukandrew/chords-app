@@ -1,0 +1,70 @@
+import React, {useRef} from 'react';
+import {useEffect} from 'react';
+import {StyleSheet, Text, ScrollView, View} from 'react-native';
+import BottomSheet from './BottomSheet';
+import ColorSwatchOption from './ColorSwatchOption';
+
+export default function BinderColorSwatchesBottomSheet({
+  visible,
+  onDismiss,
+  color,
+  onChange,
+}) {
+  const sheetRef = useRef();
+  const colors = [
+    'red',
+    'blue',
+    'green',
+    'yellow',
+    'purple',
+    'indigo',
+    'pink',
+    'gray',
+  ];
+
+  useEffect(() => {
+    if (visible) sheetRef.current?.present();
+  }, [visible]);
+
+  return (
+    <BottomSheet snapPoints={['20%']} ref={sheetRef} onDismiss={onDismiss}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Choose a color</Text>
+        <View style={styles.swatchesContainer}>
+          <ScrollView horizontal>
+            <ColorSwatchOption
+              color="None"
+              onPress={() => onChange?.('')}
+              selected={!color || color === ''}
+            />
+            {colors.map(colorOption => (
+              <ColorSwatchOption
+                key={colorOption}
+                color={colorOption}
+                selected={colorOption === color}
+                onPress={() => onChange?.(colorOption)}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </View>
+    </BottomSheet>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 20,
+    textAlign: 'left',
+  },
+  swatchesContainer: {
+    height: 60,
+  },
+});

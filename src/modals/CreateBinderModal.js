@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useState} from 'react';
 import Container from '../components/Container';
@@ -6,17 +6,14 @@ import ScreenModalHeader from '../components/ScreenModalHeader';
 import ScreenModal from './ScreenModal';
 import FormField from '../components/FormField';
 import Button from '../components/Button';
-import BottomSheet from '../components/BottomSheet';
+import BinderColorSwatchesBottomSheet from '../components/BinderColorSwatchesBottomSheet';
+import BinderColorSwatch from '../components/BinderColorSwatch';
 
 export default function CreateBinderModal({navigation}) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [color, setColor] = useState('');
-  const colorModalRef = useRef();
-
-  function handleOpenColorModal() {
-    colorModalRef.current?.present;
-  }
+  const [colorSwatchesVisible, setColorSwatchesVisible] = useState(false);
 
   return (
     <ScreenModal>
@@ -35,22 +32,25 @@ export default function CreateBinderModal({navigation}) {
             value={description}
             onChange={setDescription}
           />
-
-          <BottomSheet
-            ref={colorModalRef}
-            button={
-              <FormField
-                label="Color"
-                value={color}
-                onPress={handleOpenColorModal}
-              />
+          <FormField
+            label="Color"
+            value={color}
+            onPress={() => setColorSwatchesVisible(true)}
+            renderRightAccessory={() =>
+              color ? <BinderColorSwatch color={color} /> : null
             }
           />
         </View>
-        {/* <Button>
+        <Button>
           <Text>Save</Text>
-        </Button> */}
+        </Button>
       </Container>
+      <BinderColorSwatchesBottomSheet
+        visible={colorSwatchesVisible}
+        onDismiss={() => setColorSwatchesVisible(false)}
+        onChange={setColor}
+        color={color}
+      />
     </ScreenModal>
   );
 }
@@ -59,6 +59,5 @@ const styles = StyleSheet.create({
   fieldsContainer: {
     marginVertical: 20,
     flexDirection: 'column',
-    height: '100%',
   },
 });

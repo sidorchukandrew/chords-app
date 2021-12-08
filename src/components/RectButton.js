@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, StyleSheet} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 
 export default function RectButton({
   children,
@@ -7,9 +7,9 @@ export default function RectButton({
   styles: providedStyles,
 }) {
   return (
-    <Pressable onPress={onPress} style={[styles.button, providedStyles]}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, providedStyles]}>
       {children}
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
