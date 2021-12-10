@@ -52,6 +52,7 @@ export default function BindersIndexScreen({navigation}) {
           items={filteredBinders()}
           renderLargeScreen={renderBinderRow}
           renderSmallScreen={renderBinderRow}
+          noItemsMessage="No binders to show"
         />
       </Container>
       <CircleButton style={styles.addButton} onPress={handleCreateBinder}>

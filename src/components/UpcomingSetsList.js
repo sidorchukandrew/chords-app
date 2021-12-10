@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
 import Container from './Container';
 import List from './List';
 
@@ -14,6 +13,7 @@ export default function UpcomingSetsList({
         items={sets}
         renderLargeScreen={renderLargeScreen}
         renderSmallScreen={renderSmallScreen}
+        noItemsMessage="No sets to show"
       />
     </Container>
   );

@@ -14,6 +14,7 @@ export default function PreviousSetsList({
         items={sets}
         renderLargeScreen={renderLargeScreen}
         renderSmallScreen={renderSmallScreen}
+        noItemsMessage="No sets to show"
       />
     </Container>
   );

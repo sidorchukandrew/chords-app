@@ -44,7 +44,15 @@ export default function App() {
             component={HomeTabs}
             options={{headerShown: false}}
           />
-          <Stack.Screen name="Song Detail" component={SongDetailScreen} />
+          <Stack.Screen
+            name="Song Detail"
+            component={SongDetailScreen}
+            options={({route}) => ({
+              title: route.params.name,
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            })}
+          />
         </Stack.Group>
 
         <Stack.Screen

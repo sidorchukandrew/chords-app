@@ -6,12 +6,21 @@ export default function Button({
   onPress,
   style: providedStyles,
   full,
+  disabled,
 }) {
   return (
     <TouchableOpacity
-      style={[styles.button, full && styles.full, providedStyles]}
+      style={[
+        styles.button,
+        full && styles.full,
+        disabled && styles.disabled,
+        providedStyles,
+      ]}
+      disabled={disabled}
       onPress={onPress}>
-      <Text style={styles.buttonText}>{children}</Text>
+      <Text style={[styles.buttonText, disabled && styles.disabledText]}>
+        {children}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -31,5 +40,11 @@ const styles = StyleSheet.create({
   },
   full: {
     flex: 1,
+  },
+  disabled: {
+    backgroundColor: '#eaeaea',
+  },
+  disabledText: {
+    color: '#a0a0a0',
   },
 });

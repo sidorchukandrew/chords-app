@@ -12,7 +12,7 @@ export default function SongsIndexScreen({navigation}) {
 
   function renderSongRow({item: song}) {
     return (
-      <Pressable style={styles.row} onPress={() => handleNavigateTo(song.id)}>
+      <Pressable style={styles.row} onPress={() => handleNavigateTo(song)}>
         <Text style={styles.name}>{song.name}</Text>
         <KeyBadge style={styles.keyBadge}>{song.songKey}</KeyBadge>
       </Pressable>
@@ -26,8 +26,8 @@ export default function SongsIndexScreen({navigation}) {
     );
   }
 
-  function handleNavigateTo(songId) {
-    navigation.navigate('Song Detail', {id: songId});
+  function handleNavigateTo({id, name}) {
+    navigation.navigate('Song Detail', {id, name});
   }
 
   function handleCreateSong() {
@@ -46,6 +46,7 @@ export default function SongsIndexScreen({navigation}) {
           items={filteredSongs()}
           renderLargeScreen={renderSongRow}
           renderSmallScreen={renderSongRow}
+          noItemsMessage="No songs to show"
         />
       </Container>
       <CircleButton style={styles.addButton} onPress={handleCreateSong}>
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 17,
     color: 'black',
-    fontWeight: '600',
+    fontWeight: '500',
   },
   row: {
     flexDirection: 'row',

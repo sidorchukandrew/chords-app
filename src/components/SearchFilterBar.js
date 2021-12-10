@@ -11,7 +11,6 @@ export default function SearchFilterBar({query, onQueryChange, placeholder}) {
           onChange={onQueryChange}
           placeholder={placeholder}
         />
-        <Icon name="filter-outline" color="blue" size={18} />
       </View>
     </View>
   );
@@ -26,6 +25,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   centered: {
     flexDirection: 'row',
