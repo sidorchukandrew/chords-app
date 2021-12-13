@@ -1,24 +1,16 @@
-import React from 'react';
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {useState} from 'react/cjs/react.development';
+import React, {useState} from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Container from '../components/Container';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import BinderDetailHeader from '../components/BinderDetailHeader';
+import SetlistDetailHeader from '../components/SetlistDetailHeader';
 import NoDataMessage from '../components/NoDataMessage';
-import AddSongsToBinderBottomSheet from '../components/AddSongsToBinderBottomSheet';
-import BinderOptionsBottomSheet from '../components/BinderOptionsBottomSheet';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AddSongsToSetlistBottomSheet from '../components/AddSongsToSetlistBottomSheet';
+import SetlistOptionsBottomSheet from '../components/SetlistOptionsBottomSheet';
 
-export default function BinderDetailScreen({navigation, route}) {
-  const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
+export default function SetlistDetailScreen({route, navigation}) {
+  const [setlist, setSetlist] = useState(route.params);
   const [addSongsSheetVisible, setAddSongsSheetVisible] = useState(false);
-  const [binder, setBinder] = useState(route.params);
+  const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -39,16 +31,16 @@ export default function BinderDetailScreen({navigation, route}) {
     });
   }, [navigation]);
 
-  function renderRow({item: song}) {
+  function renderSongRow({item: song}) {
     return (
       <View>
-        <Text>Song</Text>
+        <Text>{song}</Text>
       </View>
     );
   }
 
   function handleNavigateTo(route) {
-    navigation.navigate(route, binder);
+    navigation.navigate(route, setlist);
   }
 
   return (
@@ -56,26 +48,30 @@ export default function BinderDetailScreen({navigation, route}) {
       <Container size="lg">
         <FlatList
           style={{height: '100%'}}
-          ListHeaderComponent={() => <BinderDetailHeader binder={binder} />}
+          data={setlist.songs}
+          renderItem={renderSongRow}
+          ListHeaderComponent={() => (
+            <SetlistDetailHeader
+              setlist={setlist}
+              onNavigateTo={handleNavigateTo}
+            />
+          )}
           ListEmptyComponent={() => (
             <NoDataMessage
-              message="There are no songs in this binder yet"
               buttonTitle="Add songs"
+              message="No songs in this set yet"
               onButtonPress={() => setAddSongsSheetVisible(true)}
             />
           )}
-          data={[]}
-          renderItem={renderRow}
         />
       </Container>
-      <AddSongsToBinderBottomSheet
+      <AddSongsToSetlistBottomSheet
         visible={addSongsSheetVisible}
         onDismiss={() => setAddSongsSheetVisible(false)}
       />
-      <BinderOptionsBottomSheet
+      <SetlistOptionsBottomSheet
         visible={optionsSheetVisible}
         onDismiss={() => setOptionsSheetVisible(false)}
-        onNavigateTo={handleNavigateTo}
       />
     </View>
   );

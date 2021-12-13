@@ -21,6 +21,8 @@ import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
 import EditBinderDetailsModal from './src/modals/EditBinderDetailsModal';
 import BinderDetailScreen from './src/screens/BinderDetailScreen';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import SetlistDetailScreen from './src/screens/SetlistDetailScreen';
+import PerformSetlistScreen from './src/screens/PerformSetlistScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -73,10 +75,31 @@ export default function App() {
               })}
             />
             <Stack.Screen
+              name="Setlist Detail"
+              component={SetlistDetailScreen}
+              options={({route}) => ({
+                title: '',
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerBackTitle: '',
+              })}
+            />
+            <Stack.Screen
               name="Perform Song"
               component={PerformSongScreen}
               options={({route}) => ({
                 title: route.params.name,
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerBackTitle: '',
+              })}
+            />
+
+            <Stack.Screen
+              name="Perform Setlist"
+              component={PerformSetlistScreen}
+              options={({route}) => ({
+                title: '',
                 headerShadowVisible: false,
                 headerTitleAlign: 'center',
                 headerBackTitle: '',

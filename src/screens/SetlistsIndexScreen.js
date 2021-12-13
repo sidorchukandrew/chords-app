@@ -29,7 +29,9 @@ export default function SetlistsIndexScreen({navigation}) {
   function renderSetRow({item: set}) {
     return (
       <View style={styles.rowBorder}>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity
+          style={styles.row}
+          onPress={() => handleNavigateTo(set)}>
           <Text style={styles.name}>{set.name}</Text>
           <View style={styles.detailsContainer}>
             <View style={styles.detail}>
@@ -48,6 +50,10 @@ export default function SetlistsIndexScreen({navigation}) {
         </TouchableOpacity>
       </View>
     );
+  }
+
+  function handleNavigateTo(set) {
+    navigation.navigate('Setlist Detail', set);
   }
 
   function filteredUpcomingSets() {
@@ -160,7 +166,7 @@ const sets = [
     id: 3,
     name: 'Youth Service',
     scheduled_date: new Date(),
-    songs: [1, 2, 3, 4],
+    songs: [],
   },
   {
     id: 4,
