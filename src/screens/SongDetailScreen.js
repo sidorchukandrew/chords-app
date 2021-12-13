@@ -7,41 +7,85 @@ import {
   View,
 } from 'react-native';
 import Container from '../components/Container';
-import AccentButton from '../components/AccentButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import SegmentedControl from '../components/SegmentedControl';
+import {useState} from 'react/cjs/react.development';
+import SongContentTab from '../components/SongContentTab';
+import SongDetailsTab from '../components/SongDetailsTab';
+import SongOptionsBottomSheet from '../components/SongOptionsBottomSheet';
 
 export default function SongDetailScreen({navigation}) {
+  const [tab, setTab] = useState('Song');
+  const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
+  const [song, setSong] = useState({
+    content,
+    original_key: 'G',
+    transposed_key: 'A',
+    bpm: 112,
+    meter: '3/4',
+    artist: 'Edward Shelton',
+    themes: [
+      {id: 1, name: 'Salvation'},
+      {id: 2, name: 'Praise'},
+    ],
+    genres: [
+      {id: 1, name: 'Christian'},
+      {id: 2, name: 'Contemporary'},
+    ],
+    binders: [
+      {id: 1, name: 'English'},
+      {id: 2, name: 'Old'},
+    ],
+    name: 'How Great is Our God',
+  });
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          style={{backgroundColor: '#eaeaea', padding: 3, borderRadius: 50}}>
+          style={{backgroundColor: '#eaeaea', padding: 3, borderRadius: 50}}
+          onPress={() => setOptionsSheetVisible(true)}>
           <Icon name="dots-horizontal" size={22} color="#2464eb" />
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
 
+  function handlePerformSong() {
+    navigation.navigate('Perform Song', song);
+  }
+
+  function renderTab() {
+    if (tab === 'Song') {
+      return <SongContentTab song={song} onPerform={handlePerformSong} />;
+    } else if (tab === 'Details') {
+      return <SongDetailsTab song={song} onNavigateTo={handleNavigateTo} />;
+    }
+  }
+
+  function handleNavigateTo(route) {
+    navigation.navigate(route);
+  }
+
   return (
-    <ScrollView style={styles.container}>
-      <Container size="lg">
-        <View style={styles.shortcutsContainer}>
-          <AccentButton style={{paddingVertical: 10, marginRight: 5}} full>
-            <View style={styles.shortcut}>
-              <Icon name="pencil" size={20} style={styles.shortcutIcon} />
-              <Text style={styles.shortcutText}>Edit</Text>
-            </View>
-          </AccentButton>
-          <AccentButton style={{paddingVertical: 10, marginLeft: 5}} full>
-            <View style={styles.shortcut}>
-              <Icon name="play-circle" size={20} style={styles.shortcutIcon} />
-              <Text style={styles.shortcutText}>Perform</Text>
-            </View>
-          </AccentButton>
-        </View>
-        <Text>{content}</Text>
-      </Container>
-    </ScrollView>
+    <>
+      <ScrollView style={styles.container}>
+        <Container size="lg">
+          <SegmentedControl
+            options={['Song', 'Details']}
+            selected={tab}
+            onPress={setTab}
+            style={styles.tabContainer}
+          />
+        </Container>
+
+        {renderTab()}
+      </ScrollView>
+      <SongOptionsBottomSheet
+        visible={optionsSheetVisible}
+        onDismiss={() => setOptionsSheetVisible(false)}
+      />
+    </>
   );
 }
 
@@ -49,26 +93,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: 20,
   },
-  shortcutsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  shortcut: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  shortcutIcon: {
-    color: '#2464eb',
-    marginRight: 8,
-  },
-  shortcutText: {
-    color: '#2464eb',
-    fontWeight: '700',
-    fontSize: 15,
+  tabContainer: {
+    marginBottom: 20,
   },
 });
 

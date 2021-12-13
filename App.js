@@ -14,6 +14,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CreateSongModal from './src/modals/CreateSongModal';
 import CreateBinderModal from './src/modals/CreateBinderModal';
 import CreateSetlistModal from './src/modals/CreateSetlistModal';
+import PerformSongScreen from './src/screens/PerformSongScreen';
+import AddThemeModal from './src/modals/AddThemeModal';
+import AddGenreModal from './src/modals/AddGenreModal';
+import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
+import EditBinderDetailsModal from './src/modals/EditBinderDetailsModal';
+import BinderDetailScreen from './src/screens/BinderDetailScreen';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,50 +43,109 @@ function HomeTabs() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Group>
-          <Stack.Screen
-            name="Tabbed"
-            component={HomeTabs}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Song Detail"
-            component={SongDetailScreen}
-            options={({route}) => ({
-              title: route.params.name,
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            })}
-          />
-        </Stack.Group>
+    <BottomSheetModalProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Group>
+            <Stack.Screen
+              name="Tabbed"
+              component={HomeTabs}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Song Detail"
+              component={SongDetailScreen}
+              options={({route}) => ({
+                title: route.params.name,
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerBackTitle: '',
+              })}
+            />
+            <Stack.Screen
+              name="Binder Detail"
+              component={BinderDetailScreen}
+              options={({route}) => ({
+                title: '',
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerBackTitle: '',
+              })}
+            />
+            <Stack.Screen
+              name="Perform Song"
+              component={PerformSongScreen}
+              options={({route}) => ({
+                title: route.params.name,
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerBackTitle: '',
+              })}
+            />
+          </Stack.Group>
 
-        <Stack.Screen
-          name="Create Song"
-          component={CreateSongModal}
-          options={{
-            headerShown: false,
-            presentation: 'fullScreenModal',
-          }}
-        />
-        <Stack.Screen
-          name="Create Binder"
-          component={CreateBinderModal}
-          options={{
-            headerShown: false,
-            presentation: 'fullScreenModal',
-          }}
-        />
-        <Stack.Screen
-          name="Create Setlist"
-          component={CreateSetlistModal}
-          options={{
-            headerShown: false,
-            presentation: 'fullScreenModal',
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="Create Song"
+            component={CreateSongModal}
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+            }}
+          />
+          <Stack.Screen
+            name="Create Binder"
+            component={CreateBinderModal}
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+            }}
+          />
+          <Stack.Screen
+            name="Create Setlist"
+            component={CreateSetlistModal}
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+            }}
+          />
+          <Stack.Screen
+            name="Add Theme"
+            component={AddThemeModal}
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+            }}
+          />
+
+          <Stack.Screen
+            name="Add Genre"
+            component={AddGenreModal}
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+            }}
+          />
+          <Stack.Screen
+            name="Edit Song Details"
+            component={EditSongDetailsModal}
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+              title: 'Edit Song',
+            }}
+          />
+
+          <Stack.Screen
+            name="Edit Binder Details"
+            component={EditBinderDetailsModal}
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+              title: 'Edit Binder',
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </BottomSheetModalProvider>
   );
 }

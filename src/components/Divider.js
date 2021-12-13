@@ -1,20 +1,15 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
-export default function Container({
-  children,
-  size = 'md',
-  style: providedStyles,
-}) {
+export default function Divider({size = 'md'}) {
   return (
-    <View style={[styles.spacing, providedStyles]}>
-      <View style={[styles.container, widths[size]]}>{children}</View>
+    <View style={[styles.spacing]}>
+      <View style={[styles.container, widths[size]]} />
     </View>
   );
 }
 
 const widths = {
-  sm: {maxWidth: 450},
   md: {maxWidth: 550},
   lg: {
     maxWidth: 650,
@@ -29,7 +24,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
+    backgroundColor: '#eaeaea',
+    height: 7,
     width: '100%',
-    paddingHorizontal: 15,
   },
 });

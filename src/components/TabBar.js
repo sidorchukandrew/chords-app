@@ -21,35 +21,37 @@ export default function TabBar({state, descriptors, navigation}) {
   const accountColors = isFocused(2) ? styles.blue : styles.gray;
 
   return (
-    <View style={styles.bar}>
-      <Pressable
-        style={styles.button}
-        onPress={() => navigation.navigate('Search')}>
-        <Icon name="magnify" size={20} style={searchColors} />
-        {shouldShowLabels && (
-          <Text style={[searchColors, styles.buttonText]}>Search</Text>
-        )}
-      </Pressable>
-      <Pressable style={styles.button} onPress={() => setMenuVisible(true)}>
-        <Icon name="menu" size={20} style={styles.gray} />
-        {shouldShowLabels && (
-          <Text style={[styles.gray, styles.buttonText]}>Menu</Text>
-        )}
-        <AppMenu
-          visible={menuVisible}
-          onClose={() => setMenuVisible(false)}
-          onNavigateTo={handleNavigateTo}
-        />
-      </Pressable>
-      <Pressable
-        style={styles.button}
-        onPress={() => navigation.navigate('Account')}>
-        <Icon name="account" size={20} style={accountColors} />
-        {shouldShowLabels && (
-          <Text style={[accountColors, styles.buttonText]}>Account</Text>
-        )}
-      </Pressable>
-    </View>
+    <>
+      <View style={styles.bar}>
+        <Pressable
+          style={styles.button}
+          onPress={() => navigation.navigate('Search')}>
+          <Icon name="magnify" size={20} style={searchColors} />
+          {shouldShowLabels && (
+            <Text style={[searchColors, styles.buttonText]}>Search</Text>
+          )}
+        </Pressable>
+        <Pressable style={styles.button} onPress={() => setMenuVisible(true)}>
+          <Icon name="menu" size={20} style={styles.gray} />
+          {shouldShowLabels && (
+            <Text style={[styles.gray, styles.buttonText]}>Menu</Text>
+          )}
+        </Pressable>
+        <Pressable
+          style={styles.button}
+          onPress={() => navigation.navigate('Account')}>
+          <Icon name="account" size={20} style={accountColors} />
+          {shouldShowLabels && (
+            <Text style={[accountColors, styles.buttonText]}>Account</Text>
+          )}
+        </Pressable>
+      </View>
+      <AppMenu
+        visible={menuVisible}
+        onClose={() => setMenuVisible(false)}
+        onNavigateTo={handleNavigateTo}
+      />
+    </>
   );
 }
 

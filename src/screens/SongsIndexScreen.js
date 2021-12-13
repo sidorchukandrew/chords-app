@@ -1,8 +1,14 @@
 import React, {useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import CircleButton from '../components/CircleButton';
 import KeyBadge from '../components/KeyBadge';
-import List from '../components/List';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Container from '../components/Container';
 import SearchFilterBar from '../components/SearchFilterBar';
@@ -12,10 +18,14 @@ export default function SongsIndexScreen({navigation}) {
 
   function renderSongRow({item: song}) {
     return (
-      <Pressable style={styles.row} onPress={() => handleNavigateTo(song)}>
-        <Text style={styles.name}>{song.name}</Text>
-        <KeyBadge style={styles.keyBadge}>{song.songKey}</KeyBadge>
-      </Pressable>
+      <Container size="lg">
+        <TouchableOpacity
+          style={styles.row}
+          onPress={() => handleNavigateTo(song)}>
+          <Text style={styles.name}>{song.name}</Text>
+          <KeyBadge style={styles.keyBadge}>{song.songKey}</KeyBadge>
+        </TouchableOpacity>
+      </Container>
     );
   }
 
@@ -36,19 +46,17 @@ export default function SongsIndexScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <SearchFilterBar
-        query={query}
-        onQueryChange={setQuery}
-        placeholder={`Search ${songs?.length} songs`}
+      <FlatList
+        ListHeaderComponent={
+          <SearchFilterBar
+            query={query}
+            onQueryChange={setQuery}
+            placeholder={`Search ${songs?.length} songs`}
+          />
+        }
+        data={filteredSongs()}
+        renderItem={renderSongRow}
       />
-      <Container size="lg">
-        <List
-          items={filteredSongs()}
-          renderLargeScreen={renderSongRow}
-          renderSmallScreen={renderSongRow}
-          noItemsMessage="No songs to show"
-        />
-      </Container>
       <CircleButton style={styles.addButton} onPress={handleCreateSong}>
         <Icon name="plus" size={35} color="white" />
       </CircleButton>
@@ -91,4 +99,16 @@ const songs = [
   {id: 4, name: 'This is Amazing Grace', songKey: 'D'},
   {id: 5, name: 'What a Day', songKey: 'G'},
   {id: 6, name: 'Here Again', songKey: 'C'},
+  {id: 7, name: 'How Great is Our God', songKey: 'A'},
+  {id: 8, name: 'How Great Thou Art', songKey: 'Db'},
+  {id: 9, name: 'Amazing Grace', songKey: 'E'},
+  {id: 10, name: 'This is Amazing Grace', songKey: 'D'},
+  {id: 11, name: 'What a Day', songKey: 'G'},
+  // {id: 12, name: 'Here Again', songKey: 'C'},
+  // {id: 13, name: 'How Great is Our God', songKey: 'A'},
+  // {id: 14, name: 'How Great Thou Art', songKey: 'Db'},
+  // {id: 15, name: 'Amazing Grace', songKey: 'E'},
+  // {id: 41, name: 'This is Amazing Grace', songKey: 'D'},
+  {id: 51, name: 'What a Day', songKey: 'G'},
+  {id: 61, name: 'Here Again', songKey: 'C'},
 ];

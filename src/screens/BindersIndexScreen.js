@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import CircleButton from '../components/CircleButton';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -12,20 +12,28 @@ import SearchFilterBar from '../components/SearchFilterBar';
 export default function BindersIndexScreen({navigation}) {
   const [query, setQuery] = useState('');
 
+  function handleNavigateTo(binder) {
+    navigation.navigate('Binder Detail', binder);
+  }
+
   function renderBinderRow({item: binder}) {
     return (
-      <TouchableOpacity style={styles.row}>
-        <BinderColorSwatch color={binder.color} style={styles.colorSwatch} />
-        <View style={{width: '100%'}}>
-          <Text style={styles.name}>{binder.name}</Text>
-          {/* <View style={styles.binderDetailsContainer}>
+      <Container size="lg">
+        <TouchableOpacity
+          style={styles.row}
+          onPress={() => handleNavigateTo(binder)}>
+          <BinderColorSwatch color={binder.color} style={styles.colorSwatch} />
+          <View style={{width: '100%'}}>
+            <Text style={styles.name}>{binder.name}</Text>
+            {/* <View style={styles.binderDetailsContainer}>
             <View style={styles.detailContainer}>
-              <IonIcon name="musical-notes" size={18} color="#505050" />
-              <Text style={styles.detailText}>{binder.songs?.length}</Text>
+            <IonIcon name="musical-notes" size={18} color="#505050" />
+            <Text style={styles.detailText}>{binder.songs?.length}</Text>
             </View>
           </View> */}
-        </View>
-      </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Container>
     );
   }
 
@@ -42,19 +50,17 @@ export default function BindersIndexScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <SearchFilterBar
-        query={query}
-        onQueryChange={setQuery}
-        placeholder={`Search ${binders?.length} binders`}
+      <FlatList
+        ListHeaderComponent={
+          <SearchFilterBar
+            query={query}
+            onQueryChange={setQuery}
+            placeholder={`Search ${binders?.length} binders`}
+          />
+        }
+        data={filteredBinders()}
+        renderItem={renderBinderRow}
       />
-      <Container size="lg">
-        <List
-          items={filteredBinders()}
-          renderLargeScreen={renderBinderRow}
-          renderSmallScreen={renderBinderRow}
-          noItemsMessage="No binders to show"
-        />
-      </Container>
       <CircleButton style={styles.addButton} onPress={handleCreateBinder}>
         <Icon name="plus" size={35} color="white" />
       </CircleButton>
@@ -66,7 +72,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 10,
   },
   searchInput: {
     marginTop: 20,
@@ -111,7 +116,13 @@ const styles = StyleSheet.create({
 });
 
 const binders = [
-  {id: 1, name: 'English Hymns', color: 'red', songs: ['', '', '']},
+  {
+    id: 1,
+    name: 'English Hymns',
+    color: 'red',
+    songs: ['', '', ''],
+    description: 'Traditional hymns with just English lyrics',
+  },
   {
     id: 2,
     name: 'Christmas',
@@ -148,6 +159,7 @@ const binders = [
       '',
       '',
     ],
+    description: 'Mix of English and Ukrainian Christmas carols and songs',
   },
   {id: 3, name: 'Easter', color: 'blue', songs: []},
   {
@@ -155,6 +167,7 @@ const binders = [
     name: 'Ukrainian Hymns',
     color: 'yellow',
     songs: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+    description: 'Traditional hymns with Ukrainian only lyrics',
   },
   {
     id: 5,
@@ -207,5 +220,6 @@ const binders = [
       '',
       '',
     ],
+    description: 'Contemporary songs with only English lyrics',
   },
 ];
