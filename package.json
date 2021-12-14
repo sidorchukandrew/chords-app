@@ -16,6 +16,7 @@
     "@react-navigation/drawer": "^6.1.8",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "@reduxjs/toolkit": "^1.7.0",
     "dayjs": "^1.10.7",
     "react": "17.0.2",
     "react-native": "0.66.3",
@@ -27,6 +28,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-vector-icons": "^9.0.0",
+    "react-redux": "^7.2.6",
     "rn-material-ui-textfield": "^1.0.5"
   },
   "devDependencies": {

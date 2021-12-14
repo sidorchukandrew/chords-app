@@ -27,6 +27,7 @@ import AuthScreen from './src/screens/AuthScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
+import LoginTeamScreen from './src/screens/LoginTeamScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -58,6 +59,14 @@ export default function App() {
         <Stack.Navigator>
           {isSignedIn ? (
             <>
+              <Stack.Screen
+                name="Login Team"
+                component={LoginTeamScreen}
+                options={{
+                  headerShown: false,
+                  presentation: 'fullScreenModal',
+                }}
+              />
               <Stack.Group>
                 <Stack.Screen
                   name="Tabbed"

@@ -25,7 +25,7 @@ export default function ForgotPasswordScreen({navigation}) {
         <TouchableOpacity
           style={styles.backButton}
           onPress={handleNavigateToLogin}>
-          <Icon name="chevron-left" size={16} />
+          <Icon name="chevron-left" size={16} color="#505050" />
           <Text style={styles.backButtonText}>Go back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Reset your password</Text>
