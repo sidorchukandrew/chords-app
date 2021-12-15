@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,14 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useState} from 'react/cjs/react.development';
+import {useDispatch} from 'react-redux';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
+import {login} from '../redux/slices/authSlice';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   function handleNavigateToSignUp() {
     navigation.navigate('Sign Up');
@@ -21,6 +23,11 @@ export default function LoginScreen({navigation}) {
 
   function handleNavigateToForgotPassword() {
     navigation.navigate('Forgot Password');
+  }
+
+  function handleLogin() {
+    dispatch(login());
+    navigation.navigate('Login Team');
   }
 
   return (
@@ -58,7 +65,7 @@ export default function LoginScreen({navigation}) {
               <Text style={styles.buttonText}>Sign up</Text>
             </TouchableOpacity>
           </View>
-          <Button>Login</Button>
+          <Button onPress={handleLogin}>Login</Button>
         </Container>
       </View>
     </SafeAreaView>
