@@ -9,17 +9,32 @@ export default function SongContentTab({song, onPerform}) {
   return (
     <Container>
       <View style={styles.shortcutsContainer}>
-        <AccentButton style={{marginRight: 5}} full>
-          <View style={styles.shortcut}>
-            <Icon name="pencil" size={20} style={styles.shortcutIcon} />
-            <Text style={styles.shortcutText}>Edit</Text>
-          </View>
+        <AccentButton
+          style={{marginRight: 5}}
+          full
+          icon={
+            <Icon
+              name="pencil"
+              size={20}
+              style={styles.shortcutIcon}
+              color="#2464eb"
+            />
+          }>
+          Edit
         </AccentButton>
-        <AccentButton style={{marginLeft: 5}} full onPress={onPerform}>
-          <View style={styles.shortcut}>
-            <Icon name="play-circle" size={20} style={styles.shortcutIcon} />
-            <Text style={styles.shortcutText}>Perform</Text>
-          </View>
+        <AccentButton
+          style={{marginLeft: 5}}
+          full
+          onPress={onPerform}
+          icon={
+            <Icon
+              name="play-circle"
+              size={20}
+              color="#2464eb"
+              style={styles.shortcutIcon}
+            />
+          }>
+          Perform
         </AccentButton>
       </View>
       <Text>{song.content}</Text>
@@ -32,19 +47,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-  },
-  shortcut: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    marginBottom: 20,
   },
   shortcutIcon: {
-    color: '#2464eb',
     marginRight: 8,
-  },
-  shortcutText: {
-    color: '#2464eb',
-    fontWeight: '700',
-    fontSize: 15,
   },
 });

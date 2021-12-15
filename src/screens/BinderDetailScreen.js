@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -14,11 +14,34 @@ import BinderDetailHeader from '../components/BinderDetailHeader';
 import NoDataMessage from '../components/NoDataMessage';
 import AddSongsToBinderBottomSheet from '../components/AddSongsToBinderBottomSheet';
 import BinderOptionsBottomSheet from '../components/BinderOptionsBottomSheet';
+import {reportError} from '../utils/error';
+import {getBinderById} from '../services/bindersService';
+import LoadingIndicator from '../components/LoadingIndicator';
+import KeyBadge from '../components/KeyBadge';
+import {hasAnyKeysSet} from '../utils/song';
 
 export default function BinderDetailScreen({navigation, route}) {
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
   const [addSongsSheetVisible, setAddSongsSheetVisible] = useState(false);
   const [binder, setBinder] = useState(route.params);
+  const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        let {data} = await getBinderById(route.params.id);
+        setBinder(data);
+      } catch (error) {
+        reportError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [route.params.id]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -41,9 +64,16 @@ export default function BinderDetailScreen({navigation, route}) {
 
   function renderRow({item: song}) {
     return (
-      <View>
-        <Text>Song</Text>
-      </View>
+      <TouchableOpacity
+        style={styles.row}
+        onPress={() => handleNavigateToSong(song)}>
+        <Text style={styles.songName}>{song.name}</Text>
+        {hasAnyKeysSet(song) && (
+          <KeyBadge style={styles.keyBadge}>
+            {song.transposed_key || song.original_key}
+          </KeyBadge>
+        )}
+      </TouchableOpacity>
     );
   }
 
@@ -51,20 +81,44 @@ export default function BinderDetailScreen({navigation, route}) {
     navigation.navigate(route, binder);
   }
 
+  function handleNavigateToSong(song) {
+    navigation.navigate('Song Detail', song);
+  }
+
+  function filteredSongs() {
+    let lowercasedQuery = query.toLowerCase();
+    return binder.songs?.filter(song =>
+      song.name.toLowerCase().includes(lowercasedQuery),
+    );
+  }
+
+  function renderNoData() {
+    if (loading) {
+      return <LoadingIndicator />;
+    } else if (query && filteredSongs().length === 0) {
+      return <Text>No songs were found</Text>;
+    } else if (!query && filteredSongs().length === 0) {
+      <NoDataMessage
+        buttonTitle="Add songs"
+        onButtonPress={() => setAddSongsSheetVisible(true)}
+      />;
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Container size="lg">
         <FlatList
           style={{height: '100%'}}
-          ListHeaderComponent={() => <BinderDetailHeader binder={binder} />}
-          ListEmptyComponent={() => (
-            <NoDataMessage
-              message="There are no songs in this binder yet"
-              buttonTitle="Add songs"
-              onButtonPress={() => setAddSongsSheetVisible(true)}
+          ListHeaderComponent={
+            <BinderDetailHeader
+              binder={binder}
+              query={query}
+              onQueryChange={setQuery}
             />
-          )}
-          data={[]}
+          }
+          ListEmptyComponent={renderNoData}
+          data={filteredSongs()}
           renderItem={renderRow}
         />
       </Container>
@@ -91,5 +145,21 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 50,
     marginLeft: 15,
+  },
+  songName: {
+    fontSize: 17,
+    color: 'black',
+    fontWeight: '500',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e5e5',
+  },
+  keyBadge: {
+    marginLeft: 10,
   },
 });

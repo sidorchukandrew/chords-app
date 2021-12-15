@@ -1,10 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import BinderColorSwatch from './BinderColorSwatch';
+import SearchFilterBar from './SearchFilterBar';
 
-export default function BinderDetailHeader({binder}) {
+export default function BinderDetailHeader({binder, query, onQueryChange}) {
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.colorTitleContainer}>
         {binder.color && (
           <BinderColorSwatch color={binder.color} style={{marginRight: 10}} />
@@ -14,6 +15,11 @@ export default function BinderDetailHeader({binder}) {
       <Text style={styles.description}>
         {binder.description || 'No description provided yet'}
       </Text>
+      <SearchFilterBar
+        placeholder={`Search ${binder.songs?.length} songs`}
+        query={query}
+        onQueryChange={onQueryChange}
+      />
     </View>
   );
 }
@@ -33,5 +39,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#404040',
     marginTop: 10,
+    marginBottom: 40,
+  },
+  container: {
+    marginBottom: 0,
   },
 });

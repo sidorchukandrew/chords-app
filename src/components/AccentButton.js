@@ -6,11 +6,13 @@ export default function AccentButton({
   onPress,
   style: providedStyles,
   full,
+  icon,
 }) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.button, full && styles.full, providedStyles]}>
+      {icon}
       <Text style={styles.buttonText}>{children}</Text>
     </TouchableOpacity>
   );
@@ -19,10 +21,11 @@ export default function AccentButton({
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#eaeaea',
-    paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    height: 42,
+    flexDirection: 'row',
   },
   buttonText: {
     color: '#2464eb',

@@ -12,31 +12,27 @@ import Button from '../components/Button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
+import {hasAnyKeysSet} from '../utils/song';
 
-export default function PerformSetlistScreen({navigation}) {
+export default function PerformSetlistScreen({navigation, route}) {
   const windowWidth = useWindowDimensions().width;
-  const [songs, setSongs] = useState(() => [content, content, content]);
+  const [songs] = useState(route.params.songs);
   const [songIndex, setSongIndex] = useState(0);
   const [keyOptionsSheetVisible, setKeyOptionsSheetVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
 
   React.useLayoutEffect(() => {
-    const titles = ['Amazing Grace', 'How Great Thou Art', 'The First Noel'];
     navigation.setOptions({
-      title: titles[songIndex],
+      title: songs[songIndex].name,
       headerRight: () => (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            width: 100,
-          }}>
-          <Button
-            style={{marginRight: 15, height: 43, width: 43}}
-            onPress={() => setKeyOptionsSheetVisible(true)}>
-            Ab
-          </Button>
+        <View style={styles.headerButtonsContainer}>
+          {hasAnyKeysSet(songs[songIndex]) && (
+            <Button
+              style={styles.keyButton}
+              onPress={() => setKeyOptionsSheetVisible(true)}>
+              {songs[songIndex].transposed_key || songs[songIndex].original_key}
+            </Button>
+          )}
           <TouchableOpacity
             style={{padding: 3}}
             onPress={() => setAdjustmentsSheetVisible(true)}>
@@ -45,18 +41,12 @@ export default function PerformSetlistScreen({navigation}) {
         </View>
       ),
     });
-  }, [navigation, songIndex]);
+  }, [navigation, songIndex, songs]);
 
   function renderSlide({item: song}) {
     return (
-      <ScrollView
-        style={{
-          width: '100%',
-          flexGrow: 1,
-          paddingHorizontal: 20,
-          marginBottom: 20,
-        }}>
-        <Text>{song}</Text>
+      <ScrollView style={styles.slideContainer}>
+        <Text>{song.content}</Text>
       </ScrollView>
     );
   }
@@ -66,7 +56,7 @@ export default function PerformSetlistScreen({navigation}) {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white', height: '100%'}}>
+    <View style={styles.screenContainer}>
       <Carousel
         layout="default"
         data={songs}
@@ -87,117 +77,24 @@ export default function PerformSetlistScreen({navigation}) {
   );
 }
 
-const styles = StyleSheet.create({});
-
-const content = `
-[Intro]
-C Em D x2
- 
-[Verse 1]
-C
-You’re not going anywhere
-G
-I’m not going anywhere
-D
-I’m just gonna stay right here
-Em             D
-I’m just gonna wait here
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Intro]
-C Em D x2
- 
-[Verse 2]
-C
-You’re not going anywhere
-G
-I’m not going anywhere
-D
-Let Your love quiet fear
-Em            D
-Let Your love be near
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Instrumental]
-Am Em G D
- 
-[Bridge]
-          Am                    Em
-You’re my one desire, You’re my one desire
-G                            D
-Everything that I’m seeking, everything that I want
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Intro]
-C Em D x6
- 
-[Bridge 2]
-C                 Em
-You’re my refuge, You’re my strength
-D
-You’re my rest, my hiding place
-C                 Em
-You’re my refuge, You’re my strength
-D
-I abide in You, Jesus
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Intro]
-C Em D x4
- 
-[Outro]
-C       Em   D
-All my life, I abide in You
-`;
+const styles = StyleSheet.create({
+  headerButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: 100,
+  },
+  slideContainer: {
+    width: '100%',
+    flexGrow: 1,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  screenContainer: {flex: 1, backgroundColor: 'white', height: '100%'},
+  keyButton: {
+    marginRight: 15,
+    height: 35,
+    width: 35,
+    borderRadius: 8,
+  },
+});

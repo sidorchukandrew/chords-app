@@ -14,6 +14,7 @@ import SongDetailsTab from '../components/SongDetailsTab';
 import SongOptionsBottomSheet from '../components/SongOptionsBottomSheet';
 import {reportError} from '../utils/error';
 import {getSongById} from '../services/songsService';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
@@ -76,8 +77,7 @@ export default function SongDetailScreen({navigation, route}) {
             style={styles.tabContainer}
           />
         </Container>
-
-        {renderTab()}
+        {loading ? <LoadingIndicator /> : renderTab()}
       </ScrollView>
       <SongOptionsBottomSheet
         visible={optionsSheetVisible}

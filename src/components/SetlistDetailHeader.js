@@ -7,7 +7,7 @@ import {format} from '../utils/date';
 
 export default function SetlistDetailHeader({setlist, onNavigateTo}) {
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.dateTitleContainer}>
         <Text style={styles.title}>{setlist?.name}</Text>
         <View style={styles.dateContainer}>
@@ -23,9 +23,16 @@ export default function SetlistDetailHeader({setlist, onNavigateTo}) {
         <Container size="sm">
           <AccentButton
             style={styles.button}
-            onPress={() => onNavigateTo('Perform Setlist')}>
-            <Icon name="play-circle" size={18} />
-            <Text style={styles.buttonText}>{'   '}Perform</Text>
+            onPress={() => onNavigateTo('Perform Setlist')}
+            icon={
+              <Icon
+                name="play-circle"
+                size={18}
+                color="#2464eb"
+                style={styles.playIcon}
+              />
+            }>
+            Perform
           </AccentButton>
         </Container>
       )}
@@ -34,6 +41,9 @@ export default function SetlistDetailHeader({setlist, onNavigateTo}) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 30,
+  },
   title: {
     fontSize: 22,
     textAlign: 'center',
@@ -57,5 +67,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: '#505050',
     fontSize: 13,
+  },
+  playIcon: {
+    marginRight: 8,
   },
 });

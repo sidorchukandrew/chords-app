@@ -9,7 +9,7 @@ export default function List({
 }) {
   const windowWidth = Dimensions.get('window').width;
 
-  return items?.length > 1 ? (
+  return items?.length > 0 ? (
     <FlatList
       style={styles.list}
       data={items}
@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
   noDataText: {
     marginVertical: 20,
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
   },
 });

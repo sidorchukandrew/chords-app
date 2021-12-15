@@ -9,21 +9,37 @@ import {format, isPast} from '../utils/date';
 import CircleButton from '../components/CircleButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import {getAllSetlists} from '../services/setlistsService';
+import {reportError} from '../utils/error';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 export default function SetlistsIndexScreen({navigation}) {
   const [setType, setSetType] = useState('Upcoming');
   const [query, setQuery] = useState('');
   const [upcomingSets, setUpcomingSets] = useState([]);
   const [pastSets, setPastSets] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let upcoming = [];
-    let past = [];
-    sets?.forEach(set =>
-      isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
-    );
-    setUpcomingSets(upcoming);
-    setPastSets(past);
+    async function fetchData() {
+      try {
+        setLoading(true);
+        let {data: sets} = await getAllSetlists();
+        let upcoming = [];
+        let past = [];
+
+        sets?.forEach(set =>
+          isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
+        );
+        setUpcomingSets(upcoming);
+        setPastSets(past);
+      } catch (error) {
+        reportError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   function renderSetRow({item: set}) {
@@ -70,6 +86,27 @@ export default function SetlistsIndexScreen({navigation}) {
     );
   }
 
+  function renderContent() {
+    if (loading) return <LoadingIndicator />;
+    else if (setType === 'Upcoming') {
+      return (
+        <UpcomingSetsList
+          sets={filteredUpcomingSets()}
+          renderLargeScreen={renderSetRow}
+          renderSmallScreen={renderSetRow}
+        />
+      );
+    } else {
+      return (
+        <PreviousSetsList
+          sets={filteredPastSets()}
+          renderLargeScreen={renderSetRow}
+          renderSmallScreen={renderSetRow}
+        />
+      );
+    }
+  }
+
   return (
     <View style={styles.container}>
       <SearchFilterBar
@@ -89,19 +126,7 @@ export default function SetlistsIndexScreen({navigation}) {
           style={{maxWidth: 200}}
         />
       </View>
-      {setType === 'Upcoming' ? (
-        <UpcomingSetsList
-          sets={filteredUpcomingSets()}
-          renderLargeScreen={renderSetRow}
-          renderSmallScreen={renderSetRow}
-        />
-      ) : (
-        <PreviousSetsList
-          sets={filteredPastSets()}
-          renderLargeScreen={renderSetRow}
-          renderSmallScreen={renderSetRow}
-        />
-      )}
+      {renderContent()}
       <CircleButton
         style={styles.addButton}
         onPress={() => navigation.navigate('Create Setlist')}>
@@ -153,31 +178,3 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
-const sets = [
-  {
-    id: 1,
-    name: 'Youth Service',
-    scheduled_date: dayjs().subtract(2, 'day').toDate(),
-    songs: [1, 2, 3, 4],
-  },
-  {id: 2, name: 'Church Service', scheduled_date: null, songs: [1, 2, 3]},
-  {
-    id: 3,
-    name: 'Youth Service',
-    scheduled_date: new Date(),
-    songs: [],
-  },
-  {
-    id: 4,
-    name: 'Friendsgiving',
-    scheduled_date: dayjs().subtract(12, 'day').toDate(),
-    songs: [1, 2],
-  },
-  {
-    id: 5,
-    name: 'Christmas Party',
-    scheduled_date: dayjs().add(12, 'day').toDate(),
-    songs: [1, 2, 3],
-  },
-];

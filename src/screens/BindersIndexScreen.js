@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import CircleButton from '../components/CircleButton';
@@ -8,9 +8,30 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import BinderColorSwatch from '../components/BinderColorSwatch';
 import Container from '../components/Container';
 import SearchFilterBar from '../components/SearchFilterBar';
+import LoadingIndicator from '../components/LoadingIndicator';
+import {reportError} from '../utils/error';
+import {getAllBinders} from '../services/bindersService';
 
 export default function BindersIndexScreen({navigation}) {
   const [query, setQuery] = useState('');
+  const [binders, setBinders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        let {data} = await getAllBinders();
+        setBinders(data);
+      } catch (error) {
+        reportError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   function handleNavigateTo(binder) {
     navigation.navigate('Binder Detail', binder);
@@ -47,6 +68,8 @@ export default function BindersIndexScreen({navigation}) {
   function handleCreateBinder() {
     navigation.navigate('Create Binder');
   }
+
+  if (loading) return <LoadingIndicator />;
 
   return (
     <View style={styles.container}>
@@ -114,112 +137,3 @@ const styles = StyleSheet.create({
     color: '#505050',
   },
 });
-
-const binders = [
-  {
-    id: 1,
-    name: 'English Hymns',
-    color: 'red',
-    songs: ['', '', ''],
-    description: 'Traditional hymns with just English lyrics',
-  },
-  {
-    id: 2,
-    name: 'Christmas',
-    color: 'green',
-    songs: [
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-    ],
-    description: 'Mix of English and Ukrainian Christmas carols and songs',
-  },
-  {id: 3, name: 'Easter', color: 'blue', songs: []},
-  {
-    id: 4,
-    name: 'Ukrainian Hymns',
-    color: 'yellow',
-    songs: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-    description: 'Traditional hymns with Ukrainian only lyrics',
-  },
-  {
-    id: 5,
-    name: 'English Contemporary',
-    color: 'purple',
-    songs: [
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-    ],
-    description: 'Contemporary songs with only English lyrics',
-  },
-];
