@@ -1,28 +1,9 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import SearchScreen from './src/screens/SearchScreen';
-import SongsIndexScreen from './src/screens/SongsIndexScreen';
-import BindersIndexScreen from './src/screens/BindersIndexScreen';
-import SetlistsIndexScreen from './src/screens/SetlistsIndexScreen';
-import MembersIndexScreen from './src/screens/MembersIndexScreen';
-import DashboardScreen from './src/screens/DashboardScreen';
-import AccountScreen from './src/screens/AccountScreen';
-import SongDetailScreen from './src/screens/SongDetailScreen';
-import TabBar from './src/components/TabBar';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CreateSongModal from './src/modals/CreateSongModal';
-import CreateBinderModal from './src/modals/CreateBinderModal';
-import CreateSetlistModal from './src/modals/CreateSetlistModal';
-import PerformSongScreen from './src/screens/PerformSongScreen';
-import AddThemeModal from './src/modals/AddThemeModal';
-import AddGenreModal from './src/modals/AddGenreModal';
-import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
-import EditBinderDetailsModal from './src/modals/EditBinderDetailsModal';
-import BinderDetailScreen from './src/screens/BinderDetailScreen';
+
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import SetlistDetailScreen from './src/screens/SetlistDetailScreen';
-import PerformSetlistScreen from './src/screens/PerformSetlistScreen';
+
 import AuthScreen from './src/screens/AuthScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
@@ -32,30 +13,37 @@ import {useSelector} from 'react-redux';
 import {selectIsLoggedIn} from './src/redux/slices/authSlice';
 import CreateTeamScreen from './src/screens/CreateTeamScreen';
 
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
+import SearchScreen from './src/screens/SearchScreen';
+import SongsIndexScreen from './src/screens/SongsIndexScreen';
+import BindersIndexScreen from './src/screens/BindersIndexScreen';
+import SetlistsIndexScreen from './src/screens/SetlistsIndexScreen';
+import MembersIndexScreen from './src/screens/MembersIndexScreen';
+import DashboardScreen from './src/screens/DashboardScreen';
+import AccountScreen from './src/screens/AccountScreen';
+import SongDetailScreen from './src/screens/SongDetailScreen';
+import TabBar from './src/components/TabBar';
+
+import CreateSongModal from './src/modals/CreateSongModal';
+import CreateBinderModal from './src/modals/CreateBinderModal';
+import CreateSetlistModal from './src/modals/CreateSetlistModal';
+import PerformSongScreen from './src/screens/PerformSongScreen';
+import AddThemeModal from './src/modals/AddThemeModal';
+import AddGenreModal from './src/modals/AddGenreModal';
+import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
+import EditBinderDetailsModal from './src/modals/EditBinderDetailsModal';
+import BinderDetailScreen from './src/screens/BinderDetailScreen';
+
+import SetlistDetailScreen from './src/screens/SetlistDetailScreen';
+import PerformSetlistScreen from './src/screens/PerformSetlistScreen';
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
-function HomeTabs() {
-  return (
-    <Tab.Navigator
-      tabBar={props => <TabBar {...props} />}
-      screenOptions={{headerShadowVisible: false, headerTitleAlign: 'center'}}>
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Account" component={AccountScreen} />
-      <Tab.Screen name="Songs" component={SongsIndexScreen} />
-      <Tab.Screen name="Binders" component={BindersIndexScreen} />
-      <Tab.Screen name="Sets" component={SetlistsIndexScreen} />
-      <Tab.Screen name="Members" component={MembersIndexScreen} />
-    </Tab.Navigator>
-  );
-}
 
 export default function Routes() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  // if authed, render the typical routes
-  // not authed, show auth routes
   return (
     <BottomSheetModalProvider>
       <NavigationContainer>
@@ -203,5 +191,21 @@ export default function Routes() {
         </Stack.Navigator>
       </NavigationContainer>
     </BottomSheetModalProvider>
+  );
+}
+
+function HomeTabs() {
+  return (
+    <Tab.Navigator
+      tabBar={props => <TabBar {...props} />}
+      screenOptions={{headerShadowVisible: false, headerTitleAlign: 'center'}}>
+      <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
+      <Tab.Screen name="Songs" component={SongsIndexScreen} />
+      <Tab.Screen name="Binders" component={BindersIndexScreen} />
+      <Tab.Screen name="Sets" component={SetlistsIndexScreen} />
+      <Tab.Screen name="Members" component={MembersIndexScreen} />
+    </Tab.Navigator>
   );
 }

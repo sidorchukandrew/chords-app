@@ -5,7 +5,7 @@ export default function Detail({title, children, border, data}) {
   return (
     <View style={[styles.detailContainer, border && styles.border]}>
       <Text style={styles.title}>{title}</Text>
-      <Text>{data}</Text>
+      <Text>{data ? data : 'None yet'}</Text>
     </View>
   );
 }

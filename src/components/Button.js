@@ -1,5 +1,10 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Text} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 
 export default function Button({
   children,
@@ -7,6 +12,7 @@ export default function Button({
   style: providedStyles,
   full,
   disabled,
+  loading,
 }) {
   return (
     <TouchableOpacity
@@ -16,11 +22,15 @@ export default function Button({
         disabled && styles.disabled,
         providedStyles,
       ]}
-      disabled={disabled}
+      disabled={disabled || loading}
       onPress={onPress}>
-      <Text style={[styles.buttonText, disabled && styles.disabledText]}>
-        {children}
-      </Text>
+      {loading ? (
+        <ActivityIndicator color="white" />
+      ) : (
+        <Text style={[styles.buttonText, disabled && styles.disabledText]}>
+          {children}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }

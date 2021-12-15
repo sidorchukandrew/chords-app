@@ -5,23 +5,37 @@ const authSlice = createSlice({
   initialState: {
     authenticating: true,
     accessToken: '',
-    clientId: '',
+    client: '',
     email: '',
     isLoggedIn: false,
-    team: null,
+    currentTeam: null,
+    currentUser: null,
+    currentMember: null,
   },
   reducers: {
     setAuthenticating: (state, action) => {
       state.authenticating = action.payload;
     },
-    login: state => {
+    login: (state, {payload}) => {
       state.isLoggedIn = true;
+      state.accessToken = payload.accessToken;
+      state.uid = payload.uid;
+      state.client = payload.client;
     },
     logout: state => {
       state.isLoggedIn = false;
+      state.accessToken = '';
+      state.client = '';
+      state.uid = '';
     },
-    loginTeam: (state, action) => {
-      state.team = action.payload;
+    loginTeam: (state, {payload}) => {
+      state.currentTeam = payload;
+    },
+    setMembership: (state, {payload}) => {
+      state.currentMember = payload;
+    },
+    setCurrentUser: (state, {payload}) => {
+      state.currentUser = payload;
     },
   },
 });
@@ -29,5 +43,11 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 export const selectIsLoggedIn = state =>
-  state?.auth.isLoggedIn && state?.auth.team;
-export const {login, logout, loginTeam} = authSlice.actions;
+  state?.auth.isLoggedIn &&
+  state?.auth.currentTeam &&
+  state?.auth.currentMember;
+
+export const selectCurrentUser = state => state.auth?.currentUser;
+
+export const {login, logout, loginTeam, setMembership, setCurrentUser} =
+  authSlice.actions;

@@ -7,14 +7,17 @@ import {
   View,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
+import AuthApi from '../api/authApi';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
 import {login} from '../redux/slices/authSlice';
+import {reportError} from '../utils/error';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   function handleNavigateToSignUp() {
@@ -25,9 +28,23 @@ export default function LoginScreen({navigation}) {
     navigation.navigate('Forgot Password');
   }
 
-  function handleLogin() {
-    dispatch(login());
-    navigation.navigate('Login Team');
+  async function handleLogin() {
+    try {
+      setLoading(true);
+      let {headers} = await AuthApi.login(email, password);
+      let auth = {
+        accessToken: headers['access-token'],
+        client: headers.client,
+        uid: headers.uid,
+      };
+      setLoading(false);
+      dispatch(login(auth));
+      navigation.navigate('Login Team');
+    } catch (error) {
+      reportError(error);
+      setLoading(false);
+    }
+    // dispatch(login());
   }
 
   return (
@@ -65,7 +82,9 @@ export default function LoginScreen({navigation}) {
               <Text style={styles.buttonText}>Sign up</Text>
             </TouchableOpacity>
           </View>
-          <Button onPress={handleLogin}>Login</Button>
+          <Button onPress={handleLogin} loading={loading}>
+            Login
+          </Button>
         </Container>
       </View>
     </SafeAreaView>

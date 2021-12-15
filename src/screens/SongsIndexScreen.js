@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Pressable,
@@ -12,9 +12,32 @@ import KeyBadge from '../components/KeyBadge';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Container from '../components/Container';
 import SearchFilterBar from '../components/SearchFilterBar';
+import {reportError} from '../utils/error';
+import {getAllSongs} from '../services/songsService';
+
+import LoadingIndicator from '../components/LoadingIndicator';
+import {hasAnyKeysSet} from '../utils/song';
 
 export default function SongsIndexScreen({navigation}) {
+  const [songs, setSongs] = useState([]);
   const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        let {data} = await getAllSongs();
+        setSongs(data);
+      } catch (error) {
+        reportError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   function renderSongRow({item: song}) {
     return (
@@ -23,7 +46,11 @@ export default function SongsIndexScreen({navigation}) {
           style={styles.row}
           onPress={() => handleNavigateTo(song)}>
           <Text style={styles.name}>{song.name}</Text>
-          <KeyBadge style={styles.keyBadge}>{song.songKey}</KeyBadge>
+          {hasAnyKeysSet(song) && (
+            <KeyBadge style={styles.keyBadge}>
+              {song.transposed_key || song.original_key}
+            </KeyBadge>
+          )}
         </TouchableOpacity>
       </Container>
     );
@@ -43,6 +70,8 @@ export default function SongsIndexScreen({navigation}) {
   function handleCreateSong() {
     navigation.navigate('Create Song');
   }
+
+  if (loading) return <LoadingIndicator />;
 
   return (
     <View style={styles.container}>
@@ -91,24 +120,3 @@ const styles = StyleSheet.create({
     right: 20,
   },
 });
-
-const songs = [
-  {id: 1, name: 'How Great is Our God', songKey: 'A'},
-  {id: 2, name: 'How Great Thou Art', songKey: 'Db'},
-  {id: 3, name: 'Amazing Grace', songKey: 'E'},
-  {id: 4, name: 'This is Amazing Grace', songKey: 'D'},
-  {id: 5, name: 'What a Day', songKey: 'G'},
-  {id: 6, name: 'Here Again', songKey: 'C'},
-  {id: 7, name: 'How Great is Our God', songKey: 'A'},
-  {id: 8, name: 'How Great Thou Art', songKey: 'Db'},
-  {id: 9, name: 'Amazing Grace', songKey: 'E'},
-  {id: 10, name: 'This is Amazing Grace', songKey: 'D'},
-  {id: 11, name: 'What a Day', songKey: 'G'},
-  // {id: 12, name: 'Here Again', songKey: 'C'},
-  // {id: 13, name: 'How Great is Our God', songKey: 'A'},
-  // {id: 14, name: 'How Great Thou Art', songKey: 'Db'},
-  // {id: 15, name: 'Amazing Grace', songKey: 'E'},
-  // {id: 41, name: 'This is Amazing Grace', songKey: 'D'},
-  {id: 51, name: 'What a Day', songKey: 'G'},
-  {id: 61, name: 'Here Again', songKey: 'C'},
-];

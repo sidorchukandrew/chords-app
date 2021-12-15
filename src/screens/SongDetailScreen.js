@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -9,35 +9,33 @@ import {
 import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SegmentedControl from '../components/SegmentedControl';
-import {useState} from 'react/cjs/react.development';
 import SongContentTab from '../components/SongContentTab';
 import SongDetailsTab from '../components/SongDetailsTab';
 import SongOptionsBottomSheet from '../components/SongOptionsBottomSheet';
+import {reportError} from '../utils/error';
+import {getSongById} from '../services/songsService';
 
-export default function SongDetailScreen({navigation}) {
+export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
-  const [song, setSong] = useState({
-    content,
-    original_key: 'G',
-    transposed_key: 'A',
-    bpm: 112,
-    meter: '3/4',
-    artist: 'Edward Shelton',
-    themes: [
-      {id: 1, name: 'Salvation'},
-      {id: 2, name: 'Praise'},
-    ],
-    genres: [
-      {id: 1, name: 'Christian'},
-      {id: 2, name: 'Contemporary'},
-    ],
-    binders: [
-      {id: 1, name: 'English'},
-      {id: 2, name: 'Old'},
-    ],
-    name: 'How Great is Our God',
-  });
+  const [song, setSong] = useState(route.params);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        let {data} = await getSongById(song.id);
+        setSong(data);
+      } catch (error) {
+        reportError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [song.id]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
