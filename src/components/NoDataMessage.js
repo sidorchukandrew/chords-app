@@ -3,14 +3,21 @@ import {StyleSheet, Text, View} from 'react-native';
 import Container from './Container';
 import Button from './Button';
 
-export default function NoDataMessage({buttonTitle, message, onButtonPress}) {
+export default function NoDataMessage({
+  buttonTitle,
+  message,
+  onButtonPress,
+  showAddButton,
+}) {
   return (
     <Container size="sm">
       <View style={styles.noDataContainer}>
         <Text style={styles.noDataText}>{message}</Text>
-        <Button onPress={onButtonPress}>
-          <Text>{buttonTitle}</Text>
-        </Button>
+        {showAddButton && (
+          <Button onPress={onButtonPress}>
+            <Text>{buttonTitle}</Text>
+          </Button>
+        )}
       </View>
     </Container>
   );

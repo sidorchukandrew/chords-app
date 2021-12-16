@@ -11,14 +11,42 @@ import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FormField from '../components/FormField';
 import {useDispatch} from 'react-redux';
-import {loginTeam} from '../redux/slices/authSlice';
+import {
+  loginTeam,
+  setCurrentUser,
+  setMembership,
+} from '../redux/slices/authSlice';
+import {createTeam} from '../services/teamsService';
+import {reportError} from '../utils/error';
+import UsersApi from '../api/usersApi';
+import TeamsApi from '../api/teamsApi';
+import {setSubscription} from '../redux/slices/subscriptionSlice';
 
 export default function CreateTeamScreen({navigation}) {
   const [name, setName] = useState('');
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
-  function handleCreateTeam() {
-    dispatch(loginTeam({name}));
+  async function handleCreateTeam() {
+    try {
+      setLoading(true);
+      let {data} = await createTeam({name});
+      dispatch(loginTeam(data));
+
+      let userResult = await UsersApi.getCurrentUser();
+      dispatch(setCurrentUser(userResult.data));
+
+      let teamResult = await TeamsApi.getCurrentTeam();
+      dispatch(loginTeam(teamResult.data.team));
+      dispatch(setSubscription(teamResult.data.subscription));
+
+      let membershipResult = await UsersApi.getTeamMembership();
+      dispatch(setMembership({role: membershipResult.data.role}));
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleGoBack() {
@@ -37,7 +65,9 @@ export default function CreateTeamScreen({navigation}) {
       </Container>
       <View style={styles.buttonContainer}>
         <Container size="sm">
-          <Button onPress={handleCreateTeam}>Create</Button>
+          <Button onPress={handleCreateTeam} loading={loading} disabled={!name}>
+            Create
+          </Button>
         </Container>
       </View>
     </SafeAreaView>

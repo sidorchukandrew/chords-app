@@ -13,4 +13,13 @@ export default class SongsApi {
       headers: constructAuthHeaders(),
     });
   }
+
+  static createOne(song) {
+    let params = {
+      ...song,
+      team_id: getTeamId(),
+    };
+
+    return api().post('/songs', params, {headers: constructAuthHeaders()});
+  }
 }

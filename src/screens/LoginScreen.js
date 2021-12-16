@@ -82,7 +82,10 @@ export default function LoginScreen({navigation}) {
               <Text style={styles.buttonText}>Sign up</Text>
             </TouchableOpacity>
           </View>
-          <Button onPress={handleLogin} loading={loading}>
+          <Button
+            onPress={handleLogin}
+            loading={loading}
+            disabled={!email || !password}>
             Login
           </Button>
         </Container>

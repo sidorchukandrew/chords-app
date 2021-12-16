@@ -19,6 +19,9 @@ import {getBinderById} from '../services/bindersService';
 import LoadingIndicator from '../components/LoadingIndicator';
 import KeyBadge from '../components/KeyBadge';
 import {hasAnyKeysSet} from '../utils/song';
+import {useSelector} from 'react-redux';
+import {selectCurrentMember} from '../redux/slices/authSlice';
+import {EDIT_BINDERS} from '../utils/auth';
 
 export default function BinderDetailScreen({navigation, route}) {
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
@@ -26,6 +29,7 @@ export default function BinderDetailScreen({navigation, route}) {
   const [binder, setBinder] = useState(route.params);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
+  const currentMember = useSelector(selectCurrentMember);
 
   useEffect(() => {
     async function fetchData() {
@@ -47,11 +51,13 @@ export default function BinderDetailScreen({navigation, route}) {
     navigation.setOptions({
       headerRight: () => (
         <>
-          <TouchableOpacity
-            style={styles.headerButton}
-            onPress={() => setAddSongsSheetVisible(true)}>
-            <Icon name="plus" size={22} color="#2464eb" />
-          </TouchableOpacity>
+          {currentMember.can(EDIT_BINDERS) && (
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => setAddSongsSheetVisible(true)}>
+              <Icon name="plus" size={22} color="#2464eb" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={styles.headerButton}
             onPress={() => setOptionsSheetVisible(true)}>
@@ -60,7 +66,7 @@ export default function BinderDetailScreen({navigation, route}) {
         </>
       ),
     });
-  }, [navigation]);
+  }, [navigation, currentMember]);
 
   function renderRow({item: song}) {
     return (
@@ -77,8 +83,8 @@ export default function BinderDetailScreen({navigation, route}) {
     );
   }
 
-  function handleNavigateTo(route) {
-    navigation.navigate(route, binder);
+  function handleNavigateTo(routeName) {
+    navigation.navigate(routeName, binder);
   }
 
   function handleNavigateToSong(song) {
@@ -98,10 +104,14 @@ export default function BinderDetailScreen({navigation, route}) {
     } else if (query && filteredSongs().length === 0) {
       return <Text>No songs were found</Text>;
     } else if (!query && filteredSongs().length === 0) {
-      <NoDataMessage
-        buttonTitle="Add songs"
-        onButtonPress={() => setAddSongsSheetVisible(true)}
-      />;
+      return (
+        <NoDataMessage
+          buttonTitle="Add songs"
+          onButtonPress={() => setAddSongsSheetVisible(true)}
+          message="There are no songs in this binder yet"
+          showAddButton={currentMember.can(EDIT_BINDERS)}
+        />
+      );
     }
   }
 

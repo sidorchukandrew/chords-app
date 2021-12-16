@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import AccentButton from '../components/AccentButton';
+import {StyleSheet, View} from 'react-native';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
@@ -8,6 +7,8 @@ import MeterModal from '../components/MeterModal';
 import ScreenModalHeader from '../components/ScreenModalHeader';
 import SongKeyModal from '../components/SongKeyModal';
 import ScreenModal from './ScreenModal';
+import {reportError} from '../utils/error';
+import {createSong} from '../services/songsService';
 
 export default function CreateSongModal({navigation}) {
   const [name, setName] = useState('');
@@ -17,8 +18,26 @@ export default function CreateSongModal({navigation}) {
   const [originalKeyModalVisible, setOriginalKeyModalVisible] = useState(false);
   const [meter, setMeter] = useState('');
   const [meterModalVisible, setMeterModalVisible] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  function handleSave() {}
+  async function handleSave() {
+    try {
+      setSaving(true);
+      let song = {
+        name,
+        bpm,
+        artist,
+        original_key: originalKey,
+        meter,
+      };
+
+      let {data} = await createSong(song);
+      navigation.navigate('Songs', {created: data});
+    } catch (error) {
+      reportError(error);
+      setSaving(false);
+    }
+  }
 
   return (
     <ScreenModal>
@@ -26,7 +45,8 @@ export default function CreateSongModal({navigation}) {
         options={{saveVisible: true, backVisible: true}}
         title="Add a Song"
         onBackPress={navigation.goBack}
-        onSavePress={navigation.goBack}
+        onSavePress={handleSave}
+        saveDisabled={saving || !name}
       />
       <Container>
         <View style={styles.fieldsContainer}>
@@ -63,7 +83,9 @@ export default function CreateSongModal({navigation}) {
             meter={meter}
           />
         </View>
-        <Button onPress={handleSave}>Save</Button>
+        <Button onPress={handleSave} loading={saving} disabled={!name}>
+          Save
+        </Button>
 
         {/* <AccentButton>Import</AccentButton> */}
       </Container>

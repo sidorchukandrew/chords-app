@@ -11,11 +11,23 @@ import SearchFilterBar from '../components/SearchFilterBar';
 import LoadingIndicator from '../components/LoadingIndicator';
 import {reportError} from '../utils/error';
 import {getAllBinders} from '../services/bindersService';
+import {useSelector} from 'react-redux';
+import {selectCurrentMember} from '../redux/slices/authSlice';
+import NoDataMessage from '../components/NoDataMessage';
+import {ADD_BINDERS} from '../utils/auth';
 
-export default function BindersIndexScreen({navigation}) {
+export default function BindersIndexScreen({navigation, route}) {
   const [query, setQuery] = useState('');
   const [binders, setBinders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const currentMember = useSelector(selectCurrentMember);
+
+  useEffect(() => {
+    if (route?.params?.created) {
+      setBinders(currentBinders => [...currentBinders, route.params.created]);
+      navigation.navigate('Binder Detail', route.params.created);
+    }
+  }, [route?.params?.created, navigation]);
 
   useEffect(() => {
     async function fetchData() {
@@ -83,10 +95,20 @@ export default function BindersIndexScreen({navigation}) {
         }
         data={filteredBinders()}
         renderItem={renderBinderRow}
+        ListEmptyComponent={
+          <NoDataMessage
+            message="You have no binders yet"
+            showAddButton={currentMember.can(ADD_BINDERS)}
+            buttonTitle="Add binder"
+            onButtonPress={handleCreateBinder}
+          />
+        }
       />
-      <CircleButton style={styles.addButton} onPress={handleCreateBinder}>
-        <Icon name="plus" size={35} color="white" />
-      </CircleButton>
+      {currentMember.can(ADD_BINDERS) && (
+        <CircleButton style={styles.addButton} onPress={handleCreateBinder}>
+          <Icon name="plus" size={35} color="white" />
+        </CircleButton>
+      )}
     </View>
   );
 }

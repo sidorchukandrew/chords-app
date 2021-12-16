@@ -27,6 +27,9 @@ const authSlice = createSlice({
       state.accessToken = '';
       state.client = '';
       state.uid = '';
+      state.currentMember = null;
+      state.currentTeam = null;
+      state.currentMember = null;
     },
     loginTeam: (state, {payload}) => {
       state.currentTeam = payload;
@@ -51,3 +54,17 @@ export const selectCurrentUser = state => state.auth?.currentUser;
 
 export const {login, logout, loginTeam, setMembership, setCurrentUser} =
   authSlice.actions;
+
+export const selectCurrentMember = state => {
+  let permissions = state.auth?.currentMember.role.permissions.map(
+    permission => permission.name,
+  );
+
+  return {
+    permissions,
+    ...state.auth.currentUser,
+    can: permission => {
+      return permissions?.includes(permission);
+    },
+  };
+};

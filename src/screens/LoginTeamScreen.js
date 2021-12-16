@@ -15,6 +15,7 @@ import {
 } from '../redux/slices/authSlice';
 import {reportError} from '../utils/error';
 import {setSubscription} from '../redux/slices/subscriptionSlice';
+import NoDataMessage from '../components/NoDataMessage';
 
 export default function LoginTeamScreen({navigation}) {
   const dispatch = useDispatch();
@@ -61,26 +62,37 @@ export default function LoginTeamScreen({navigation}) {
     navigation.navigate('Create Team');
   }
 
+  function renderContent() {
+    if (loading) return <LoadingIndicator />;
+    else if (!loading && teams.length === 0) {
+      return (
+        <View>
+          <Text>Looks like you aren't a part of any teams yet.</Text>
+        </View>
+      );
+    } else {
+      return (
+        <ScrollView>
+          {teams.map((team, index) => (
+            <TeamLoginOption
+              key={team.id}
+              team={team}
+              bordered={index < teams.length - 1}
+              onPress={() => handleLoginTeam(team)}
+            />
+          ))}
+        </ScrollView>
+      );
+    }
+  }
+
   if (loadingAllData) return <LoadingIndicator />;
 
   return (
     <SafeAreaView style={styles.container}>
       <Container style={styles.formContainer} size="sm">
         <Text style={styles.title}>Choose a team to login to</Text>
-        {loading ? (
-          <LoadingIndicator />
-        ) : (
-          <ScrollView>
-            {teams.map((team, index) => (
-              <TeamLoginOption
-                key={team.id}
-                team={team}
-                bordered={index < teams.length - 1}
-                onPress={() => handleLoginTeam(team)}
-              />
-            ))}
-          </ScrollView>
-        )}
+        {renderContent()}
       </Container>
       <View style={styles.buttonContainer}>
         <Container size="sm">

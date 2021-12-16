@@ -4,6 +4,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AccentButton from '../components/AccentButton';
 import Container from './Container';
+import NoDataMessage from './NoDataMessage';
 
 export default function SongContentTab({song, onPerform}) {
   return (
@@ -37,7 +38,7 @@ export default function SongContentTab({song, onPerform}) {
           Perform
         </AccentButton>
       </View>
-      <Text>{song.content}</Text>
+      <Text>{song.content || 'No lyrics have been added yet'}</Text>
     </Container>
   );
 }

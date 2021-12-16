@@ -12,6 +12,7 @@ export default function ScreenModalHeader({
   title,
   onBackPress,
   onSavePress,
+  saveDisabled,
   options = {saveVisible: false, backVisible: false},
 }) {
   return (
@@ -31,7 +32,10 @@ export default function ScreenModalHeader({
         <Text style={[styles.headerTitle, styles.grow]}>{title}</Text>
         {options.saveVisible ? (
           <View style={styles.saveButtonContainer}>
-            <TouchableOpacity style={styles.saveButton} onPress={onSavePress}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={onSavePress}
+              disabled={saveDisabled}>
               <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
           </View>

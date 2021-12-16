@@ -11,4 +11,8 @@ export default class TeamsApi {
       headers: constructAuthHeaders(),
     });
   }
+
+  static createOne(team) {
+    return api().post('/teams', team, {headers: constructAuthHeaders()});
+  }
 }

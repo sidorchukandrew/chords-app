@@ -114,7 +114,7 @@ export default function Routes() {
                 component={CreateSongModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                 }}
               />
               <Stack.Screen
@@ -122,7 +122,7 @@ export default function Routes() {
                 component={CreateBinderModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                 }}
               />
               <Stack.Screen

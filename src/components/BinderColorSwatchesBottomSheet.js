@@ -27,7 +27,7 @@ export default function BinderColorSwatchesBottomSheet({
   }, [visible, sheetRef]);
 
   return (
-    <BottomSheet snapPoints={['40%']} ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet snapPoints={['20%']} ref={sheetRef} onDismiss={onDismiss}>
       <View style={styles.container}>
         <Text style={styles.title}>Choose a color</Text>
         <View style={styles.swatchesContainer}>
@@ -54,10 +54,6 @@ export default function BinderColorSwatchesBottomSheet({
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    flexGrow: 1,
-    height: '100%',
-    width: '100%',
     paddingHorizontal: 20,
   },
   title: {

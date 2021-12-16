@@ -13,4 +13,10 @@ export default class BindersApi {
       headers: constructAuthHeaders(),
     });
   }
+
+  static createOne(binder) {
+    return api().post('/binders', binder, {
+      headers: constructAuthHeaders(),
+    });
+  }
 }

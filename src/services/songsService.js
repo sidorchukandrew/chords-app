@@ -7,3 +7,7 @@ export function getAllSongs() {
 export function getSongById(id) {
   return SongsApi.getOne(id);
 }
+
+export function createSong(song) {
+  return SongsApi.createOne(song);
+}
