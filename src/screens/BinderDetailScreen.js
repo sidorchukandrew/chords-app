@@ -135,6 +135,8 @@ export default function BinderDetailScreen({navigation, route}) {
       <AddSongsToBinderBottomSheet
         visible={addSongsSheetVisible}
         onDismiss={() => setAddSongsSheetVisible(false)}
+        selectedSongIds={binder.songs?.map(song => song.id)}
+        binderId={binder.id}
       />
       <BinderOptionsBottomSheet
         visible={optionsSheetVisible}

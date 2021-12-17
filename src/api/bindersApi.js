@@ -19,4 +19,14 @@ export default class BindersApi {
       headers: constructAuthHeaders(),
     });
   }
+
+  static addSongs(id, songIds) {
+    if (songIds.length > 0) {
+      return api().post(
+        `/binders/${id}`,
+        {song_ids: songIds, team_id: getTeamId()},
+        {headers: constructAuthHeaders()},
+      );
+    }
+  }
 }

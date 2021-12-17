@@ -21,6 +21,7 @@
     "dayjs": "^1.10.7",
     "react": "17.0.2",
     "react-native": "0.66.3",
+    "react-native-bouncy-checkbox": "^2.1.8",
     "react-native-calendars": "^1.1271.0",
     "react-native-config": "^1.4.5",
     "react-native-gesture-handler": "^2.1.0",

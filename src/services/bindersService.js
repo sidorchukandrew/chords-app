@@ -17,3 +17,7 @@ export function createBinder(binder) {
 
   return BindersApi.createOne(params);
 }
+
+export function addSongsToBinder(binderId, songIds) {
+  return BindersApi.addSongs(binderId, songIds);
+}
