@@ -1,20 +1,20 @@
-import React, {useCallback, useEffect, useRef} from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import RectButton from './RectButton';
-import {
-  Text,
-  StyleSheet,
-  View,
-  Dimensions,
-  useWindowDimensions,
-} from 'react-native';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
-  BottomSheetModalProvider,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import React, {useCallback, useEffect, useRef} from 'react';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import RectButton from './RectButton';
 import {useState} from 'react/cjs/react.development';
 
 export default function AppMenu({visible, onClose, onNavigateTo}) {
@@ -47,65 +47,63 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
   }
 
   return (
-    <BottomSheetModalProvider>
-      <BottomSheetModal
-        snapPoints={['50%']}
-        onDismiss={onClose}
-        ref={sheetRef}
-        detached
-        bottomInset={46}
-        style={[styles.container, getHorizontalMargins()]}
-        contentHeight={200}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            disappearsOnIndex={-1}
-            appearsOnIndex={0}
-            {...props}
-          />
-        )}>
-        <BottomSheetView
-          style={{paddingTop: 12, paddingBottom: 12, paddingHorizontal: 16}}>
-          <RectButton
-            styles={styles.button}
-            onPress={() => handleNavigateTo('Dashboard')}>
-            <Icon name="view-dashboard" size={20} style={styles.icon} />
-            <Text style={styles.text}>Dashboard</Text>
-          </RectButton>
+    <BottomSheetModal
+      snapPoints={['50%']}
+      onDismiss={onClose}
+      ref={sheetRef}
+      detached
+      bottomInset={46}
+      style={[styles.container, getHorizontalMargins()]}
+      contentHeight={200}
+      backdropComponent={props => (
+        <BottomSheetBackdrop
+          disappearsOnIndex={-1}
+          appearsOnIndex={0}
+          {...props}
+        />
+      )}>
+      <BottomSheetView
+        style={{paddingTop: 12, paddingBottom: 12, paddingHorizontal: 16}}>
+        <RectButton
+          styles={styles.button}
+          onPress={() => handleNavigateTo('Dashboard')}>
+          <Icon name="view-dashboard" size={20} style={styles.icon} />
+          <Text style={styles.text}>Dashboard</Text>
+        </RectButton>
 
-          <RectButton
-            styles={styles.button}
-            onPress={() => handleNavigateTo('Binders')}>
-            <Icon name="folder-music" size={20} style={styles.icon} />
-            <Text style={styles.text}>Binders</Text>
-          </RectButton>
+        <RectButton
+          styles={styles.button}
+          onPress={() => handleNavigateTo('Binders')}>
+          <Icon name="folder-music" size={20} style={styles.icon} />
+          <Text style={styles.text}>Binders</Text>
+        </RectButton>
 
-          <RectButton
-            styles={styles.button}
-            onPress={() => handleNavigateTo('Songs')}>
-            <IonIcon name="musical-notes" size={20} style={styles.icon} />
-            <Text style={styles.text}>Songs</Text>
-          </RectButton>
+        <RectButton
+          styles={styles.button}
+          onPress={() => handleNavigateTo('Songs')}>
+          <IonIcon name="musical-notes" size={20} style={styles.icon} />
+          <Text style={styles.text}>Songs</Text>
+        </RectButton>
 
-          <RectButton
-            styles={styles.button}
-            onPress={() => handleNavigateTo('Sets')}>
-            <Icon name="playlist-music" size={20} style={styles.icon} />
-            <Text style={styles.text}>Sets</Text>
-          </RectButton>
-          <RectButton
-            styles={styles.button}
-            onPress={() => handleNavigateTo('Members')}>
-            <Icon name="account-group" size={20} style={styles.icon} />
-            <Text style={styles.text}>Team members</Text>
-          </RectButton>
+        <RectButton
+          styles={styles.button}
+          onPress={() => handleNavigateTo('Sets')}>
+          <Icon name="playlist-music" size={20} style={styles.icon} />
+          <Text style={styles.text}>Sets</Text>
+        </RectButton>
+        <RectButton
+          styles={styles.button}
+          onPress={() => handleNavigateTo('Members')}>
+          <Icon name="account-group" size={20} style={styles.icon} />
+          <Text style={styles.text}>Team members</Text>
+        </RectButton>
 
-          <RectButton styles={styles.button}>
-            <Icon name="swap-horizontal" size={20} style={styles.icon} />
-            <Text style={styles.text}>Switch teams</Text>
-          </RectButton>
-        </BottomSheetView>
-      </BottomSheetModal>
-    </BottomSheetModalProvider>
+        <RectButton styles={styles.button}>
+          <Icon name="swap-horizontal" size={20} style={styles.icon} />
+          <Text style={styles.text}>Switch teams</Text>
+        </RectButton>
+      </BottomSheetView>
+    </BottomSheetModal>
   );
 }
 

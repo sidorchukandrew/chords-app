@@ -6,15 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LoadingIndicator from '../components/LoadingIndicator';
 import SegmentedControl from '../components/SegmentedControl';
 import SongContentTab from '../components/SongContentTab';
 import SongDetailsTab from '../components/SongDetailsTab';
 import SongOptionsBottomSheet from '../components/SongOptionsBottomSheet';
-import {reportError} from '../utils/error';
 import {getSongById} from '../services/songsService';
-import LoadingIndicator from '../components/LoadingIndicator';
+import {reportError} from '../utils/error';
 
 export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
@@ -54,9 +55,19 @@ export default function SongDetailScreen({navigation, route}) {
     navigation.navigate('Perform Song', song);
   }
 
+  function handleEditSong() {
+    navigation.navigate('Edit Song Content', song);
+  }
+
   function renderTab() {
     if (tab === 'Song') {
-      return <SongContentTab song={song} onPerform={handlePerformSong} />;
+      return (
+        <SongContentTab
+          song={song}
+          onPerform={handlePerformSong}
+          onEdit={handleEditSong}
+        />
+      );
     } else if (tab === 'Details') {
       return <SongDetailsTab song={song} onNavigateTo={handleNavigateTo} />;
     }

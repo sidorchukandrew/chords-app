@@ -1,20 +1,33 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+
 import Button from '../components/Button';
 import CalendarModal from '../components/CalendarModal';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
-import ScreenModalHeader from '../components/ScreenModalHeader';
-import {format} from '../utils/date';
 import ScreenModal from './ScreenModal';
+import ScreenModalHeader from '../components/ScreenModalHeader';
+import {createSetlist} from '../services/setlistsService';
+import {format} from '../utils/date';
+import {reportError} from '../utils/error';
 
 export default function CreateSetlistModal({navigation}) {
   const [name, setName] = useState('');
   const [dateModalVisible, setDateModalVisible] = useState(false);
   const [formattedScheduledDate, setFormattedScheduledDate] = useState('');
   const [scheduledDate, setScheduledDate] = useState();
+  const [saving, setSaving] = useState(false);
 
-  function handleSave() {}
+  async function handleSave() {
+    try {
+      setSaving(true);
+      let {data} = await createSetlist({name, scheduledDate});
+      navigation.navigate('Sets', {created: {...data, songs: []}});
+    } catch (error) {
+      setSaving(false);
+      reportError(error);
+    }
+  }
 
   function handleDateChange(newDate) {
     setScheduledDate(newDate);
@@ -26,9 +39,10 @@ export default function CreateSetlistModal({navigation}) {
     <ScreenModal>
       <ScreenModalHeader
         options={{saveVisible: true, backVisible: true}}
-        title="Add a Song"
+        title="Create a set"
         onBackPress={navigation.goBack}
-        onSavePress={navigation.goBack}
+        onSavePress={handleSave}
+        saveDisabled={!name || !scheduledDate || saving}
       />
       <Container>
         <View style={styles.fieldsContainer}>
@@ -45,7 +59,12 @@ export default function CreateSetlistModal({navigation}) {
             onClose={() => setDateModalVisible(false)}
           />
         </View>
-        <Button onPress={handleSave}>Save</Button>
+        <Button
+          onPress={handleSave}
+          disabled={!name || !scheduledDate}
+          loading={saving}>
+          Save
+        </Button>
       </Container>
     </ScreenModal>
   );

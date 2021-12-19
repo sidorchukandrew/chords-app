@@ -1,18 +1,19 @@
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useRef} from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
-import {useState} from 'react/cjs/react.development';
-import {reportError} from '../utils/error';
+
 import BottomSheet from './BottomSheet';
-import SearchInput from './SearchInput';
-import {getAllSongs} from '../services/songsService';
-import NoDataMessage from './NoDataMessage';
-import {hasAnyKeysSet} from '../utils/song';
-import KeyBadge from './KeyBadge';
+import Button from './Button';
 import Checkbox from './Checkbox';
 import ItemSeparator from './ItemSeparator';
-import Button from './Button';
-import {pluralize} from '../utils/string';
+import KeyBadge from './KeyBadge';
+import NoDataMessage from './NoDataMessage';
+import SearchInput from './SearchInput';
 import {addSongsToBinder} from '../services/bindersService';
+import {getAllSongs} from '../services/songsService';
+import {hasAnyKeysSet} from '../utils/song';
+import {pluralize} from '../utils/string';
+import {reportError} from '../utils/error';
+import {useState} from 'react/cjs/react.development';
 
 export default function AddSongsToBinderBottomSheet({
   visible,
@@ -98,6 +99,8 @@ export default function AddSongsToBinderBottomSheet({
       let songIds = songsToAdd.map(song => song.id);
       let {data} = await addSongsToBinder(binderId, songIds);
       onSongsAdded(data);
+      setSaving(false);
+      sheetRef.current?.dismiss();
       onDismiss();
     } catch (error) {
       reportError(error);

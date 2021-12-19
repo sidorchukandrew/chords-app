@@ -1,24 +1,38 @@
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import PreviousSetsList from '../components/PreviousSetsList';
-import SegmentedControl from '../components/SegmentedControl';
-import UpcomingSetsList from '../components/UpcomingSetsList';
-import SearchFilterBar from '../components/SearchFilterBar';
-import dayjs from 'dayjs';
 import {format, isPast} from '../utils/date';
+
 import CircleButton from '../components/CircleButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import LoadingIndicator from '../components/LoadingIndicator';
+import PreviousSetsList from '../components/PreviousSetsList';
+import SearchFilterBar from '../components/SearchFilterBar';
+import SegmentedControl from '../components/SegmentedControl';
+import UpcomingSetsList from '../components/UpcomingSetsList';
+import dayjs from 'dayjs';
 import {getAllSetlists} from '../services/setlistsService';
 import {reportError} from '../utils/error';
-import LoadingIndicator from '../components/LoadingIndicator';
 
-export default function SetlistsIndexScreen({navigation}) {
+export default function SetlistsIndexScreen({navigation, route}) {
   const [setType, setSetType] = useState('Upcoming');
   const [query, setQuery] = useState('');
   const [upcomingSets, setUpcomingSets] = useState([]);
   const [pastSets, setPastSets] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    let createdSetlist = route?.params?.created;
+    if (createdSetlist) {
+      if (isPast(createdSetlist.scheduled_date)) {
+        setPastSets(currentSets => [...currentSets, createdSetlist]);
+      } else {
+        setUpcomingSets(currentSets => [...currentSets, createdSetlist]);
+      }
+      navigation.navigate('Setlist Detail', createdSetlist);
+    }
+  }, [route?.params?.created]);
 
   useEffect(() => {
     async function fetchData() {
@@ -41,6 +55,25 @@ export default function SetlistsIndexScreen({navigation}) {
     }
     fetchData();
   }, []);
+
+  async function handleRefresh() {
+    try {
+      setRefreshing(true);
+      let {data: sets} = await getAllSetlists();
+      let upcoming = [];
+      let past = [];
+
+      sets?.forEach(set =>
+        isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
+      );
+      setUpcomingSets(upcoming);
+      setPastSets(past);
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   function renderSetRow({item: set}) {
     return (
@@ -86,47 +119,39 @@ export default function SetlistsIndexScreen({navigation}) {
     );
   }
 
-  function renderContent() {
-    if (loading) return <LoadingIndicator />;
-    else if (setType === 'Upcoming') {
-      return (
-        <UpcomingSetsList
-          sets={filteredUpcomingSets()}
-          renderLargeScreen={renderSetRow}
-          renderSmallScreen={renderSetRow}
-        />
-      );
-    } else {
-      return (
-        <PreviousSetsList
-          sets={filteredPastSets()}
-          renderLargeScreen={renderSetRow}
-          renderSmallScreen={renderSetRow}
-        />
-      );
-    }
-  }
+  if (loading) return <LoadingIndicator />;
 
   return (
     <View style={styles.container}>
-      <SearchFilterBar
-        query={query}
-        onQueryChange={setQuery}
-        placeholder={`Search ${
-          setType === 'Upcoming'
-            ? filteredUpcomingSets().length
-            : filteredPastSets().length
-        } sets`}
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <SearchFilterBar
+              query={query}
+              onQueryChange={setQuery}
+              placeholder={`Search ${
+                setType === 'Upcoming'
+                  ? filteredUpcomingSets().length
+                  : filteredPastSets().length
+              } sets`}
+            />
+            <View style={styles.typePicker}>
+              <SegmentedControl
+                options={['Upcoming', 'Past']}
+                selected={setType}
+                onPress={setSetType}
+                style={{maxWidth: 200}}
+              />
+            </View>
+          </>
+        }
+        data={
+          setType === 'Upcoming' ? filteredUpcomingSets() : filteredPastSets()
+        }
+        renderItem={renderSetRow}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
       />
-      <View style={styles.typePicker}>
-        <SegmentedControl
-          options={['Upcoming', 'Past']}
-          selected={setType}
-          onPress={setSetType}
-          style={{maxWidth: 200}}
-        />
-      </View>
-      {renderContent()}
       <CircleButton
         style={styles.addButton}
         onPress={() => navigation.navigate('Create Setlist')}>
@@ -140,6 +165,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: 'white',
+    paddingBottom: 10,
   },
   name: {
     fontSize: 17,

@@ -1,4 +1,3 @@
-import React, {useEffect} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -7,21 +6,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useState} from 'react/cjs/react.development';
-import Container from '../components/Container';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import BinderDetailHeader from '../components/BinderDetailHeader';
-import NoDataMessage from '../components/NoDataMessage';
+import React, {useEffect} from 'react';
+
 import AddSongsToBinderBottomSheet from '../components/AddSongsToBinderBottomSheet';
+import BinderDetailHeader from '../components/BinderDetailHeader';
 import BinderOptionsBottomSheet from '../components/BinderOptionsBottomSheet';
-import {reportError} from '../utils/error';
-import {getBinderById} from '../services/bindersService';
-import LoadingIndicator from '../components/LoadingIndicator';
-import KeyBadge from '../components/KeyBadge';
-import {hasAnyKeysSet} from '../utils/song';
-import {useSelector} from 'react-redux';
-import {selectCurrentMember} from '../redux/slices/authSlice';
+import Container from '../components/Container';
 import {EDIT_BINDERS} from '../utils/auth';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import KeyBadge from '../components/KeyBadge';
+import LoadingIndicator from '../components/LoadingIndicator';
+import NoDataMessage from '../components/NoDataMessage';
+import {getBinderById} from '../services/bindersService';
+import {hasAnyKeysSet} from '../utils/song';
+import {reportError} from '../utils/error';
+import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useSelector} from 'react-redux';
+import {useState} from 'react/cjs/react.development';
 
 export default function BinderDetailScreen({navigation, route}) {
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
@@ -103,7 +104,7 @@ export default function BinderDetailScreen({navigation, route}) {
       return <LoadingIndicator />;
     } else if (query && filteredSongs().length === 0) {
       return <Text>No songs were found</Text>;
-    } else if (!query && filteredSongs().length === 0) {
+    } else {
       return (
         <NoDataMessage
           buttonTitle="Add songs"
@@ -113,6 +114,13 @@ export default function BinderDetailScreen({navigation, route}) {
         />
       );
     }
+  }
+
+  function handleSongsAdded(songsAdded) {
+    setBinder(currentBinder => ({
+      ...binder,
+      songs: [...binder.songs, ...songsAdded],
+    }));
   }
 
   return (
@@ -137,6 +145,7 @@ export default function BinderDetailScreen({navigation, route}) {
         onDismiss={() => setAddSongsSheetVisible(false)}
         selectedSongIds={binder.songs?.map(song => song.id)}
         binderId={binder.id}
+        onSongsAdded={handleSongsAdded}
       />
       <BinderOptionsBottomSheet
         visible={optionsSheetVisible}

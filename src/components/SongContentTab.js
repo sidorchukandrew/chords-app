@@ -1,18 +1,18 @@
-import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AccentButton from '../components/AccentButton';
 import Container from './Container';
-import NoDataMessage from './NoDataMessage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from 'react';
 
-export default function SongContentTab({song, onPerform}) {
+export default function SongContentTab({song, onPerform, onEdit}) {
   return (
     <Container>
       <View style={styles.shortcutsContainer}>
         <AccentButton
           style={{marginRight: 5}}
           full
+          onPress={onEdit}
           icon={
             <Icon
               name="pencil"

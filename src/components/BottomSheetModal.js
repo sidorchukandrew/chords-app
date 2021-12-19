@@ -1,7 +1,8 @@
 import {BottomSheetBackdrop, BottomSheetView} from '@gorhom/bottom-sheet';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+
 import {BottomSheetModal as LibBottomSheetModal} from '@gorhom/bottom-sheet';
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 
 const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
   const [windowWidth, setWindowWidth] = useState(0);

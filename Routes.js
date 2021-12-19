@@ -1,42 +1,37 @@
-import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-
-import AuthScreen from './src/screens/AuthScreen';
-import LoginScreen from './src/screens/LoginScreen';
-import SignUpScreen from './src/screens/SignUpScreen';
-import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
-import LoginTeamScreen from './src/screens/LoginTeamScreen';
-import {useSelector} from 'react-redux';
-import {selectIsLoggedIn} from './src/redux/slices/authSlice';
-import CreateTeamScreen from './src/screens/CreateTeamScreen';
-
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-import SearchScreen from './src/screens/SearchScreen';
-import SongsIndexScreen from './src/screens/SongsIndexScreen';
-import BindersIndexScreen from './src/screens/BindersIndexScreen';
-import SetlistsIndexScreen from './src/screens/SetlistsIndexScreen';
-import MembersIndexScreen from './src/screens/MembersIndexScreen';
-import DashboardScreen from './src/screens/DashboardScreen';
 import AccountScreen from './src/screens/AccountScreen';
-import SongDetailScreen from './src/screens/SongDetailScreen';
-import TabBar from './src/components/TabBar';
-
-import CreateSongModal from './src/modals/CreateSongModal';
+import AddGenreModal from './src/modals/AddGenreModal';
+import AddThemeModal from './src/modals/AddThemeModal';
+import AuthScreen from './src/screens/AuthScreen';
+import BinderDetailScreen from './src/screens/BinderDetailScreen';
+import BindersIndexScreen from './src/screens/BindersIndexScreen';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import CreateBinderModal from './src/modals/CreateBinderModal';
 import CreateSetlistModal from './src/modals/CreateSetlistModal';
-import PerformSongScreen from './src/screens/PerformSongScreen';
-import AddThemeModal from './src/modals/AddThemeModal';
-import AddGenreModal from './src/modals/AddGenreModal';
-import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
+import CreateSongModal from './src/modals/CreateSongModal';
+import CreateTeamScreen from './src/screens/CreateTeamScreen';
+import DashboardScreen from './src/screens/DashboardScreen';
 import EditBinderDetailsModal from './src/modals/EditBinderDetailsModal';
-import BinderDetailScreen from './src/screens/BinderDetailScreen';
-
-import SetlistDetailScreen from './src/screens/SetlistDetailScreen';
+import EditSongContentScreen from './src/screens/EditSongContentScreen';
+import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
+import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import LoginTeamScreen from './src/screens/LoginTeamScreen';
+import MembersIndexScreen from './src/screens/MembersIndexScreen';
+import {NavigationContainer} from '@react-navigation/native';
 import PerformSetlistScreen from './src/screens/PerformSetlistScreen';
+import PerformSongScreen from './src/screens/PerformSongScreen';
+import React from 'react';
+import SearchScreen from './src/screens/SearchScreen';
+import SetlistDetailScreen from './src/screens/SetlistDetailScreen';
+import SetlistsIndexScreen from './src/screens/SetlistsIndexScreen';
+import SignUpScreen from './src/screens/SignUpScreen';
+import SongDetailScreen from './src/screens/SongDetailScreen';
+import SongsIndexScreen from './src/screens/SongsIndexScreen';
+import TabBar from './src/components/TabBar';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {selectIsLoggedIn} from './src/redux/slices/authSlice';
+import {useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -97,6 +92,16 @@ export default function Routes() {
                   })}
                 />
 
+                <Stack.Screen
+                  name="Edit Song Content"
+                  component={EditSongContentScreen}
+                  options={({route}) => ({
+                    title: 'Edit',
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                    headerBackTitle: '',
+                  })}
+                />
                 <Stack.Screen
                   name="Perform Setlist"
                   component={PerformSetlistScreen}

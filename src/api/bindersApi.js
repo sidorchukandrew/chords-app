@@ -1,5 +1,6 @@
+import {constructAuthHeaders, getTeamId} from '../utils/auth';
+
 import api from './api';
-import {getTeamId, constructAuthHeaders} from '../utils/auth';
 
 export default class BindersApi {
   static getAll() {
@@ -23,7 +24,7 @@ export default class BindersApi {
   static addSongs(id, songIds) {
     if (songIds.length > 0) {
       return api().post(
-        `/binders/${id}`,
+        `/binders/${id}/songs`,
         {song_ids: songIds, team_id: getTeamId()},
         {headers: constructAuthHeaders()},
       );

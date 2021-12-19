@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Container from '../components/Container';
-import SetlistDetailHeader from '../components/SetlistDetailHeader';
-import NoDataMessage from '../components/NoDataMessage';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, {useEffect, useState} from 'react';
+
 import AddSongsToSetlistBottomSheet from '../components/AddSongsToSetlistBottomSheet';
-import SetlistOptionsBottomSheet from '../components/SetlistOptionsBottomSheet';
-import {reportError} from '../utils/error';
-import {getSetlistById} from '../services/setlistsService';
-import LoadingIndicator from '../components/LoadingIndicator';
-import {hasAnyKeysSet} from '../utils/song';
+import Container from '../components/Container';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ItemSeparator from '../components/ItemSeparator';
 import KeyBadge from '../components/KeyBadge';
+import LoadingIndicator from '../components/LoadingIndicator';
+import NoDataMessage from '../components/NoDataMessage';
+import SetlistDetailHeader from '../components/SetlistDetailHeader';
+import SetlistOptionsBottomSheet from '../components/SetlistOptionsBottomSheet';
+import {getSetlistById} from '../services/setlistsService';
+import {hasAnyKeysSet} from '../utils/song';
+import {reportError} from '../utils/error';
 
 export default function SetlistDetailScreen({route, navigation}) {
   const [setlist, setSetlist] = useState(route.params);
@@ -76,6 +78,13 @@ export default function SetlistDetailScreen({route, navigation}) {
     navigation.navigate(routeName, setlist);
   }
 
+  function handleSongsAdded(songsAdded) {
+    setSetlist(currentSetlist => ({
+      ...currentSetlist,
+      songs: [...currentSetlist.songs, ...songsAdded],
+    }));
+  }
+
   function renderNoData() {
     if (loading) return <LoadingIndicator />;
     else {
@@ -84,6 +93,7 @@ export default function SetlistDetailScreen({route, navigation}) {
           buttonTitle="Add songs"
           message="No songs in this set yet"
           onButtonPress={() => setAddSongsSheetVisible(true)}
+          showAddButton
         />
       );
     }
@@ -103,11 +113,15 @@ export default function SetlistDetailScreen({route, navigation}) {
             />
           }
           ListEmptyComponent={renderNoData()}
+          ItemSeparatorComponent={ItemSeparator}
+          keyExtractor={(item, index) => index}
         />
       </Container>
       <AddSongsToSetlistBottomSheet
         visible={addSongsSheetVisible}
         onDismiss={() => setAddSongsSheetVisible(false)}
+        onSongsAdded={handleSongsAdded}
+        setlistId={setlist.id}
       />
       <SetlistOptionsBottomSheet
         visible={optionsSheetVisible}
@@ -137,8 +151,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e5e5',
   },
   keyBadge: {
     marginLeft: 10,
