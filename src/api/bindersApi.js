@@ -21,6 +21,18 @@ export default class BindersApi {
     });
   }
 
+  static deleteOne(id) {
+    return api().delete(`/binders/${id}?team_id=${getTeamId()}`, {
+      headers: constructAuthHeaders(),
+    });
+  }
+
+  static updateOne(id, updates) {
+    return api().put(`/binders/${id}`, updates, {
+      headers: constructAuthHeaders(),
+    });
+  }
+
   static addSongs(id, songIds) {
     if (songIds.length > 0) {
       return api().post(

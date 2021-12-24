@@ -6,23 +6,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import {deleteBinder, getBinderById} from '../services/bindersService';
 
 import AddSongsToBinderBottomSheet from '../components/AddSongsToBinderBottomSheet';
 import BinderDetailHeader from '../components/BinderDetailHeader';
 import BinderOptionsBottomSheet from '../components/BinderOptionsBottomSheet';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import Container from '../components/Container';
 import {EDIT_BINDERS} from '../utils/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyBadge from '../components/KeyBadge';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
-import {getBinderById} from '../services/bindersService';
 import {hasAnyKeysSet} from '../utils/song';
 import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {useState} from 'react/cjs/react.development';
 
 export default function BinderDetailScreen({navigation, route}) {
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
@@ -30,7 +31,16 @@ export default function BinderDetailScreen({navigation, route}) {
   const [binder, setBinder] = useState(route.params);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
+
   const currentMember = useSelector(selectCurrentMember);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route.params) setBinder(route.params);
+    }, [route]),
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -94,7 +104,7 @@ export default function BinderDetailScreen({navigation, route}) {
 
   function filteredSongs() {
     let lowercasedQuery = query.toLowerCase();
-    return binder.songs?.filter(song =>
+    return binder?.songs?.filter(song =>
       song.name.toLowerCase().includes(lowercasedQuery),
     );
   }
@@ -118,9 +128,19 @@ export default function BinderDetailScreen({navigation, route}) {
 
   function handleSongsAdded(songsAdded) {
     setBinder(currentBinder => ({
-      ...binder,
-      songs: [...binder.songs, ...songsAdded],
+      ...currentBinder,
+      songs: [...currentBinder.songs, ...songsAdded],
     }));
+  }
+
+  async function handleConfirmDelete() {
+    try {
+      setDeleting(true);
+      await deleteBinder(binder.id);
+      navigation.navigate('Binders', {deleted: binder});
+    } catch (error) {
+      reportError(error);
+    }
   }
 
   return (
@@ -143,14 +163,22 @@ export default function BinderDetailScreen({navigation, route}) {
       <AddSongsToBinderBottomSheet
         visible={addSongsSheetVisible}
         onDismiss={() => setAddSongsSheetVisible(false)}
-        selectedSongIds={binder.songs?.map(song => song.id)}
-        binderId={binder.id}
+        selectedSongIds={binder?.songs?.map(song => song.id)}
+        binderId={binder?.id}
         onSongsAdded={handleSongsAdded}
       />
       <BinderOptionsBottomSheet
         visible={optionsSheetVisible}
         onDismiss={() => setOptionsSheetVisible(false)}
+        onDelete={() => setConfirmDeleteVisible(true)}
         onNavigateTo={handleNavigateTo}
+      />
+      <ConfirmDeleteModal
+        visible={confirmDeleteVisible}
+        deleting={deleting}
+        onDelete={handleConfirmDelete}
+        onDismiss={() => setConfirmDeleteVisible(false)}
+        message="Are you sure you'd like to delete this binder? Deleting this binder will not delete any songs from your library."
       />
     </View>
   );

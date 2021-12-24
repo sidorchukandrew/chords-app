@@ -1,4 +1,5 @@
 import {constructAuthHeaders, getTeamId} from '../utils/auth';
+
 import api from './api';
 
 export default class SongsApi {
@@ -21,5 +22,17 @@ export default class SongsApi {
     };
 
     return api().post('/songs', params, {headers: constructAuthHeaders()});
+  }
+
+  static updateOne(songId, updates) {
+    return api().put(`/songs/${songId}`, updates, {
+      headers: constructAuthHeaders(),
+    });
+  }
+
+  static deleteOne(songId) {
+    return api().delete(`/songs/${songId}?team_id=${getTeamId()}`, {
+      headers: constructAuthHeaders(),
+    });
   }
 }

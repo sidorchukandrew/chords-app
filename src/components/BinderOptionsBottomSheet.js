@@ -1,57 +1,78 @@
+import {DELETE_BINDERS, EDIT_BINDERS} from '../utils/auth';
 import React, {useEffect, useRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import RectButton from './RectButton';
+
+import BottomSheet from './BottomSheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import BottomSheetModal from './BottomSheetModal';
+import RectButton from './RectButton';
+import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useSelector} from 'react-redux';
 
 export default function BinderOptionsBottomSheet({
   visible,
   onDismiss,
   onNavigateTo,
+  onDelete,
 }) {
   const sheetRef = useRef();
+  const currentMember = useSelector(selectCurrentMember);
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
   }, [visible, sheetRef]);
 
-  function handleNavigateTo(route) {
+  function handleDelete() {
     sheetRef.current?.dismiss();
     onDismiss();
-    onNavigateTo(route);
+    onDelete();
+  }
+
+  function handleEdit() {
+    sheetRef.current?.dismiss();
+    onDismiss();
+    onNavigateTo('Edit Binder Details');
   }
 
   return (
-    <BottomSheetModal
+    <BottomSheet
+      snapPoints={['40%', '60%']}
       onDismiss={onDismiss}
-      ref={sheetRef}
-      snapPoints={['10%']}
-      detached>
-      <View style={styles.container}>
-        <RectButton
-          styles={styles.button}
-          onPress={() => handleNavigateTo('Edit Binder Details')}>
-          <Icon name="pencil" size={18} color="#2464eb" />
-          <Text style={styles.buttonText}>Edit</Text>
-        </RectButton>
-        <RectButton styles={styles.button}>
-          <Icon name="delete" size={18} color="#2464eb" />
-          <Text style={styles.buttonText}>Delete</Text>
-        </RectButton>
+      ref={sheetRef}>
+      <View style={styles.sheet}>
+        {currentMember.can(EDIT_BINDERS) && (
+          <RectButton styles={styles.button} onPress={handleEdit}>
+            <Icon name="pencil" size={20} color="#505050" />
+            <Text style={styles.buttonText}>Edit</Text>
+          </RectButton>
+        )}
+        {currentMember.can(DELETE_BINDERS) && (
+          <RectButton styles={styles.button} onPress={handleDelete}>
+            <Icon name="delete" size={20} color="#ef4444" />
+            <Text style={[styles.buttonText, styles.deleteColor]}>Delete</Text>
+          </RectButton>
+        )}
       </View>
-    </BottomSheetModal>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 15,
+  sheet: {
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+    flex: 1,
   },
   button: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonText: {
+    color: '#505050',
     fontWeight: '600',
     marginLeft: 10,
+    fontSize: 16,
+  },
+  deleteColor: {
+    color: '#ef4444',
   },
 });

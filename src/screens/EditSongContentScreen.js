@@ -1,36 +1,75 @@
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
 
 import Container from '../components/Container';
+import LoadingIndicator from '../components/LoadingIndicator';
+import {reportError} from '../utils/error';
+import {updateSong} from '../services/songsService';
 
 export default function EditSongContentScreen({navigation, route}) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Save</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
   const [localContent, setLocalContent] = useState(
     route?.params?.content || '',
   );
+  const [song, setSong] = useState(route?.params);
+
+  const [dirty, setDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const handleGoBack = useCallback(() => {
+    navigation.navigate('Song Detail', song);
+  }, [song.content]);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.saveButton}
+          disabled={!dirty}
+          onPress={handleSave}>
+          {saving ? (
+            <LoadingIndicator />
+          ) : (
+            <Text
+              style={[styles.saveButtonText, !dirty && styles.disabledText]}>
+              Save
+            </Text>
+          )}
+        </TouchableOpacity>
+      ),
+      headerLeft: props => (
+        <TouchableOpacity {...props} onPress={handleGoBack}>
+          <Text style={styles.saveButtonText}>Done</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, dirty, saving, handleGoBack, localContent]);
+
+  function handleContentChange(newContent) {
+    setDirty(true);
+    setLocalContent(newContent);
+  }
+
+  async function handleSave() {
+    try {
+      setSaving(true);
+      await updateSong(song.id, {content: localContent});
+      setDirty(false);
+      setSong(currentSong => ({...currentSong, content: localContent}));
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <Container size="lg" style={styles.container}>
       <TextInput
         value={localContent}
-        onChangeText={setLocalContent}
+        onChangeText={handleContentChange}
         multiline
         style={styles.input}
+        placeholder="Start typing here"
       />
     </Container>
   );
@@ -42,7 +81,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   input: {
-    backgroundColor: 'red',
     height: '100%',
     marginBottom: 10,
     textAlignVertical: 'top',
@@ -55,5 +93,8 @@ const styles = StyleSheet.create({
     color: '#2464eb',
     fontWeight: '600',
     fontSize: 17,
+  },
+  disabledText: {
+    color: '#d0d0d0',
   },
 });

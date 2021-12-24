@@ -1,19 +1,20 @@
-import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import CircleButton from '../components/CircleButton';
-import KeyBadge from '../components/KeyBadge';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Container from '../components/Container';
-import SearchFilterBar from '../components/SearchFilterBar';
-import {reportError} from '../utils/error';
-import {getAllSongs} from '../services/songsService';
+import React, {useEffect, useState} from 'react';
 
-import LoadingIndicator from '../components/LoadingIndicator';
-import {hasAnyKeysSet} from '../utils/song';
-import {useSelector} from 'react-redux';
-import {selectCurrentMember} from '../redux/slices/authSlice';
 import {ADD_SONGS} from '../utils/auth';
+import CircleButton from '../components/CircleButton';
+import Container from '../components/Container';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ItemSeparator from '../components/ItemSeparator';
+import KeyBadge from '../components/KeyBadge';
+import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
+import SearchFilterBar from '../components/SearchFilterBar';
+import {getAllSongs} from '../services/songsService';
+import {hasAnyKeysSet} from '../utils/song';
+import {reportError} from '../utils/error';
+import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useSelector} from 'react-redux';
 
 export default function SongsIndexScreen({navigation, route}) {
   const [songs, setSongs] = useState([]);
@@ -27,7 +28,14 @@ export default function SongsIndexScreen({navigation, route}) {
       setSongs(currentSongs => [...currentSongs, route.params.created]);
       navigation.navigate('Song Detail', route.params.created);
     }
-  }, [route?.params?.created, navigation]);
+
+    if (route?.params?.deleted) {
+      setSongs(currentSongs => {
+        let idToDelete = route.params.deleted.id;
+        return currentSongs.filter(song => song.id !== idToDelete);
+      });
+    }
+  }, [route?.params?.created, navigation, route?.params?.deleted]);
 
   useEffect(() => {
     async function fetchData() {
@@ -96,6 +104,7 @@ export default function SongsIndexScreen({navigation, route}) {
       <FlatList
         onRefresh={handleRefresh}
         refreshing={refreshing}
+        ItemSeparatorComponent={ItemSeparator}
         ListHeaderComponent={
           <SearchFilterBar
             query={query}
@@ -138,8 +147,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e5e5',
   },
   keyBadge: {
     marginLeft: 10,

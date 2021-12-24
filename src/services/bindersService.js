@@ -21,3 +21,16 @@ export function createBinder(binder) {
 export function addSongsToBinder(binderId, songIds) {
   return BindersApi.addSongs(binderId, songIds);
 }
+
+export function deleteBinder(binderId) {
+  return BindersApi.deleteOne(binderId);
+}
+
+export function updateBinder(binderId, updates) {
+  let params = {
+    ...updates,
+    team_id: getTeamId(),
+  };
+
+  return BindersApi.updateOne(binderId, params);
+}

@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {deleteSong, getSongById} from '../services/songsService';
 
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -14,14 +16,22 @@ import SegmentedControl from '../components/SegmentedControl';
 import SongContentTab from '../components/SongContentTab';
 import SongDetailsTab from '../components/SongDetailsTab';
 import SongOptionsBottomSheet from '../components/SongOptionsBottomSheet';
-import {getSongById} from '../services/songsService';
 import {reportError} from '../utils/error';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
   const [song, setSong] = useState(route.params);
   const [loading, setLoading] = useState(false);
+  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route.params) setSong(route.params);
+    }, [route]),
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -74,7 +84,17 @@ export default function SongDetailScreen({navigation, route}) {
   }
 
   function handleNavigateTo(route) {
-    navigation.navigate(route);
+    navigation.navigate(route, song);
+  }
+
+  async function handleDelete() {
+    try {
+      setDeleting(true);
+      await deleteSong(song.id);
+      navigation.navigate('Songs', {deleted: song});
+    } catch (error) {
+      reportError(error);
+    }
   }
 
   return (
@@ -93,6 +113,14 @@ export default function SongDetailScreen({navigation, route}) {
       <SongOptionsBottomSheet
         visible={optionsSheetVisible}
         onDismiss={() => setOptionsSheetVisible(false)}
+        onDelete={() => setConfirmDeleteVisible(true)}
+      />
+      <ConfirmDeleteModal
+        visible={confirmDeleteVisible}
+        onDismiss={() => setConfirmDeleteVisible(false)}
+        message="Are you sure you'd like to delete this song? This action is irreversible."
+        deleting={deleting}
+        onDelete={handleDelete}
       />
     </>
   );
@@ -107,116 +135,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-
-const content = `
-[Intro]
-C Em D x2
- 
-[Verse 1]
-C
-You’re not going anywhere
-G
-I’m not going anywhere
-D
-I’m just gonna stay right here
-Em             D
-I’m just gonna wait here
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Intro]
-C Em D x2
- 
-[Verse 2]
-C
-You’re not going anywhere
-G
-I’m not going anywhere
-D
-Let Your love quiet fear
-Em            D
-Let Your love be near
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Instrumental]
-Am Em G D
- 
-[Bridge]
-          Am                    Em
-You’re my one desire, You’re my one desire
-G                            D
-Everything that I’m seeking, everything that I want
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Intro]
-C Em D x6
- 
-[Bridge 2]
-C                 Em
-You’re my refuge, You’re my strength
-D
-You’re my rest, my hiding place
-C                 Em
-You’re my refuge, You’re my strength
-D
-I abide in You, Jesus
- 
-[Chorus]
-C
-I am Yours, You are mine
-G
-My reward, my delight
-Em          D
-All my life I abide in You
-C
-I’m the branch, you’re the Vine
-G
-Everything I want to find
-Em          D
-All my life I abide in You
- 
-[Intro]
-C Em D x4
- 
-[Outro]
-C       Em   D
-All my life, I abide in You
-`;

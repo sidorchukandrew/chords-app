@@ -1,20 +1,21 @@
-import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import React, {useEffect, useState} from 'react';
+
+import {ADD_BINDERS} from '../utils/auth';
+import BinderColorSwatch from '../components/BinderColorSwatch';
 import CircleButton from '../components/CircleButton';
+import Container from '../components/Container';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import List from '../components/List';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import BinderColorSwatch from '../components/BinderColorSwatch';
-import Container from '../components/Container';
-import SearchFilterBar from '../components/SearchFilterBar';
 import LoadingIndicator from '../components/LoadingIndicator';
-import {reportError} from '../utils/error';
-import {getAllBinders} from '../services/bindersService';
-import {useSelector} from 'react-redux';
-import {selectCurrentMember} from '../redux/slices/authSlice';
 import NoDataMessage from '../components/NoDataMessage';
-import {ADD_BINDERS} from '../utils/auth';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import SearchFilterBar from '../components/SearchFilterBar';
+import {getAllBinders} from '../services/bindersService';
+import {reportError} from '../utils/error';
+import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useSelector} from 'react-redux';
 
 export default function BindersIndexScreen({navigation, route}) {
   const [query, setQuery] = useState('');
@@ -27,7 +28,14 @@ export default function BindersIndexScreen({navigation, route}) {
       setBinders(currentBinders => [...currentBinders, route.params.created]);
       navigation.navigate('Binder Detail', route.params.created);
     }
-  }, [route?.params?.created, navigation]);
+
+    if (route?.params?.deleted) {
+      setBinders(currentBinders => {
+        let idToDelete = route.params.deleted.id;
+        return currentBinders.filter(binder => binder.id !== idToDelete);
+      });
+    }
+  }, [route?.params?.created, navigation, route?.params?.deleted]);
 
   useEffect(() => {
     async function fetchData() {

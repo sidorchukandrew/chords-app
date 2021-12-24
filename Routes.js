@@ -171,7 +171,7 @@ export default function Routes() {
                 options={{
                   headerShown: false,
                   presentation: 'fullScreenModal',
-                  title: 'Edit Binder',
+                  title: 'Edit',
                 }}
               />
             </>

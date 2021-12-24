@@ -13,8 +13,9 @@ const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
       setWindowWidth(window.width);
     }
   }, [window]);
+
   function getHorizontalMargins() {
-    let calculatedMargin = (windowWidth - 375) / 2;
+    let calculatedMargin = (windowWidth - 475) / 2;
     let minMargin = 10;
 
     let actualMargin = calculatedMargin < 1 ? minMargin : calculatedMargin;

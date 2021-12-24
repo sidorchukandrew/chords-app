@@ -38,7 +38,9 @@ export default function SongContentTab({song, onPerform, onEdit}) {
           Perform
         </AccentButton>
       </View>
-      <Text>{song.content || 'No lyrics have been added yet'}</Text>
+      <Text style={styles.content}>
+        {song.content || 'No lyrics have been added yet'}
+      </Text>
     </Container>
   );
 }
@@ -52,5 +54,9 @@ const styles = StyleSheet.create({
   },
   shortcutIcon: {
     marginRight: 8,
+  },
+  content: {
+    marginVertical: 10,
+    color: 'black',
   },
 });

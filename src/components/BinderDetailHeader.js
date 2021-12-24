@@ -1,22 +1,23 @@
-import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+
 import BinderColorSwatch from './BinderColorSwatch';
+import React from 'react';
 import SearchFilterBar from './SearchFilterBar';
 
 export default function BinderDetailHeader({binder, query, onQueryChange}) {
   return (
     <View style={styles.container}>
       <View style={styles.colorTitleContainer}>
-        {binder.color && (
-          <BinderColorSwatch color={binder.color} style={{marginRight: 10}} />
+        {Boolean(binder?.color) && (
+          <BinderColorSwatch color={binder?.color} style={{marginRight: 10}} />
         )}
         <Text style={styles.title}>{binder?.name}</Text>
       </View>
       <Text style={styles.description}>
-        {binder.description || 'No description provided yet'}
+        {binder?.description || 'No description provided yet'}
       </Text>
       <SearchFilterBar
-        placeholder={`Search ${binder.songs?.length} songs`}
+        placeholder={`Search ${binder?.songs?.length} songs`}
         query={query}
         onQueryChange={onQueryChange}
       />
