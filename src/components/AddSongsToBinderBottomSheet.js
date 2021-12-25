@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 
 import BottomSheet from './BottomSheet';
 import Button from './Button';
@@ -23,10 +23,18 @@ export default function AddSongsToBinderBottomSheet({
   onSongsAdded,
 }) {
   const sheetRef = useRef();
-  const [unboundSongs, setUnboundSongs] = useState([]);
   const [songsToAdd, setSongsToAdd] = useState([]);
   const [query, setQuery] = useState('');
   const [saving, setSaving] = useState(false);
+  const [allSongs, setAllSongs] = useState([]);
+
+  const unboundSongs = useMemo(() => {
+    if (selectedSongIds && allSongs) {
+      return allSongs.filter(song => !selectedSongIds.includes(song.id));
+    } else {
+      return [];
+    }
+  }, [selectedSongIds, allSongs]);
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -39,16 +47,14 @@ export default function AddSongsToBinderBottomSheet({
     async function fetchData() {
       try {
         let {data} = await getAllSongs();
-        let unbound = data.filter(song => !selectedSongIds.includes(song.id));
-
-        setUnboundSongs(unbound);
+        setAllSongs(data);
       } catch (error) {
         reportError(error);
       }
     }
 
     fetchData();
-  }, [selectedSongIds]);
+  }, []);
 
   function handleToggleSong(isChecked, song) {
     if (isChecked) {

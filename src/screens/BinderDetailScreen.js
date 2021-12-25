@@ -1,13 +1,16 @@
+import React, {useEffect, useState} from 'react';
 import {
-  FlatList,
-  ScrollView,
   StyleSheet,
   Text,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {deleteBinder, getBinderById} from '../services/bindersService';
+import {
+  deleteBinder,
+  getBinderById,
+  removeSongFromBinder,
+} from '../services/bindersService';
 
 import AddSongsToBinderBottomSheet from '../components/AddSongsToBinderBottomSheet';
 import BinderDetailHeader from '../components/BinderDetailHeader';
@@ -16,9 +19,12 @@ import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import Container from '../components/Container';
 import {EDIT_BINDERS} from '../utils/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ItemSeparator from '../components/ItemSeparator';
 import KeyBadge from '../components/KeyBadge';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
+import SwipeListDeleteButton from '../components/SwipeListDeleteButton';
+import {SwipeListView} from 'react-native-swipe-list-view';
 import {hasAnyKeysSet} from '../utils/song';
 import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
@@ -81,16 +87,19 @@ export default function BinderDetailScreen({navigation, route}) {
 
   function renderRow({item: song}) {
     return (
-      <TouchableOpacity
+      <TouchableHighlight
         style={styles.row}
-        onPress={() => handleNavigateToSong(song)}>
-        <Text style={styles.songName}>{song.name}</Text>
-        {hasAnyKeysSet(song) && (
-          <KeyBadge style={styles.keyBadge}>
-            {song.transposed_key || song.original_key}
-          </KeyBadge>
-        )}
-      </TouchableOpacity>
+        onPress={() => handleNavigateToSong(song)}
+        underlayColor="white">
+        <>
+          <Text style={styles.songName}>{song.name}</Text>
+          {hasAnyKeysSet(song) && (
+            <KeyBadge style={styles.keyBadge}>
+              {song.transposed_key || song.original_key}
+            </KeyBadge>
+          )}
+        </>
+      </TouchableHighlight>
     );
   }
 
@@ -143,11 +152,35 @@ export default function BinderDetailScreen({navigation, route}) {
     }
   }
 
+  async function handleRemoveSong(songIdToRemove) {
+    setBinder(currentBinder => {
+      let updatedSongs = currentBinder.songs?.filter(
+        song => song.id !== songIdToRemove,
+      );
+      return {...currentBinder, songs: updatedSongs};
+    });
+
+    try {
+      await removeSongFromBinder(binder.id, songIdToRemove);
+    } catch (error) {
+      reportError(error);
+    }
+  }
+
+  function renderHiddenItem({item: song}) {
+    return (
+      <View style={styles.hiddenRow}>
+        <SwipeListDeleteButton onPress={() => handleRemoveSong(song.id)} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Container size="lg">
-        <FlatList
-          style={{height: '100%'}}
+        <SwipeListView
+          data={filteredSongs()}
+          renderItem={renderRow}
           ListHeaderComponent={
             <BinderDetailHeader
               binder={binder}
@@ -156,8 +189,14 @@ export default function BinderDetailScreen({navigation, route}) {
             />
           }
           ListEmptyComponent={renderNoData}
-          data={filteredSongs()}
-          renderItem={renderRow}
+          renderHiddenItem={
+            currentMember.can(EDIT_BINDERS) ? renderHiddenItem : null
+          }
+          ItemSeparatorComponent={ItemSeparator}
+          style={{height: '100%'}}
+          rightOpenValue={-75}
+          stopRightSwipe={-100}
+          disableRightSwipe
         />
       </Container>
       <AddSongsToBinderBottomSheet
@@ -205,10 +244,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e5e5',
+    backgroundColor: 'white',
   },
   keyBadge: {
     marginLeft: 10,
+  },
+  hiddenRow: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
 });

@@ -6,11 +6,8 @@ import CircleButton from '../components/CircleButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import LoadingIndicator from '../components/LoadingIndicator';
-import PreviousSetsList from '../components/PreviousSetsList';
 import SearchFilterBar from '../components/SearchFilterBar';
 import SegmentedControl from '../components/SegmentedControl';
-import UpcomingSetsList from '../components/UpcomingSetsList';
-import dayjs from 'dayjs';
 import {getAllSetlists} from '../services/setlistsService';
 import {reportError} from '../utils/error';
 
@@ -32,7 +29,13 @@ export default function SetlistsIndexScreen({navigation, route}) {
       }
       navigation.navigate('Setlist Detail', createdSetlist);
     }
-  }, [route?.params?.created]);
+
+    if (route?.params?.deleted) {
+      const idToDelete = route.params.deleted.id;
+      setPastSets(sets => sets.filter(set => set.id !== idToDelete));
+      setUpcomingSets(sets => sets.filter(set => set.id !== idToDelete));
+    }
+  }, [route?.params?.created, route?.params?.deleted]);
 
   useEffect(() => {
     async function fetchData() {

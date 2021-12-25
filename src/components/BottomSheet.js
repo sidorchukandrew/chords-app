@@ -1,12 +1,28 @@
 import {BottomSheetBackdrop, BottomSheetModal} from '@gorhom/bottom-sheet';
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 
 const BottomSheet = React.forwardRef(
   ({children, snapPoints = ['25%', '50%'], onDismiss, detached}, sheetRef) => {
+    const [windowWidth, setWindowWidth] = useState(0);
+    const window = useWindowDimensions();
+
+    useEffect(() => {
+      setWindowWidth(window.width);
+    }, [window]);
+
+    function getHorizontalMargins() {
+      let calculatedMargin = (windowWidth - 450) / 2;
+      let minMargin = 0;
+
+      let actualMargin = calculatedMargin < 1 ? minMargin : calculatedMargin;
+
+      return {marginHorizontal: actualMargin};
+    }
+
     return (
       <BottomSheetModal
-        style={styles.shadow}
+        style={[styles.shadow, getHorizontalMargins()]}
         onDismiss={onDismiss}
         ref={sheetRef}
         index={0}

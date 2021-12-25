@@ -42,4 +42,11 @@ export default class BindersApi {
       );
     }
   }
+
+  static removeSong(binderId, songId) {
+    return api().delete(
+      `/binders/${binderId}/songs?song_ids[]=${songId}&team_id=${getTeamId()}`,
+      {headers: constructAuthHeaders()},
+    );
+  }
 }

@@ -1,4 +1,4 @@
-import {
+import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetView,
@@ -10,12 +10,11 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import RectButton from './RectButton';
-import {useState} from 'react/cjs/react.development';
 
 export default function AppMenu({visible, onClose, onNavigateTo}) {
   const sheetRef = useRef();
@@ -23,9 +22,9 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
   const window = useWindowDimensions();
 
   useEffect(() => {
-    if (windowWidth > window.width || windowWidth === 0) {
-      setWindowWidth(window.width);
-    }
+    // if (windowWidth > window.width || windowWidth === 0) {
+    setWindowWidth(window.width);
+    // }
   }, [window]);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
       onDismiss={onClose}
       ref={sheetRef}
       detached
-      bottomInset={46}
+      bottomInset={146}
       style={[styles.container, getHorizontalMargins()]}
       contentHeight={200}
       backdropComponent={props => (

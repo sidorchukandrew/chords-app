@@ -27,3 +27,20 @@ export function addSongsToSetlist(setlistId, songIds) {
 
   return SetlistsApi.addSongs(setlistId, params);
 }
+
+export function removeSongFromSetlist(setlistId, songId) {
+  return SetlistsApi.removeSong(setlistId, songId);
+}
+
+export function deleteSetlist(setlistId) {
+  return SetlistsApi.deleteOne(setlistId);
+}
+
+export function updateSetlist(setlistId, updates) {
+  let params = {
+    team_id: getTeamId(),
+    ...updates,
+  };
+
+  return SetlistsApi.updateOne(setlistId, params);
+}

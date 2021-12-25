@@ -34,3 +34,7 @@ export function updateBinder(binderId, updates) {
 
   return BindersApi.updateOne(binderId, params);
 }
+
+export function removeSongFromBinder(binderId, songId) {
+  return BindersApi.removeSong(binderId, songId);
+}

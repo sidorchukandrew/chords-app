@@ -11,6 +11,7 @@ import CreateSongModal from './src/modals/CreateSongModal';
 import CreateTeamScreen from './src/screens/CreateTeamScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import EditBinderDetailsModal from './src/modals/EditBinderDetailsModal';
+import EditSetlistDetailsModal from './src/modals/EditSetlistDetailsModal';
 import EditSongContentScreen from './src/screens/EditSongContentScreen';
 import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
@@ -168,6 +169,16 @@ export default function Routes() {
               <Stack.Screen
                 name="Edit Binder Details"
                 component={EditBinderDetailsModal}
+                options={{
+                  headerShown: false,
+                  presentation: 'fullScreenModal',
+                  title: 'Edit',
+                }}
+              />
+
+              <Stack.Screen
+                name="Edit Setlist Details"
+                component={EditSetlistDetailsModal}
                 options={{
                   headerShown: false,
                   presentation: 'fullScreenModal',

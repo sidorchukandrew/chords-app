@@ -24,4 +24,23 @@ export default class SetlistsApi {
       headers: constructAuthHeaders(),
     });
   }
+
+  static removeSong(setlistId, songId) {
+    return api().delete(
+      `/setlists/${setlistId}/songs?song_ids[]=${songId}&team_id=${getTeamId()}`,
+      {headers: constructAuthHeaders()},
+    );
+  }
+
+  static deleteOne(setlistId) {
+    return api().delete(`/setlists/${setlistId}?team_id=${getTeamId()}`, {
+      headers: constructAuthHeaders(),
+    });
+  }
+
+  static updateOne(setlistId, updates) {
+    return api().put(`/setlists/${setlistId}`, updates, {
+      headers: constructAuthHeaders(),
+    });
+  }
 }

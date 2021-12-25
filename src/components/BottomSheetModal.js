@@ -9,9 +9,7 @@ const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
   const window = useWindowDimensions();
 
   useEffect(() => {
-    if (windowWidth > window.width || windowWidth === 0) {
-      setWindowWidth(window.width);
-    }
+    setWindowWidth(window.width);
   }, [window]);
 
   function getHorizontalMargins() {
@@ -22,13 +20,14 @@ const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
 
     return {marginHorizontal: actualMargin};
   }
+
   return (
     <LibBottomSheetModal
       snapPoints={['50%']}
       onDismiss={onDismiss}
       ref={ref}
-      detached
-      bottomInset={46}
+      detached={true}
+      bottomInset={146}
       style={[styles.container, getHorizontalMargins()]}
       contentHeight={200}
       backdropComponent={props => (
