@@ -1,13 +1,14 @@
-import React, {useRef, useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import KeyOptionsBottomSheetScreen from './KeyOptionsBottomSheetScreen';
-import TransposeBottomSheetScreen from './TransposeBottomSheetScreen';
-import CapoBottomSheetScreen from './CapoBottomSheetScreen';
+import React, {useEffect, useRef} from 'react';
+
 import BottomSheet from './BottomSheet';
+import CapoBottomSheetScreen from './CapoBottomSheetScreen';
+import KeyOptionsBottomSheetScreen from './KeyOptionsBottomSheetScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import TransposeBottomSheetScreen from './TransposeBottomSheetScreen';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
-export default function KeyOptionsBottomSheet({visible, onDismiss}) {
+export default function KeyOptionsBottomSheet({visible, onDismiss, song}) {
   const bottomSheetRef = useRef();
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function KeyOptionsBottomSheet({visible, onDismiss}) {
 
   return (
     <BottomSheet
-      snapPoints={['30%', '50%']}
+      snapPoints={['30%', '50%', '70%']}
       ref={bottomSheetRef}
       onDismiss={onDismiss}>
       <NavigationContainer independent>
@@ -24,6 +25,7 @@ export default function KeyOptionsBottomSheet({visible, onDismiss}) {
           <Stack.Screen
             name="KeyOptions Options"
             component={KeyOptionsBottomSheetScreen}
+            initialParams={song}
             options={() => ({
               headerShown: false,
             })}
@@ -31,14 +33,17 @@ export default function KeyOptionsBottomSheet({visible, onDismiss}) {
           <Stack.Screen
             name="KeyOptions Transpose"
             component={TransposeBottomSheetScreen}
+            initialParams={song}
             options={() => ({
-              title: '',
+              title: 'Transpose',
               headerShadowVisible: false,
+              headerTitleAlign: 'center',
             })}
           />
           <Stack.Screen
             name="KeyOptions Capo"
             component={CapoBottomSheetScreen}
+            initialParams={song}
             options={() => ({
               title: '',
               headerShadowVisible: false,

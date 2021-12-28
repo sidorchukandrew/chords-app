@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useState} from 'react/cjs/react.development';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Button from '../components/Button';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
+import {hasAnyKeysSet} from '../utils/song';
 
 export default function PerformSongScreen({route, navigation}) {
   const [song, setSong] = useState(route.params);
@@ -27,11 +28,13 @@ export default function PerformSongScreen({route, navigation}) {
             alignItems: 'center',
             width: 100,
           }}>
-          <Button
-            style={{marginRight: 10, paddingHorizontal: 12}}
-            onPress={() => setKeyOptionsVisible(true)}>
-            Ab
-          </Button>
+          {hasAnyKeysSet(song) && (
+            <Button
+              style={{marginRight: 15, height: 35, width: 35, borderRadius: 8}}
+              onPress={() => setKeyOptionsVisible(true)}>
+              {song.transposed_key || song.original_key}
+            </Button>
+          )}
           <TouchableOpacity
             style={{padding: 3}}
             onPress={() => setAdjustmentsSheetVisible(true)}>
@@ -45,7 +48,7 @@ export default function PerformSongScreen({route, navigation}) {
         </Text>
       ),
     });
-  }, [navigation]);
+  }, [navigation, song]);
   return (
     <>
       <ScrollView style={styles.container}>
@@ -54,6 +57,7 @@ export default function PerformSongScreen({route, navigation}) {
       <KeyOptionsBottomSheet
         visible={keyOptionsVisible}
         onDismiss={() => setKeyOptionsVisible(false)}
+        song={song}
       />
       <SongAdjustmentsBottomSheet
         visible={adjustmentsSheetVisible}

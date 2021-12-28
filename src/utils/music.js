@@ -83,3 +83,43 @@ export const COMMON_METERS = [
     bottom: '8',
   },
 ];
+
+export function getHalfStepHigher(key) {
+  let keys = isMinor(key) ? MINOR_KEYS : MAJOR_KEYS;
+
+  let indexOfKey = keys.findIndex(keyInList => keyInList === key);
+  if (indexOfKey > -1) {
+    let indexOfNextKey = (indexOfKey + 1) % keys.length;
+    return keys[indexOfNextKey];
+  } else {
+    return key;
+  }
+}
+
+export function getHalfStepLower(key) {
+  let keys = isMinor(key) ? MINOR_KEYS : MAJOR_KEYS;
+
+  let indexOfKey = keys.findIndex(keyInList => keyInList === key);
+  if (indexOfKey > -1) {
+    let indexOfNextKey;
+
+    if (indexOfKey - 1 === -1) {
+      indexOfNextKey = keys.length - 1;
+    } else {
+      indexOfNextKey = indexOfKey - 1;
+    }
+
+    return keys[indexOfNextKey];
+  } else {
+    return key;
+  }
+}
+
+export function isMinor(key) {
+  if (key) {
+    let lastChar = key.charAt(key.length - 1);
+    return lastChar === 'm';
+  } else {
+    return key;
+  }
+}
