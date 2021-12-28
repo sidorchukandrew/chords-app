@@ -37,7 +37,7 @@ export default function KeyOptionsBottomSheet({visible, onDismiss, song}) {
             options={() => ({
               title: 'Transpose',
               headerShadowVisible: false,
-              headerTitleAlign: 'center',
+              headerTitleAlign: 'left',
             })}
           />
           <Stack.Screen
@@ -45,8 +45,9 @@ export default function KeyOptionsBottomSheet({visible, onDismiss, song}) {
             component={CapoBottomSheetScreen}
             initialParams={song}
             options={() => ({
-              title: '',
+              title: 'Capo',
               headerShadowVisible: false,
+              headerTitleAlign: 'left',
             })}
           />
         </Stack.Navigator>

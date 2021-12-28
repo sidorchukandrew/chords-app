@@ -123,3 +123,75 @@ export function isMinor(key) {
     return key;
   }
 }
+
+export function semitonesAway(keyOne, keyTwo, chromaticScale = SEMITONES) {
+  return Math.abs(chromaticScale[keyOne] - chromaticScale[keyTwo]);
+}
+
+export const SEMITONES = {
+  A: 0,
+  'A#': 1,
+  Bb: 1,
+  B: 2,
+  C: 3,
+  'C#': 4,
+  Db: 4,
+  D: 5,
+  'D#': 6,
+  Eb: 6,
+  E: 7,
+  F: 8,
+  'F#': 9,
+  Gb: 9,
+  G: 10,
+  'G#': 11,
+  Ab: 11,
+};
+
+const SEMITONES_ARRAY = [
+  ['A'],
+  ['A#', 'Bb'],
+  ['B'],
+  ['C'],
+  ['C#', 'Db'],
+  ['D'],
+  ['D#', 'Eb'],
+  ['E'],
+  ['F'],
+  ['F#', 'Gb'],
+  ['G'],
+  ['G#', 'Ab'],
+];
+
+export function buildChromaticScale(startingNote) {
+  let chromaticScale = {};
+  let index = SEMITONES[startingNote];
+  let scaleIndex = 0;
+
+  do {
+    for (
+      let enharmonicIndex = 0;
+      enharmonicIndex < SEMITONES_ARRAY[index].length;
+      ++enharmonicIndex
+    ) {
+      chromaticScale[SEMITONES_ARRAY[index][enharmonicIndex]] = scaleIndex;
+    }
+    index = (index + 1) % 12;
+    scaleIndex++;
+  } while (index !== SEMITONES[startingNote]);
+
+  return chromaticScale;
+}
+
+export function parseNote(key) {
+  if (key?.length > 0) {
+    if (isMinor(key)) {
+      let notePart = key.substring(0, key.length - 1);
+      return notePart;
+    } else {
+      return key;
+    }
+  } else {
+    return key;
+  }
+}

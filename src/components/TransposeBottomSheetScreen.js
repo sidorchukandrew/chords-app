@@ -2,19 +2,23 @@ import {MAJOR_KEYS, MINOR_KEYS, isMinor} from '../utils/music';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import KeyOptionButton from './KeyOptionButton';
 import OrDivider from './OrDivider';
+import {ScrollView} from 'react-native-gesture-handler';
 import TransposeButtons from './TransposeButtons';
+import {updateSongOnScreen} from '../redux/slices/performanceSlice';
+import {useDispatch} from 'react-redux';
 
 export default function TransposeBottomSheetScreen({route}) {
   const [song, setSong] = useState(route?.params);
-  const [keys, setKeys] = useState(() => {
+  const [keys] = useState(() => {
     return isMinor(song.original_key) ? MINOR_KEYS : MAJOR_KEYS;
   });
+  const dispatch = useDispatch();
 
   function handleChange(newKey) {
     setSong(currentSong => ({...currentSong, transposed_key: newKey}));
+    dispatch(updateSongOnScreen({transposed_key: newKey}));
   }
 
   return (
@@ -24,7 +28,7 @@ export default function TransposeBottomSheetScreen({route}) {
         onChange={handleChange}
       />
       <OrDivider />
-      <BottomSheetScrollView horizontal style={styles.keyOptions}>
+      <ScrollView horizontal style={styles.keyOptions}>
         {keys.map(songKey => (
           <KeyOptionButton
             key={songKey}
@@ -33,7 +37,8 @@ export default function TransposeBottomSheetScreen({route}) {
             {songKey}
           </KeyOptionButton>
         ))}
-      </BottomSheetScrollView>
+      </ScrollView>
+      <View style={styles.saveContainer}></View>
     </View>
   );
 }
@@ -44,5 +49,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
   },
-  keyOptions: {},
+  keyOptions: {
+    maxHeight: 60,
+  },
+  saveContainer: {
+    flex: 1,
+  },
 });

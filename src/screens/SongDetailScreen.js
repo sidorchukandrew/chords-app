@@ -17,6 +17,8 @@ import SongContentTab from '../components/SongContentTab';
 import SongDetailsTab from '../components/SongDetailsTab';
 import SongOptionsBottomSheet from '../components/SongOptionsBottomSheet';
 import {reportError} from '../utils/error';
+import {setSongOnScreen} from '../redux/slices/performanceSlice';
+import {useDispatch} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 
 export default function SongDetailScreen({navigation, route}) {
@@ -26,7 +28,7 @@ export default function SongDetailScreen({navigation, route}) {
   const [loading, setLoading] = useState(false);
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [deleting, setDeleting] = useState(false);
-
+  const dispatch = useDispatch();
   useFocusEffect(
     React.useCallback(() => {
       if (route.params) setSong(route.params);
@@ -62,6 +64,7 @@ export default function SongDetailScreen({navigation, route}) {
   }, [navigation]);
 
   function handlePerformSong() {
+    dispatch(setSongOnScreen(song));
     navigation.navigate('Perform Song', song);
   }
 

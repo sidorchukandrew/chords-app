@@ -6,15 +6,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {getPreferredKey, hasAnyKeysSet} from '../utils/song';
 
 import Button from '../components/Button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
-import {hasAnyKeysSet} from '../utils/song';
+import {selectSongOnScreen} from '../redux/slices/performanceSlice';
+import {useSelector} from 'react-redux';
 
 export default function PerformSongScreen({route, navigation}) {
-  const [song, setSong] = useState(route.params);
+  const song = useSelector(selectSongOnScreen);
   const [keyOptionsVisible, setKeyOptionsVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
 
@@ -32,7 +34,7 @@ export default function PerformSongScreen({route, navigation}) {
             <Button
               style={{marginRight: 15, height: 35, width: 35, borderRadius: 8}}
               onPress={() => setKeyOptionsVisible(true)}>
-              {song.transposed_key || song.original_key}
+              {getPreferredKey(song)}
             </Button>
           )}
           <TouchableOpacity
@@ -52,7 +54,7 @@ export default function PerformSongScreen({route, navigation}) {
   return (
     <>
       <ScrollView style={styles.container}>
-        <Text>{song.content}</Text>
+        <Text style={styles.content}>{song.content}</Text>
       </ScrollView>
       <KeyOptionsBottomSheet
         visible={keyOptionsVisible}
@@ -69,8 +71,11 @@ export default function PerformSongScreen({route, navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: 'white',
     padding: 10,
+  },
+  content: {
+    paddingBottom: 40,
   },
 });
