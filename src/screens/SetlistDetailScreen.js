@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingBottom: 10,
   },
   headerButton: {
     backgroundColor: '#eaeaea',

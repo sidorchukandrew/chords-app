@@ -2,23 +2,40 @@ import {MAJOR_KEYS, MINOR_KEYS, isMinor} from '../utils/music';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 
-import KeyOptionButton from './KeyOptionButton';
-import OrDivider from './OrDivider';
+import KeyOptionButton from '../components/KeyOptionButton';
+import OrDivider from '../components/OrDivider';
 import {ScrollView} from 'react-native-gesture-handler';
-import TransposeButtons from './TransposeButtons';
+import Toggle from '../components/Toggle';
+import TransposeButtons from '../components/TransposeButtons';
 import {updateSongOnScreen} from '../redux/slices/performanceSlice';
 import {useDispatch} from 'react-redux';
 
-export default function TransposeBottomSheetScreen({route}) {
+export default function TransposeBottomSheetScreen({route, navigation}) {
   const [song, setSong] = useState(route?.params);
   const [keys] = useState(() => {
     return isMinor(song.original_key) ? MINOR_KEYS : MAJOR_KEYS;
   });
   const dispatch = useDispatch();
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Toggle enabled={song.show_transposed} onChange={handleToggle} />
+      ),
+    });
+  }, [navigation, song]);
+
   function handleChange(newKey) {
-    setSong(currentSong => ({...currentSong, transposed_key: newKey}));
+    setSong(currentSong => ({
+      ...currentSong,
+      transposed_key: newKey,
+    }));
     dispatch(updateSongOnScreen({transposed_key: newKey}));
+  }
+
+  function handleToggle(toggleValue) {
+    setSong(currentSong => ({...currentSong, show_transposed: toggleValue}));
+    dispatch(updateSongOnScreen({show_transposed: toggleValue}));
   }
 
   return (

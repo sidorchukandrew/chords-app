@@ -183,5 +183,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
+    marginBottom: 10,
   },
 });

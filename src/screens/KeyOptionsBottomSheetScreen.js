@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import RectButton from './RectButton';
+import RectButton from '../components/RectButton';
 import {selectSongOnScreen} from '../redux/slices/performanceSlice';
 import {useSelector} from 'react-redux';
 
@@ -15,13 +15,17 @@ export default function KeyOptionsBottomSheetScreen({navigation}) {
         onPress={() => navigation.navigate('KeyOptions Transpose')}
         styles={styles.button}>
         <Text style={styles.buttonText}>Transpose</Text>
-        {song.transposed_key && <Icon name="check" color="#10b981" size={22} />}
+        {song.show_transposed && song.transposed_key && (
+          <Icon name="check" color="#10b981" size={22} />
+        )}
       </RectButton>
       <RectButton
         onPress={() => navigation.navigate('KeyOptions Capo')}
         styles={styles.button}>
         <Text style={styles.buttonText}>Capo</Text>
-        {song.capo && <Icon name="check" color="#10b981" size={22} />}
+        {song.show_capo && song.capo && (
+          <Icon name="check" color="#10b981" size={22} />
+        )}
       </RectButton>
     </View>
   );

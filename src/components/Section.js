@@ -1,13 +1,14 @@
-import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import Container from './Container';
 
-export default function Section({title, children, button}) {
+import Container from './Container';
+import React from 'react';
+
+export default function Section({title, children, button, showButton}) {
   return (
     <Container style={styles.sectionContainer} size="lg">
       <View style={styles.headerContainer}>
         <Text style={styles.sectionTitle}>{title}</Text>
-        {button}
+        {showButton && button}
       </View>
       <View>{children}</View>
     </Container>

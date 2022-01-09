@@ -1,19 +1,28 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-import CapoOption from './CapoOption';
+import CapoOption from '../components/CapoOption';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ScrollView} from 'react-native-gesture-handler';
+import Toggle from '../components/Toggle';
 import {determineCapos} from '../utils/capo';
 import {updateSongOnScreen} from '../redux/slices/performanceSlice';
 import {useDispatch} from 'react-redux';
 
-export default function CapoBottomSheetScreen({route}) {
+export default function CapoBottomSheetScreen({route, navigation}) {
   const [song, setSong] = useState(route.params);
   const {commonKeys: commonCapos, uncommonKeys: uncommonCapos} = determineCapos(
     song.transposed_key || song.original_key,
   );
   const dispatch = useDispatch();
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Toggle enabled={song.show_capo} onChange={handleToggle} />
+      ),
+    });
+  }, [navigation, song]);
 
   function handleChange(capoKey) {
     setSong(currentSong => {
@@ -31,6 +40,11 @@ export default function CapoBottomSheetScreen({route}) {
   function handleRemoveCapo() {
     setSong(currentSong => ({...currentSong, capo: null}));
     dispatch(updateSongOnScreen({capo: null}));
+  }
+
+  function handleToggle(toggleValue) {
+    setSong(currentSong => ({...currentSong, show_capo: toggleValue}));
+    dispatch(updateSongOnScreen({show_capo: toggleValue}));
   }
 
   return (

@@ -25,3 +25,19 @@ export function updateSong(songId, updates) {
 export function deleteSong(songId) {
   return SongsApi.deleteOne(songId);
 }
+
+export function addGenresToSong(genreIds, songId) {
+  return SongsApi.addGenres(songId, genreIds);
+}
+
+export function removeGenreFromSong(genreId, songId) {
+  return SongsApi.removeGenre(songId, genreId);
+}
+
+export function addThemesToSong(themeIds, songId) {
+  return SongsApi.addThemes(songId, themeIds);
+}
+
+export function removeThemeFromSong(themeId, songId) {
+  return SongsApi.removeTheme(songId, themeId);
+}

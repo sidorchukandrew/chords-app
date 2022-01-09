@@ -1,10 +1,13 @@
-import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+
+import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export default function Tag({tag, style: providedStyles, textStyle}) {
+export default function Tag({tag, style: providedStyles, textStyle, onPress}) {
   return (
-    <TouchableOpacity style={[styles.tagContainer, providedStyles]}>
+    <TouchableOpacity
+      style={[styles.tagContainer, providedStyles]}
+      onPress={onPress}>
       <Text style={[styles.tagText, textStyle]}>{tag}</Text>
     </TouchableOpacity>
   );

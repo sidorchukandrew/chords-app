@@ -29,6 +29,7 @@ export default function SongDetailScreen({navigation, route}) {
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const dispatch = useDispatch();
+
   useFocusEffect(
     React.useCallback(() => {
       if (route.params) setSong(route.params);
@@ -82,8 +83,18 @@ export default function SongDetailScreen({navigation, route}) {
         />
       );
     } else if (tab === 'Details') {
-      return <SongDetailsTab song={song} onNavigateTo={handleNavigateTo} />;
+      return (
+        <SongDetailsTab
+          song={song}
+          onNavigateTo={handleNavigateTo}
+          onUpdateSong={handleUpdateSong}
+        />
+      );
     }
+  }
+
+  function handleUpdateSong(updates) {
+    setSong(currentSong => ({...currentSong, ...updates}));
   }
 
   function handleNavigateTo(route) {

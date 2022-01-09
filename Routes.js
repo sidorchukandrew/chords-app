@@ -144,7 +144,7 @@ export default function Routes() {
                 component={AddThemeModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                 }}
               />
 

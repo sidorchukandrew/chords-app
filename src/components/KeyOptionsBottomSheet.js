@@ -1,10 +1,10 @@
 import React, {useEffect, useRef} from 'react';
 
 import BottomSheet from './BottomSheet';
-import CapoBottomSheetScreen from './CapoBottomSheetScreen';
-import KeyOptionsBottomSheetScreen from './KeyOptionsBottomSheetScreen';
+import CapoBottomSheetScreen from '../screens/CapoBottomSheetScreen';
+import KeyOptionsBottomSheetScreen from '../screens/KeyOptionsBottomSheetScreen';
 import {NavigationContainer} from '@react-navigation/native';
-import TransposeBottomSheetScreen from './TransposeBottomSheetScreen';
+import TransposeBottomSheetScreen from '../screens/TransposeBottomSheetScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();

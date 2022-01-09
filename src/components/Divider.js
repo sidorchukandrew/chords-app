@@ -1,9 +1,10 @@
-import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
-export default function Divider({size = 'md'}) {
+import React from 'react';
+
+export default function Divider({size = 'md', style: providedStyles}) {
   return (
-    <View style={[styles.spacing]}>
+    <View style={[styles.spacing, providedStyles]}>
       <View style={[styles.container, widths[size]]} />
     </View>
   );

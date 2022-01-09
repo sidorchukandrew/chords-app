@@ -12,6 +12,7 @@ import Button from '../components/Button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
+import SongContent from '../components/SongContent';
 import {selectSongOnScreen} from '../redux/slices/performanceSlice';
 import {useSelector} from 'react-redux';
 
@@ -54,7 +55,7 @@ export default function PerformSongScreen({route, navigation}) {
   return (
     <>
       <ScrollView style={styles.container}>
-        <Text style={styles.content}>{song.content}</Text>
+        <SongContent song={song} />
       </ScrollView>
       <KeyOptionsBottomSheet
         visible={keyOptionsVisible}
@@ -74,8 +75,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 10,
-  },
-  content: {
-    paddingBottom: 40,
   },
 });

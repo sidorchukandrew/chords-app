@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,7 +5,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LoadingIndicator from './LoadingIndicator';
+import React from 'react';
 
 export default function ScreenModalHeader({
   title,
@@ -14,7 +16,22 @@ export default function ScreenModalHeader({
   onSavePress,
   saveDisabled,
   options = {saveVisible: false, backVisible: false},
+  saving = false,
 }) {
+  const saveButton = saving ? (
+    <View style={styles.saveButtonContainer}>
+      <LoadingIndicator />
+    </View>
+  ) : (
+    <View style={styles.saveButtonContainer}>
+      <TouchableOpacity
+        style={styles.saveButton}
+        onPress={onSavePress}
+        disabled={saveDisabled}>
+        <Text style={styles.saveButtonText}>Save</Text>
+      </TouchableOpacity>
+    </View>
+  );
   return (
     <SafeAreaView style={styles.header}>
       <View style={styles.container}>
@@ -30,18 +47,7 @@ export default function ScreenModalHeader({
           <View style={styles.backButton} />
         )}
         <Text style={[styles.headerTitle, styles.grow]}>{title}</Text>
-        {options.saveVisible ? (
-          <View style={styles.saveButtonContainer}>
-            <TouchableOpacity
-              style={styles.saveButton}
-              onPress={onSavePress}
-              disabled={saveDisabled}>
-              <Text style={styles.saveButtonText}>Save</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.saveButton} />
-        )}
+        {options.saveVisible ? saveButton : <View style={styles.saveButton} />}
       </View>
     </SafeAreaView>
   );

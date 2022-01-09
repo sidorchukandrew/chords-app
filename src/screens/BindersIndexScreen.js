@@ -7,6 +7,7 @@ import CircleButton from '../components/CircleButton';
 import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import ItemSeparator from '../components/ItemSeparator';
 import List from '../components/List';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
@@ -101,6 +102,7 @@ export default function BindersIndexScreen({navigation, route}) {
             placeholder={`Search ${binders?.length} binders`}
           />
         }
+        ItemSeparatorComponent={ItemSeparator}
         data={filteredBinders()}
         renderItem={renderBinderRow}
         ListEmptyComponent={
@@ -141,8 +143,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 10, //remove later
-    borderBottomWidth: 1, // remove later
-    borderBottomColor: '#e0e0e0', // remove later
   },
   addButton: {
     position: 'absolute',
