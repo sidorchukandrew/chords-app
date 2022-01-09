@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -39,30 +40,27 @@ export default function BinderDetailScreen({navigation, route}) {
   const [query, setQuery] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const currentMember = useSelector(selectCurrentMember);
 
   useFocusEffect(
     React.useCallback(() => {
-      if (route.params) setBinder(route.params);
-    }, [route]),
-  );
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        let {data} = await getBinderById(route.params.id);
-        setBinder(data);
-      } catch (error) {
-        reportError(error);
-      } finally {
-        setLoading(false);
+      async function fetchData() {
+        try {
+          setLoading(true);
+          let data = await getBinderById(route.params.id);
+          setBinder(data);
+        } catch (error) {
+          reportError(error);
+        } finally {
+          setLoading(false);
+        }
       }
-    }
 
-    fetchData();
-  }, [route.params.id]);
+      fetchData();
+    }, [route?.params?.id]),
+  );
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -146,7 +144,7 @@ export default function BinderDetailScreen({navigation, route}) {
     try {
       setDeleting(true);
       await deleteBinder(binder.id);
-      navigation.navigate('Binders', {deleted: binder});
+      navigation.navigate('Binders');
     } catch (error) {
       reportError(error);
     }
@@ -175,10 +173,25 @@ export default function BinderDetailScreen({navigation, route}) {
     );
   }
 
+  async function handleRefresh() {
+    try {
+      setRefreshing(true);
+      let data = await getBinderById(binder.id);
+      setBinder(data);
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Container size="lg">
         <SwipeListView
+          refreshControl={
+            <RefreshControl onRefresh={handleRefresh} refreshing={refreshing} />
+          }
           data={filteredSongs()}
           renderItem={renderRow}
           ListHeaderComponent={

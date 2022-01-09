@@ -46,7 +46,7 @@ export default function AddSongsToBinderBottomSheet({
   useEffect(() => {
     async function fetchData() {
       try {
-        let {data} = await getAllSongs();
+        let data = await getAllSongs();
         setAllSongs(data);
       } catch (error) {
         reportError(error);
@@ -103,7 +103,7 @@ export default function AddSongsToBinderBottomSheet({
     try {
       setSaving(true);
       let songIds = songsToAdd.map(song => song.id);
-      let {data} = await addSongsToBinder(binderId, songIds);
+      let data = await addSongsToBinder(binderId, songIds);
       onSongsAdded(data);
       setSaving(false);
       sheetRef.current?.dismiss();

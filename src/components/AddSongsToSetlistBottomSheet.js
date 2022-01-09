@@ -28,7 +28,7 @@ export default function AddSongsToSetlistBottomSheet({
   useEffect(() => {
     async function fetchSongs() {
       try {
-        let {data} = await getAllSongs();
+        let data = await getAllSongs();
         setAllSongs(data);
       } catch (error) {
         reportError(error);

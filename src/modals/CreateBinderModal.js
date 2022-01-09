@@ -1,15 +1,16 @@
-import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useState} from 'react';
-import Container from '../components/Container';
-import ScreenModalHeader from '../components/ScreenModalHeader';
-import ScreenModal from './ScreenModal';
-import FormField from '../components/FormField';
-import Button from '../components/Button';
-import BinderColorSwatchesBottomSheet from '../components/BinderColorSwatchesBottomSheet';
+
 import BinderColorSwatch from '../components/BinderColorSwatch';
-import {reportError} from '../utils/error';
+import BinderColorSwatchesBottomSheet from '../components/BinderColorSwatchesBottomSheet';
+import Button from '../components/Button';
+import Container from '../components/Container';
+import FormField from '../components/FormField';
+import React from 'react';
+import ScreenModal from './ScreenModal';
+import ScreenModalHeader from '../components/ScreenModalHeader';
 import {createBinder} from '../services/bindersService';
+import {reportError} from '../utils/error';
+import {useState} from 'react';
 
 export default function CreateBinderModal({navigation}) {
   const [name, setName] = useState('');
@@ -25,8 +26,8 @@ export default function CreateBinderModal({navigation}) {
         description,
         color,
       };
-      let {data} = await createBinder(binder);
-      navigation.navigate('Binders', {created: {...data, songs: []}});
+      await createBinder(binder);
+      navigation.goBack();
     } catch (error) {
       reportError(error);
       setSaving(false);

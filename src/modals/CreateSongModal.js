@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
 import MeterModal from '../components/MeterModal';
+import ScreenModal from './ScreenModal';
 import ScreenModalHeader from '../components/ScreenModalHeader';
 import SongKeyModal from '../components/SongKeyModal';
-import ScreenModal from './ScreenModal';
-import {reportError} from '../utils/error';
 import {createSong} from '../services/songsService';
+import {reportError} from '../utils/error';
 
 export default function CreateSongModal({navigation}) {
   const [name, setName] = useState('');
@@ -31,8 +32,8 @@ export default function CreateSongModal({navigation}) {
         meter,
       };
 
-      let {data} = await createSong(song);
-      navigation.navigate('Songs', {created: data});
+      await createSong(song);
+      navigation.navigate('Songs');
     } catch (error) {
       reportError(error);
       setSaving(false);

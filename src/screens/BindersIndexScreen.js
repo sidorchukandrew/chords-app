@@ -6,53 +6,40 @@ import BinderColorSwatch from '../components/BinderColorSwatch';
 import CircleButton from '../components/CircleButton';
 import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import ItemSeparator from '../components/ItemSeparator';
-import List from '../components/List';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import SearchFilterBar from '../components/SearchFilterBar';
 import {getAllBinders} from '../services/bindersService';
 import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 
-export default function BindersIndexScreen({navigation, route}) {
+export default function BindersIndexScreen({navigation}) {
   const [query, setQuery] = useState('');
   const [binders, setBinders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
 
-  useEffect(() => {
-    if (route?.params?.created) {
-      setBinders(currentBinders => [...currentBinders, route.params.created]);
-      navigation.navigate('Binder Detail', route.params.created);
-    }
-
-    if (route?.params?.deleted) {
-      setBinders(currentBinders => {
-        let idToDelete = route.params.deleted.id;
-        return currentBinders.filter(binder => binder.id !== idToDelete);
-      });
-    }
-  }, [route?.params?.created, navigation, route?.params?.deleted]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        let {data} = await getAllBinders();
-        setBinders(data);
-      } catch (error) {
-        reportError(error);
-      } finally {
-        setLoading(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      async function fetchData() {
+        try {
+          setLoading(true);
+          let data = await getAllBinders();
+          setBinders(data);
+        } catch (error) {
+          reportError(error);
+        } finally {
+          setLoading(false);
+        }
       }
-    }
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, []),
+  );
 
   function handleNavigateTo(binder) {
     navigation.navigate('Binder Detail', binder);
@@ -90,11 +77,25 @@ export default function BindersIndexScreen({navigation, route}) {
     navigation.navigate('Create Binder');
   }
 
+  async function handleRefresh() {
+    try {
+      setRefreshing(true);
+      let data = await getAllBinders({refresh: true});
+      setBinders(data);
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
   if (loading) return <LoadingIndicator />;
 
   return (
     <View style={styles.container}>
       <FlatList
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
         ListHeaderComponent={
           <SearchFilterBar
             query={query}

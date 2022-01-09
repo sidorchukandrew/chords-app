@@ -32,25 +32,21 @@ export default function SongDetailScreen({navigation, route}) {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (route.params) setSong(route.params);
-    }, [route]),
-  );
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        let {data} = await getSongById(song.id);
-        setSong(data);
-      } catch (error) {
-        reportError(error);
-      } finally {
-        setLoading(false);
+      async function fetchData() {
+        try {
+          setLoading(true);
+          let data = await getSongById(song.id);
+          setSong(data);
+        } catch (error) {
+          reportError(error);
+        } finally {
+          setLoading(false);
+        }
       }
-    }
 
-    fetchData();
-  }, [song.id]);
+      fetchData();
+    }, [song.id]),
+  );
 
   React.useLayoutEffect(() => {
     navigation.setOptions({

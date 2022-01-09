@@ -29,6 +29,7 @@
     "react-native-config": "^1.4.5",
     "react-native-draggable-flatlist": "^3.0.4",
     "react-native-gesture-handler": "^2.1.0",
+    "react-native-mmkv": "^1.6.2",
     "react-native-reanimated": "^2.3.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.0",

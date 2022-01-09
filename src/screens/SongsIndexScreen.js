@@ -14,6 +14,7 @@ import {getAllSongs} from '../services/songsService';
 import {hasAnyKeysSet} from '../utils/song';
 import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 
 export default function SongsIndexScreen({navigation, route}) {
@@ -24,11 +25,6 @@ export default function SongsIndexScreen({navigation, route}) {
   const currentMember = useSelector(selectCurrentMember);
 
   useEffect(() => {
-    if (route?.params?.created) {
-      setSongs(currentSongs => [...currentSongs, route.params.created]);
-      navigation.navigate('Song Detail', route.params.created);
-    }
-
     if (route?.params?.deleted) {
       setSongs(currentSongs => {
         let idToDelete = route.params.deleted.id;
@@ -37,26 +33,28 @@ export default function SongsIndexScreen({navigation, route}) {
     }
   }, [route?.params?.created, navigation, route?.params?.deleted]);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        let {data} = await getAllSongs();
-        setSongs(data);
-      } catch (error) {
-        reportError(error);
-      } finally {
-        setLoading(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      async function fetchData() {
+        try {
+          setLoading(true);
+          let data = await getAllSongs();
+          setSongs(data);
+        } catch (error) {
+          reportError(error);
+        } finally {
+          setLoading(false);
+        }
       }
-    }
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, []),
+  );
 
   async function handleRefresh() {
     try {
       setRefreshing(true);
-      let {data} = await getAllSongs();
+      let data = await getAllSongs({refresh: true});
       setSongs(data);
     } catch (error) {
       reportError(error);
