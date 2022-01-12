@@ -3,7 +3,10 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 
 const BottomSheet = React.forwardRef(
-  ({children, snapPoints = ['25%', '50%'], onDismiss, detached}, sheetRef) => {
+  (
+    {children, snapPoints = ['25%', '50%'], onDismiss, detached, snapIndex = 0},
+    sheetRef,
+  ) => {
     const [windowWidth, setWindowWidth] = useState(0);
     const window = useWindowDimensions();
 
@@ -25,7 +28,7 @@ const BottomSheet = React.forwardRef(
         style={[styles.shadow, getHorizontalMargins()]}
         onDismiss={onDismiss}
         ref={sheetRef}
-        index={0}
+        index={snapIndex}
         snapPoints={snapPoints}
         detached={detached}
         bottomInset={detached ? 40 : 0}

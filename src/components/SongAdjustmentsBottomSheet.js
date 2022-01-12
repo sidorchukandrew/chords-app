@@ -15,7 +15,11 @@ export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
   }, [visible, sheetRef]);
 
   return (
-    <BottomSheet snapPoints={['80%']} onDismiss={onDismiss} ref={sheetRef}>
+    <BottomSheet
+      snapPoints={['20%', '80%']}
+      onDismiss={onDismiss}
+      ref={sheetRef}
+      snapIndex={1}>
       <NavigationContainer independent>
         <Stack.Navigator>
           <Stack.Screen

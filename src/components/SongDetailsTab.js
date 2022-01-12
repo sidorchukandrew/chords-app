@@ -61,7 +61,8 @@ export default function SongDetailsTab({song, onNavigateTo, onUpdateSong}) {
           <TouchableOpacity onPress={() => onNavigateTo('Edit Song Details')}>
             <Text style={styles.editButtonText}>Edit</Text>
           </TouchableOpacity>
-        }>
+        }
+        showButton={currentMember.can(EDIT_SONGS)}>
         <Detail title="Original Key" data={song.original_key} border />
         <Detail title="Transposed" data={song.transposed_key} border />
         <Detail title="Artist" data={song.artist} border />

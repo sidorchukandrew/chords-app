@@ -70,7 +70,7 @@ export default function EditSongDetailsModal({navigation, route}) {
           <FormField value={name} onChange={setName} label="Name *" />
           <FormField value={artist} onChange={setArtist} label="Artist" />
           <FormField
-            value={bpm}
+            value={`${bpm}`}
             onChange={setBpm}
             label="Tempo"
             keyboardType="numeric"

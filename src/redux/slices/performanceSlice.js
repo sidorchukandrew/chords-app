@@ -4,6 +4,8 @@ const performanceSlice = createSlice({
   name: 'auth',
   initialState: {
     songOnScreen: null,
+    formatEdits: {},
+    songEdits: {},
   },
   reducers: {
     setSongOnScreen: (state, action) => {
@@ -12,6 +14,7 @@ const performanceSlice = createSlice({
     updateSongOnScreen: (state, action) => {
       state.songOnScreen = {...state.songOnScreen, ...action.payload};
     },
+    storeFormatEdits: (state, {payload}) => {},
   },
 });
 

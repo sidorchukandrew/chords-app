@@ -4,7 +4,7 @@ import api from './api';
 
 export default class SongsApi {
   static getAll() {
-    return api().get(`/songs?team_id=${getTeamId()}`, {
+    return api().get(`/cache/songs?team_id=${getTeamId()}`, {
       headers: constructAuthHeaders(),
     });
   }

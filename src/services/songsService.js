@@ -6,6 +6,7 @@ const storage = new MMKV({id: 'songs'});
 
 export function getAllSongs({refresh = false} = {}) {
   if (refresh || !hasSongsSet()) {
+    console.log('getting songs from api');
     return SongsApi.getAll().then(({data}) => {
       data.forEach(setSongInStorage);
       return data;
@@ -16,13 +17,12 @@ export function getAllSongs({refresh = false} = {}) {
   }
 }
 
-// NEEDS TO BE REVISITED
-export function getSongById(id, {refresh} = {}) {
-  return SongsApi.getOne(id).then(({data}) => data);
-  if (refresh || !hasSongSet(id)) {
-    return SongsApi.getOne(id).then(({data}) => {
-      setSongInStorage(data);
-      return data;
+export function getSongById(id) {
+  if (!hasSongSet(id)) {
+    console.log('Does not have song set locally, fetching from api');
+    return SongsApi.getAll().then(({data}) => {
+      data.forEach(setSongInStorage);
+      return getSongFromStorage(id);
     });
   } else {
     console.log('Getting song from storage');
@@ -56,27 +56,69 @@ export function updateSong(songId, updates) {
     team_id: getTeamId(),
   };
 
-  return SongsApi.updateOne(songId, params);
+  return SongsApi.updateOne(songId, params).then(({data}) => {
+    if (hasSongSet(songId)) {
+      let songInStorage = getSongFromStorage(songId);
+      setSongInStorage({...songInStorage, ...data});
+    }
+    return data;
+  });
 }
 
 export function deleteSong(songId) {
+  storage.delete(`${songId}`);
   return SongsApi.deleteOne(songId);
 }
 
 export function addGenresToSong(genreIds, songId) {
-  return SongsApi.addGenres(songId, genreIds);
+  return SongsApi.addGenres(songId, genreIds).then(({data: genresAdded}) => {
+    if (hasSongSet(songId)) {
+      let song = getSongFromStorage(songId);
+      if (!song.genres) song.genres = [];
+      song.genres = song.genres.concat(genresAdded);
+
+      setSongInStorage(song);
+    }
+    return genresAdded;
+  });
 }
 
 export function removeGenreFromSong(genreId, songId) {
-  return SongsApi.removeGenre(songId, genreId);
+  return SongsApi.removeGenre(songId, genreId).then(() => {
+    if (hasSongSet(songId)) {
+      let song = getSongFromStorage(songId);
+
+      song.genres = song.genres.filter(genre => genre.id !== genreId);
+      console.log('Removed genre from song');
+      setSongInStorage(song);
+    }
+  });
 }
 
 export function addThemesToSong(themeIds, songId) {
-  return SongsApi.addThemes(songId, themeIds);
+  return SongsApi.addThemes(songId, themeIds).then(({data: themesAdded}) => {
+    if (hasSongSet(songId)) {
+      let song = getSongFromStorage(songId);
+      if (!song.themes) song.themes = [];
+      song.themes = song.themes.concat(themesAdded);
+
+      console.log('Adding themes to song in storage');
+      setSongInStorage(song);
+    }
+    return themesAdded;
+  });
 }
 
 export function removeThemeFromSong(themeId, songId) {
-  return SongsApi.removeTheme(songId, themeId);
+  return SongsApi.removeTheme(songId, themeId).then(() => {
+    if (hasSongSet(songId)) {
+      let song = getSongFromStorage(songId);
+
+      song.themes = song.themes.filter(theme => theme.id !== themeId);
+      console.log('Removed theme from song');
+      setSongInStorage(song);
+    }
+  });
 }
 
 function hasSongsSet() {

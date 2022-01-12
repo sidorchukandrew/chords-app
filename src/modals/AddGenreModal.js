@@ -77,11 +77,12 @@ export default function AddGenreModal({navigation, route}) {
         saveDisabled={selectedGenreIds.length === 0}
         saving={saving}
       />
-      <Container>
+      <Container style={styles.container}>
         <FlatList
           data={genres}
           ItemSeparatorComponent={ItemSeparator}
           renderItem={renderRow}
+          style={styles.list}
         />
       </Container>
     </ScreenModal>
@@ -97,5 +98,8 @@ const styles = StyleSheet.create({
   row: {
     paddingVertical: 12,
     paddingHorizontal: 10,
+  },
+  list: {
+    marginBottom: 20,
   },
 });
