@@ -4,7 +4,7 @@ import {getTeamId} from '../utils/auth';
 
 const storage = new MMKV({id: 'songs'});
 
-export function getAllSongs({refresh = false} = {}) {
+export async function getAllSongs({refresh = false} = {}) {
   if (refresh || !hasSongsSet()) {
     console.log('getting songs from api');
     return SongsApi.getAll().then(({data}) => {
@@ -125,7 +125,7 @@ function hasSongsSet() {
   return storage.getAllKeys().length > 0;
 }
 
-function setSongInStorage(song) {
+export function setSongInStorage(song) {
   let stringified = JSON.stringify(song);
   storage.set(`${song.id}`, stringified);
 }
@@ -143,11 +143,11 @@ function getSongsFromStorage() {
   return songs;
 }
 
-function hasSongSet(id) {
+export function hasSongSet(id) {
   return storage.contains(`${id}`);
 }
 
-function getSongFromStorage(id) {
+export function getSongFromStorage(id) {
   let stringified = storage.getString(`${id}`);
 
   return JSON.parse(stringified);

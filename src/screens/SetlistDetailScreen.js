@@ -10,6 +10,7 @@ import {
   deleteSetlist,
   getSetlistById,
   removeSongFromSetlist,
+  updateScheduledSong,
 } from '../services/setlistsService';
 
 import AddSongsToSetlistBottomSheet from '../components/AddSongsToSetlistBottomSheet';
@@ -42,30 +43,26 @@ export default function SetlistDetailScreen({route, navigation}) {
 
   useFocusEffect(
     React.useCallback(() => {
-      if (route.params) setSetlist(route.params);
-    }, [route]),
-  );
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        let {data} = await getSetlistById(route.params.id);
-        setSetlist(data);
-      } catch (error) {
-        reportError(error);
-      } finally {
-        setLoading(false);
+      async function fetchData() {
+        try {
+          setLoading(true);
+          let data = await getSetlistById(route.params.id);
+          setSetlist(data);
+        } catch (error) {
+          reportError(error);
+        } finally {
+          setLoading(false);
+        }
       }
-    }
 
-    fetchData();
-  }, [route.params.id]);
+      fetchData();
+    }, [route.params.id]),
+  );
 
   async function handleRefresh() {
     try {
       setRefreshing(true);
-      let {data} = await getSetlistById(route.params.id);
+      let data = await getSetlistById(route.params.id, {refresh: true});
       setSetlist(data);
     } catch (error) {
       reportError(error);
@@ -105,8 +102,17 @@ export default function SetlistDetailScreen({route, navigation}) {
     );
   }
 
-  function handleReorder({data: songs}) {
-    setSetlist(currentSetlist => ({...currentSetlist, songs: songs}));
+  function handleReorder({data: reorderedSongs, from, to}) {
+    reorderedSongs = reorderedSongs.map((reorderedSong, index) => ({
+      ...reorderedSong,
+      position: index,
+    }));
+
+    let movedSong = setlist.songs[from];
+
+    reorderedSongs.forEach(song => console.log(song.name, song.position));
+    setSetlist(currentSetlist => ({...currentSetlist, songs: reorderedSongs}));
+    updateScheduledSong(setlist.id, movedSong.id, to, reorderedSongs);
   }
 
   function handleNavigateToSong(song) {

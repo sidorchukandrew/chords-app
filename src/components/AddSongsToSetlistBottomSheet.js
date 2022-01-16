@@ -89,9 +89,10 @@ export default function AddSongsToSetlistBottomSheet({
     try {
       setSaving(true);
       let songIds = songsToAdd.map(song => song.id);
-      let {data} = await addSongsToSetlist(setlistId, songIds);
+      let data = await addSongsToSetlist(setlistId, songIds);
       onSongsAdded(data);
       setSaving(false);
+      setSongsToAdd([]);
       sheetRef.current?.dismiss();
       onDismiss();
     } catch (error) {

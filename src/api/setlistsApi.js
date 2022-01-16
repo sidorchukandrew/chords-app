@@ -4,7 +4,7 @@ import api from './api';
 
 export default class SetlistsApi {
   static getAll() {
-    return api().get(`/setlists?team_id=${getTeamId()}`, {
+    return api().get(`/cache/setlists?team_id=${getTeamId()}`, {
       headers: constructAuthHeaders(),
     });
   }
@@ -15,7 +15,7 @@ export default class SetlistsApi {
     });
   }
 
-  static create(setlist) {
+  static createOne(setlist) {
     return api().post('/setlists', setlist, {headers: constructAuthHeaders()});
   }
 
@@ -40,6 +40,12 @@ export default class SetlistsApi {
 
   static updateOne(setlistId, updates) {
     return api().put(`/setlists/${setlistId}`, updates, {
+      headers: constructAuthHeaders(),
+    });
+  }
+
+  static updateScheduledSong(setlistId, songId, updates) {
+    return api().put(`/setlists/${setlistId}/songs/${songId}`, updates, {
       headers: constructAuthHeaders(),
     });
   }

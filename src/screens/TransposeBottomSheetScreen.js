@@ -1,14 +1,19 @@
 import {MAJOR_KEYS, MINOR_KEYS, isMinor} from '../utils/music';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {
+  storeSongEdits,
+  updateSongOnScreen,
+} from '../redux/slices/performanceSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
+import {EDIT_SONGS} from '../utils/auth';
 import KeyOptionButton from '../components/KeyOptionButton';
 import OrDivider from '../components/OrDivider';
 import {ScrollView} from 'react-native-gesture-handler';
 import Toggle from '../components/Toggle';
 import TransposeButtons from '../components/TransposeButtons';
-import {updateSongOnScreen} from '../redux/slices/performanceSlice';
-import {useDispatch} from 'react-redux';
+import {selectCurrentMember} from '../redux/slices/authSlice';
 
 export default function TransposeBottomSheetScreen({route, navigation}) {
   const [song, setSong] = useState(route?.params);
@@ -16,6 +21,7 @@ export default function TransposeBottomSheetScreen({route, navigation}) {
     return isMinor(song.original_key) ? MINOR_KEYS : MAJOR_KEYS;
   });
   const dispatch = useDispatch();
+  const currentMember = useSelector(selectCurrentMember);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,6 +37,15 @@ export default function TransposeBottomSheetScreen({route, navigation}) {
       transposed_key: newKey,
     }));
     dispatch(updateSongOnScreen({transposed_key: newKey}));
+    if (currentMember.can(EDIT_SONGS)) {
+      let edits = {
+        songId: song.id,
+        updates: {
+          transposed_key: newKey,
+        },
+      };
+      dispatch(storeSongEdits(edits));
+    }
   }
 
   function handleToggle(toggleValue) {

@@ -1,18 +1,22 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {
   selectSongOnScreen,
+  storeFormatEdits,
   updateSongOnScreen,
 } from '../redux/slices/performanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Divider from './Divider';
+import {EDIT_SONGS} from '../utils/auth';
 import FormatDetailButton from './FormatDetailButton';
 import React from 'react';
 import ToggleField from './ToggleField';
+import {selectCurrentMember} from '../redux/slices/authSlice';
 
 export default function AdjustmentsBottomSheetScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
   const dispatch = useDispatch();
+  const currentMember = useSelector(selectCurrentMember);
 
   function handleUpdateField(field, value) {
     dispatch(updateSongOnScreen({[field]: value}));
@@ -21,6 +25,16 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
   function handleUpdateFormat(formatField, value) {
     let updatedFormat = {...song.format, [formatField]: value};
     dispatch(updateSongOnScreen({format: updatedFormat}));
+
+    if (currentMember.can(EDIT_SONGS)) {
+      let edits = {
+        songId: song.id,
+        updates: {
+          [formatField]: value,
+        },
+      };
+      dispatch(storeFormatEdits(edits));
+    }
   }
 
   return (

@@ -21,8 +21,8 @@ export default function CreateSetlistModal({navigation}) {
   async function handleSave() {
     try {
       setSaving(true);
-      let {data} = await createSetlist({name, scheduledDate});
-      navigation.navigate('Sets', {created: {...data, songs: []}});
+      await createSetlist({name, scheduledDate});
+      navigation.navigate('Sets');
     } catch (error) {
       setSaving(false);
       reportError(error);

@@ -1,15 +1,18 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {format, isPast} from '../utils/date';
 
 import CircleButton from '../components/CircleButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import ItemSeparator from '../components/ItemSeparator';
 import LoadingIndicator from '../components/LoadingIndicator';
+import NoDataMessage from '../components/NoDataMessage';
 import SearchFilterBar from '../components/SearchFilterBar';
 import SegmentedControl from '../components/SegmentedControl';
 import {getAllSetlists} from '../services/setlistsService';
 import {reportError} from '../utils/error';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function SetlistsIndexScreen({navigation, route}) {
   const [setType, setSetType] = useState('Upcoming');
@@ -19,50 +22,35 @@ export default function SetlistsIndexScreen({navigation, route}) {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    let createdSetlist = route?.params?.created;
-    if (createdSetlist) {
-      if (isPast(createdSetlist.scheduled_date)) {
-        setPastSets(currentSets => [...currentSets, createdSetlist]);
-      } else {
-        setUpcomingSets(currentSets => [...currentSets, createdSetlist]);
+  useFocusEffect(
+    React.useCallback(() => {
+      async function fetchData() {
+        try {
+          setLoading(true);
+          let sets = await getAllSetlists();
+          let upcoming = [];
+          let past = [];
+
+          sets?.forEach(set =>
+            isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
+          );
+          setUpcomingSets(upcoming);
+          setPastSets(past);
+        } catch (error) {
+          reportError(error);
+        } finally {
+          setLoading(false);
+        }
       }
-      navigation.navigate('Setlist Detail', createdSetlist);
-    }
 
-    if (route?.params?.deleted) {
-      const idToDelete = route.params.deleted.id;
-      setPastSets(sets => sets.filter(set => set.id !== idToDelete));
-      setUpcomingSets(sets => sets.filter(set => set.id !== idToDelete));
-    }
-  }, [route?.params?.created, route?.params?.deleted]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        let {data: sets} = await getAllSetlists();
-        let upcoming = [];
-        let past = [];
-
-        sets?.forEach(set =>
-          isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
-        );
-        setUpcomingSets(upcoming);
-        setPastSets(past);
-      } catch (error) {
-        reportError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
+      fetchData();
+    }, []),
+  );
 
   async function handleRefresh() {
     try {
       setRefreshing(true);
-      let {data: sets} = await getAllSetlists();
+      let sets = await getAllSetlists({refresh: true});
       let upcoming = [];
       let past = [];
 
@@ -80,7 +68,7 @@ export default function SetlistsIndexScreen({navigation, route}) {
 
   function renderSetRow({item: set}) {
     return (
-      <View style={styles.rowBorder}>
+      <View>
         <TouchableOpacity
           style={styles.row}
           onPress={() => handleNavigateTo(set)}>
@@ -154,6 +142,8 @@ export default function SetlistsIndexScreen({navigation, route}) {
         renderItem={renderSetRow}
         refreshing={refreshing}
         onRefresh={handleRefresh}
+        ListEmptyComponent={<NoDataMessage message={'No sets to show'} />}
+        ItemSeparatorComponent={ItemSeparator}
       />
       <CircleButton
         style={styles.addButton}
@@ -179,10 +169,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
   },
-  rowBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
+
   addButton: {
     position: 'absolute',
     bottom: 20,

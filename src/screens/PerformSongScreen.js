@@ -6,20 +6,28 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {clearEdits, selectSongOnScreen} from '../redux/slices/performanceSlice';
 import {getPreferredKey, hasAnyKeysSet} from '../utils/song';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Button from '../components/Button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
+import SaveChangesBottomBar from '../components/SaveChangesBottomBar';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
 import SongContent from '../components/SongContent';
-import {selectSongOnScreen} from '../redux/slices/performanceSlice';
-import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
 
 export default function PerformSongScreen({route, navigation}) {
   const song = useSelector(selectSongOnScreen);
+
+  const dispatch = useDispatch();
   const [keyOptionsVisible, setKeyOptionsVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
+
+  useEffect(() => {
+    dispatch(clearEdits());
+  }, []);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -57,6 +65,7 @@ export default function PerformSongScreen({route, navigation}) {
       <ScrollView style={styles.container}>
         <SongContent song={song} />
       </ScrollView>
+      <SaveChangesBottomBar song={song} />
       <KeyOptionsBottomSheet
         visible={keyOptionsVisible}
         onDismiss={() => setKeyOptionsVisible(false)}

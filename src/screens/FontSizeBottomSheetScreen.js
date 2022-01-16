@@ -2,18 +2,22 @@ import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useRef} from 'react';
 import {
   selectSongOnScreen,
+  storeFormatEdits,
   updateSongOnScreen,
 } from '../redux/slices/performanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {EDIT_SONGS} from '../utils/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ItemSeparator from '../components/ItemSeparator';
 import RectButton from '../components/RectButton';
+import {selectCurrentMember} from '../redux/slices/authSlice';
 
 const FONT_SIZES = [14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 26, 28, 30];
 
 export default function FontSizeBottomSheetScreen() {
   const song = useSelector(selectSongOnScreen);
+  const currentMember = useSelector(selectCurrentMember);
   const dispatch = useDispatch();
 
   const checkmarkIcon = useRef(
@@ -24,6 +28,16 @@ export default function FontSizeBottomSheetScreen() {
     if (newSize !== song.format?.font_size) {
       let updatedFormat = {...song.format, font_size: newSize};
       dispatch(updateSongOnScreen({format: updatedFormat}));
+
+      if (currentMember.can(EDIT_SONGS)) {
+        let edits = {
+          songId: song.id,
+          updates: {
+            font_size: newSize,
+          },
+        };
+        dispatch(storeFormatEdits(edits));
+      }
     }
   }
 

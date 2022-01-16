@@ -101,7 +101,7 @@ export default function SongDetailScreen({navigation, route}) {
     try {
       setDeleting(true);
       await deleteSong(song.id);
-      navigation.navigate('Songs', {deleted: song});
+      navigation.navigate('Songs');
     } catch (error) {
       reportError(error);
     }

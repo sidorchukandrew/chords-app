@@ -2,15 +2,19 @@ import React, {useRef} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {
   selectSongOnScreen,
+  storeFormatEdits,
   updateSongOnScreen,
 } from '../redux/slices/performanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {EDIT_SONGS} from '../utils/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RectButton from '../components/RectButton';
+import {selectCurrentMember} from '../redux/slices/authSlice';
 
 export default function FontBottomSheetScreen() {
   const song = useSelector(selectSongOnScreen);
+  const currentMember = useSelector(selectCurrentMember);
   const dispatch = useDispatch();
 
   const checkmarkIcon = useRef(
@@ -21,6 +25,15 @@ export default function FontBottomSheetScreen() {
     if (newFont !== song.format?.font) {
       let updatedFormat = {...song.format, font: newFont};
       dispatch(updateSongOnScreen({format: updatedFormat}));
+      if (currentMember.can(EDIT_SONGS)) {
+        let edits = {
+          songId: song.id,
+          updates: {
+            font: newFont,
+          },
+        };
+        dispatch(storeFormatEdits(edits));
+      }
     }
   }
 

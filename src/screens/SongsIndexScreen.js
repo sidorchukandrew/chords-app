@@ -17,21 +17,12 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 
-export default function SongsIndexScreen({navigation, route}) {
+export default function SongsIndexScreen({navigation}) {
   const [songs, setSongs] = useState([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
-
-  useEffect(() => {
-    if (route?.params?.deleted) {
-      setSongs(currentSongs => {
-        let idToDelete = route.params.deleted.id;
-        return currentSongs.filter(song => song.id !== idToDelete);
-      });
-    }
-  }, [route?.params?.created, navigation, route?.params?.deleted]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -47,6 +38,7 @@ export default function SongsIndexScreen({navigation, route}) {
         }
       }
 
+      console.log('Fetching data');
       fetchData();
     }, []),
   );

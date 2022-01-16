@@ -17,6 +17,7 @@ import Button from '../components/Button';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
+import SaveChangesBottomBar from '../components/SaveChangesBottomBar';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
 import SongContent from '../components/SongContent';
 import {hasAnyKeysSet} from '../utils/song';
@@ -71,15 +72,20 @@ export default function PerformSetlistScreen({navigation, route}) {
   function renderSlide({item: song, index}) {
     if (index === songIndex) {
       return (
-        <ScrollView style={styles.slideContainer}>
-          <SongContent song={songOnScreen} />
-        </ScrollView>
+        <>
+          <ScrollView style={styles.slideContainer}>
+            <SongContent song={songOnScreen} />
+          </ScrollView>
+          <SaveChangesBottomBar song={song} />
+        </>
       );
     } else {
       return (
-        <ScrollView style={styles.slideContainer}>
-          <SongContent song={song} />
-        </ScrollView>
+        <>
+          <ScrollView style={styles.slideContainer}>
+            <SongContent song={song} />
+          </ScrollView>
+        </>
       );
     }
   }
