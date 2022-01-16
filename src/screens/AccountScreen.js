@@ -1,13 +1,15 @@
-import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import Button from '../components/Button';
-import ProfilePicture from '../components/ProfilePicture';
 import {
   logout,
   selectCurrentMember,
   selectCurrentUser,
 } from '../redux/slices/authSlice';
+import {useDispatch, useSelector} from 'react-redux';
+
+import Button from '../components/Button';
+import ProfilePicture from '../components/ProfilePicture';
+import React from 'react';
+import {clearAuthStorage} from '../services/authService';
 
 export default function Account() {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ export default function Account() {
 
   function handleLogout() {
     dispatch(logout());
+    clearAuthStorage();
   }
 
   return (

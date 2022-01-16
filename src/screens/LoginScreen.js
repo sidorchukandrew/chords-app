@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+
 import AuthApi from '../api/authApi';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
 import {login} from '../redux/slices/authSlice';
 import {reportError} from '../utils/error';
+import {setAuthInStorage} from '../services/authService';
+import {useDispatch} from 'react-redux';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
@@ -39,12 +41,12 @@ export default function LoginScreen({navigation}) {
       };
       setLoading(false);
       dispatch(login(auth));
+      setAuthInStorage(auth);
       navigation.navigate('Login Team');
     } catch (error) {
       reportError(error);
       setLoading(false);
     }
-    // dispatch(login());
   }
 
   return (

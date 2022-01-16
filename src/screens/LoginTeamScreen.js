@@ -1,21 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useDispatch} from 'react-redux';
-import TeamsApi from '../api/teamsApi';
-import UsersApi from '../api/usersApi';
-import AccentButton from '../components/AccentButton';
-import Container from '../components/Container';
-import LoadingIndicator from '../components/LoadingIndicator';
-import TeamLoginOption from '../components/TeamLoginOption';
 import {
   loginTeam,
   selectCurrentUser,
   setCurrentUser,
   setMembership,
 } from '../redux/slices/authSlice';
+import {
+  setMemberInStorage,
+  setTeamInStorage,
+  setUserInStorage,
+} from '../services/authService';
+
+import AccentButton from '../components/AccentButton';
+import Container from '../components/Container';
+import LoadingIndicator from '../components/LoadingIndicator';
+import NoDataMessage from '../components/NoDataMessage';
+import TeamLoginOption from '../components/TeamLoginOption';
+import TeamsApi from '../api/teamsApi';
+import UsersApi from '../api/usersApi';
 import {reportError} from '../utils/error';
 import {setSubscription} from '../redux/slices/subscriptionSlice';
-import NoDataMessage from '../components/NoDataMessage';
+import {useDispatch} from 'react-redux';
 
 export default function LoginTeamScreen({navigation}) {
   const dispatch = useDispatch();
@@ -46,13 +52,17 @@ export default function LoginTeamScreen({navigation}) {
 
       let userResult = await UsersApi.getCurrentUser();
       dispatch(setCurrentUser(userResult.data));
+      setUserInStorage(userResult.data);
 
       let teamResult = await TeamsApi.getCurrentTeam();
       dispatch(loginTeam(teamResult.data.team));
+      setTeamInStorage(teamResult.data.team);
+
       dispatch(setSubscription(teamResult.data.subscription));
 
       let membershipResult = await UsersApi.getTeamMembership();
       dispatch(setMembership({role: membershipResult.data.role}));
+      setMemberInStorage({role: membershipResult.data.role});
     } catch (error) {
       reportError(error);
     }

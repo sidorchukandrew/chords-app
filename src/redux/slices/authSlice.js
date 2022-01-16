@@ -1,17 +1,41 @@
+import {
+  getAuthStorage,
+  getCurrentMember,
+  getCurrentTeam,
+  getCurrentUser,
+} from '../../services/authService';
+
 import {createSlice} from '@reduxjs/toolkit';
+
+function buildInitialState() {
+  console.log('Building initial state');
+  let authStorage = getAuthStorage();
+
+  let accessToken = authStorage.getString('accessToken');
+  let client = authStorage.getString('client');
+  let uid = authStorage.getString('uid');
+  let currentTeam = getCurrentTeam();
+  let currentUser = getCurrentUser();
+  let currentMember = getCurrentMember();
+
+  let isLoggedIn = Boolean(
+    accessToken && client && uid && currentTeam && currentMember && currentUser,
+  );
+
+  return {
+    accessToken,
+    client,
+    uid,
+    isLoggedIn,
+    currentTeam,
+    currentUser,
+    currentMember,
+  };
+}
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    authenticating: true,
-    accessToken: '',
-    client: '',
-    email: '',
-    isLoggedIn: false,
-    currentTeam: null,
-    currentUser: null,
-    currentMember: null,
-  },
+  initialState: buildInitialState(),
   reducers: {
     setAuthenticating: (state, action) => {
       state.authenticating = action.payload;
@@ -46,9 +70,11 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 export const selectIsLoggedIn = state =>
-  state?.auth.isLoggedIn &&
-  state?.auth.currentTeam &&
-  state?.auth.currentMember;
+  !!(
+    state?.auth.isLoggedIn &&
+    state?.auth.currentTeam &&
+    state?.auth.currentMember
+  );
 
 export const selectCurrentUser = state => state.auth?.currentUser;
 

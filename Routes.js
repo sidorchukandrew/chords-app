@@ -1,3 +1,5 @@
+import React, {useCallback, useEffect, useRef} from 'react';
+
 import AccountScreen from './src/screens/AccountScreen';
 import AddGenreModal from './src/modals/AddGenreModal';
 import AddThemeModal from './src/modals/AddThemeModal';
@@ -21,7 +23,6 @@ import MembersIndexScreen from './src/screens/MembersIndexScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import PerformSetlistScreen from './src/screens/PerformSetlistScreen';
 import PerformSongScreen from './src/screens/PerformSongScreen';
-import React from 'react';
 import SearchScreen from './src/screens/SearchScreen';
 import SetlistDetailScreen from './src/screens/SetlistDetailScreen';
 import SetlistsIndexScreen from './src/screens/SetlistsIndexScreen';
@@ -31,6 +32,10 @@ import SongsIndexScreen from './src/screens/SongsIndexScreen';
 import TabBar from './src/components/TabBar';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {getAllBinders} from './src/services/bindersService';
+import {getAllSetlists} from './src/services/setlistsService';
+import {getAllSongs} from './src/services/songsService';
+import {reportError} from './src/utils/error';
 import {selectIsLoggedIn} from './src/redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 
@@ -39,6 +44,28 @@ const Stack = createNativeStackNavigator();
 
 export default function Routes() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const intervalRef = useRef();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      intervalRef.current = setInterval(refreshStorage, 30000);
+    }
+
+    return () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
+  }, [isLoggedIn, refreshStorage]);
+
+  const refreshStorage = useCallback(async () => {
+    try {
+      await getAllSongs({refresh: true});
+      await getAllBinders({refresh: true});
+      await getAllSetlists({refresh: true});
+    } catch (error) {
+      reportError(error);
+    }
+  }, []);
 
   return (
     <BottomSheetModalProvider>
