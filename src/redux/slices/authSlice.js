@@ -77,6 +77,7 @@ export const selectIsLoggedIn = state =>
   );
 
 export const selectCurrentUser = state => state.auth?.currentUser;
+export const selectCurrentTeam = state => state.auth?.currentTeam;
 
 export const {login, logout, loginTeam, setMembership, setCurrentUser} =
   authSlice.actions;

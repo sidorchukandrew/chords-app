@@ -7,3 +7,7 @@ export function createTeam(team) {
   };
   return TeamsApi.createOne(params);
 }
+
+export function getAllTeams() {
+  return TeamsApi.getAll();
+}

@@ -97,7 +97,9 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
           <Text style={styles.text}>Team members</Text>
         </RectButton>
 
-        <RectButton styles={styles.button}>
+        <RectButton
+          styles={styles.button}
+          onPress={() => handleNavigateTo('Choose Team')}>
           <Icon name="swap-horizontal" size={20} style={styles.icon} />
           <Text style={styles.text}>Switch teams</Text>
         </RectButton>

@@ -173,3 +173,7 @@ function getSetlistFromStorage(id) {
 
   return JSON.parse(stringified);
 }
+
+export function clearAllSetlists() {
+  storage.clearAll();
+}

@@ -1,14 +1,20 @@
-import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native';
-import ProfilePicture from './ProfilePicture';
 
-export default function TeamLoginOption({team, bordered, onPress}) {
+import ProfilePicture from './ProfilePicture';
+import React from 'react';
+import Tag from './Tag';
+import {TouchableOpacity} from 'react-native';
+
+export default function TeamLoginOption({team, bordered, onPress, selected}) {
   return (
     <View style={bordered && styles.border}>
       <TouchableOpacity style={styles.button} onPress={onPress}>
-        <ProfilePicture url={team.image_url} size="md" />
-        <Text style={styles.buttonText}>{team.name}</Text>
+        <View style={styles.buttonLeftContainer}>
+          <ProfilePicture url={team.image_url} size="md" />
+          <Text style={styles.buttonText}>{team.name}</Text>
+        </View>
+
+        {selected && <Tag tag="Current" />}
       </TouchableOpacity>
     </View>
   );
@@ -20,6 +26,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   buttonText: {
     fontWeight: '600',
@@ -29,5 +36,9 @@ const styles = StyleSheet.create({
   border: {
     borderBottomColor: '#eaeaea',
     borderBottomWidth: 1,
+  },
+  buttonLeftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

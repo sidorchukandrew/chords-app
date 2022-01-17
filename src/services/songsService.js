@@ -152,3 +152,7 @@ export function getSongFromStorage(id) {
 
   return JSON.parse(stringified);
 }
+
+export function clearAllSongs() {
+  storage.clearAll();
+}

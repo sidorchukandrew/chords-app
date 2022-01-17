@@ -10,6 +10,7 @@ import KeyBadge from '../components/KeyBadge';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
 import SearchFilterBar from '../components/SearchFilterBar';
+import {getAllSetlists} from '../services/setlistsService';
 import {getAllSongs} from '../services/songsService';
 import {hasAnyKeysSet} from '../utils/song';
 import {reportError} from '../utils/error';

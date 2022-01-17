@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   tagText: {
-    color: '#0969da',
+    color: '#2464eb',
     fontWeight: '600',
   },
 });

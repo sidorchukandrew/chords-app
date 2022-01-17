@@ -1,6 +1,7 @@
-import React from 'react';
-import {StyleSheet, Image} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from 'react';
 
 export default function ProfilePicture({
   url,
@@ -28,8 +29,8 @@ const sizes = {
     width: 20,
   },
   md: {
-    height: 35,
-    width: 35,
+    height: 30,
+    width: 30,
   },
   lg: {
     height: 60,

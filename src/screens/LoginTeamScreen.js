@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {
   loginTeam,
-  selectCurrentUser,
   setCurrentUser,
   setMembership,
 } from '../redux/slices/authSlice';
@@ -15,7 +14,6 @@ import {
 import AccentButton from '../components/AccentButton';
 import Container from '../components/Container';
 import LoadingIndicator from '../components/LoadingIndicator';
-import NoDataMessage from '../components/NoDataMessage';
 import TeamLoginOption from '../components/TeamLoginOption';
 import TeamsApi from '../api/teamsApi';
 import UsersApi from '../api/usersApi';

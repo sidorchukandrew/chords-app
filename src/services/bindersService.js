@@ -112,3 +112,7 @@ function setBinderInStorage(binder) {
   let stringified = JSON.stringify(binder);
   storage.set(`${binder.id}`, stringified);
 }
+
+export function clearAllBinders() {
+  storage.clearAll();
+}

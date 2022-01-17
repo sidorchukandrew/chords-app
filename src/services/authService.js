@@ -15,9 +15,9 @@ export function setMemberInStorage(member) {
 }
 
 export function setAuthInStorage({accessToken, client, uid}) {
-  setInStorage('accessToken', accessToken);
-  setInStorage('client', client);
-  setInStorage('uid', uid);
+  storage.set('accessToken', accessToken);
+  storage.set('client', client);
+  storage.set('uid', uid);
 }
 
 function setInStorage(name, object) {

@@ -47,7 +47,11 @@ export default function ScreenModalHeader({
           <View style={styles.backButton} />
         )}
         <Text style={[styles.headerTitle, styles.grow]}>{title}</Text>
-        {options.saveVisible ? saveButton : <View style={styles.saveButton} />}
+        {options.saveVisible ? (
+          saveButton
+        ) : (
+          <View style={styles.saveButtonContainer} />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -69,6 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
+    color: 'black',
     fontWeight: '500',
     fontSize: 17,
   },

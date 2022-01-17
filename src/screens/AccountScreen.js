@@ -9,9 +9,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import Button from '../components/Button';
 import ProfilePicture from '../components/ProfilePicture';
 import React from 'react';
+import {clearAllBinders} from '../services/bindersService';
+import {clearAllSetlists} from '../services/setlistsService';
+import {clearAllSongs} from '../services/songsService';
 import {clearAuthStorage} from '../services/authService';
 
-export default function Account() {
+export default function AccountScreen() {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
   const currentMember = useSelector(selectCurrentMember);
@@ -20,6 +23,9 @@ export default function Account() {
   function handleLogout() {
     dispatch(logout());
     clearAuthStorage();
+    clearAllSongs();
+    clearAllSetlists();
+    clearAllBinders();
   }
 
   return (

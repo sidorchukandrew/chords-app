@@ -7,6 +7,7 @@ import AuthScreen from './src/screens/AuthScreen';
 import BinderDetailScreen from './src/screens/BinderDetailScreen';
 import BindersIndexScreen from './src/screens/BindersIndexScreen';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import ChooseTeamModal from './src/modals/ChooseTeamModal';
 import CreateBinderModal from './src/modals/CreateBinderModal';
 import CreateSetlistModal from './src/modals/CreateSetlistModal';
 import CreateSongModal from './src/modals/CreateSongModal';
@@ -48,7 +49,7 @@ export default function Routes() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      intervalRef.current = setInterval(refreshStorage, 30000);
+      intervalRef.current = setInterval(refreshStorage, 90000);
     }
 
     return () => {
@@ -210,6 +211,15 @@ export default function Routes() {
                   headerShown: false,
                   presentation: 'fullScreenModal',
                   title: 'Edit',
+                }}
+              />
+
+              <Stack.Screen
+                name="Choose Team"
+                component={ChooseTeamModal}
+                options={{
+                  headerShown: false,
+                  presentation: 'fullScreenModal',
                 }}
               />
             </>

@@ -1,12 +1,30 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
-export default function DashboardScreen() {
+import DashboardScreenProfilePicture from '../components/DashboardScreenProfilePicture';
+import DashboardScreenTitle from '../components/DashboardScreenTitle';
+import React from 'react';
+
+export default function DashboardScreen({navigation}) {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: (
+        <DashboardScreenTitle
+          onOpenTeamsModal={() => navigation.navigate('Choose Team')}
+        />
+      ),
+      headerLeft: () => <DashboardScreenProfilePicture />,
+    });
+  }, [navigation]);
+
   return (
-    <View>
+    <ScrollView style={styles.container}>
       <Text>Dashboard</Text>
-    </View>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+  },
+});
