@@ -61,11 +61,16 @@ export default function ChooseTeamModal({navigation}) {
   async function handleLoginTeam(team) {
     if (currentTeam.id === team.id) return;
 
-    dispatch(loginTeam(team));
+    dispatch(loginTeam({...team, members: []}));
     try {
       let teamResult = await TeamsApi.getCurrentTeam();
-      dispatch(loginTeam(teamResult.data.team));
-      setTeamInStorage(teamResult.data.team);
+      dispatch(
+        loginTeam({...teamResult.data.team, members: teamResult.data.members}),
+      );
+      setTeamInStorage({
+        ...teamResult.data.team,
+        members: teamResult.data.members,
+      });
 
       dispatch(setSubscription(teamResult.data.subscription));
 

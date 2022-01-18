@@ -6,21 +6,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Button from '../components/Button';
-import Container from '../components/Container';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FormField from '../components/FormField';
-import {useDispatch} from 'react-redux';
 import {
   loginTeam,
   setCurrentUser,
   setMembership,
 } from '../redux/slices/authSlice';
+import {setMemberInStorage, setTeamInStorage} from '../services/authService';
+
+import Button from '../components/Button';
+import Container from '../components/Container';
+import FormField from '../components/FormField';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import TeamsApi from '../api/teamsApi';
+import UsersApi from '../api/usersApi';
 import {createTeam} from '../services/teamsService';
 import {reportError} from '../utils/error';
-import UsersApi from '../api/usersApi';
-import TeamsApi from '../api/teamsApi';
 import {setSubscription} from '../redux/slices/subscriptionSlice';
+import {useDispatch} from 'react-redux';
 
 export default function CreateTeamScreen({navigation}) {
   const [name, setName] = useState('');
@@ -31,17 +33,25 @@ export default function CreateTeamScreen({navigation}) {
     try {
       setLoading(true);
       let {data} = await createTeam({name});
-      dispatch(loginTeam(data));
+      dispatch(loginTeam({...data, members: []}));
 
       let userResult = await UsersApi.getCurrentUser();
       dispatch(setCurrentUser(userResult.data));
 
       let teamResult = await TeamsApi.getCurrentTeam();
-      dispatch(loginTeam(teamResult.data.team));
+      dispatch(
+        loginTeam({...teamResult.data.team, members: teamResult.data.members}),
+      );
+      setTeamInStorage({
+        ...teamResult.data.team,
+        members: teamResult.data.members,
+      });
+
       dispatch(setSubscription(teamResult.data.subscription));
 
       let membershipResult = await UsersApi.getTeamMembership();
       dispatch(setMembership({role: membershipResult.data.role}));
+      setMemberInStorage({role: membershipResult.data.role});
     } catch (error) {
       reportError(error);
     } finally {

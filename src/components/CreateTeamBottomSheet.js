@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {loginTeam, setMembership} from '../redux/slices/authSlice';
+import {setMemberInStorage, setTeamInStorage} from '../services/authService';
 
 import BottomSheet from './BottomSheet';
 import Button from './Button';
@@ -36,14 +37,21 @@ export default function CreateTeamBottomSheet({
       setCreating(true);
 
       let {data} = await createTeam({name});
-      dispatch(loginTeam(data));
+      dispatch(loginTeam({...data, members: []}));
 
       let teamResult = await TeamsApi.getCurrentTeam();
-      dispatch(loginTeam(teamResult.data.team));
+      dispatch(
+        loginTeam({...teamResult.data.team, members: teamResult.data.members}),
+      );
       dispatch(setSubscription(teamResult.data.subscription));
+      setTeamInStorage({
+        ...teamResult.data.team,
+        members: teamResult.data.members,
+      });
 
       let membershipResult = await UsersApi.getTeamMembership();
       dispatch(setMembership({role: membershipResult.data.role}));
+      setMemberInStorage({role: membershipResult.data.role});
 
       clearAllBinders();
       clearAllSetlists();

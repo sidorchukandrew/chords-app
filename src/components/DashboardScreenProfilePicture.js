@@ -7,10 +7,13 @@ import {useSelector} from 'react-redux';
 
 export default function DashboardScreenProfilePicture() {
   const currentUser = useSelector(selectCurrentUser);
-
   return (
     <TouchableOpacity style={styles.button}>
-      <ProfilePicture url={currentUser?.image_url} size="md" />
+      <ProfilePicture
+        url={currentUser?.image_url}
+        size="md"
+        member={currentUser}
+      />
     </TouchableOpacity>
   );
 }

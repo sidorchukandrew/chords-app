@@ -44,7 +44,7 @@ export default function LoginTeamScreen({navigation}) {
   }, []);
 
   async function handleLoginTeam(team) {
-    dispatch(loginTeam(team));
+    dispatch(loginTeam({...team, members: []}));
     try {
       setLoadingAllData(true);
 
@@ -53,8 +53,13 @@ export default function LoginTeamScreen({navigation}) {
       setUserInStorage(userResult.data);
 
       let teamResult = await TeamsApi.getCurrentTeam();
-      dispatch(loginTeam(teamResult.data.team));
-      setTeamInStorage(teamResult.data.team);
+      dispatch(
+        loginTeam({...teamResult.data.team, members: teamResult.data.members}),
+      );
+      setTeamInStorage({
+        ...teamResult.data.team,
+        members: teamResult.data.members,
+      });
 
       dispatch(setSubscription(teamResult.data.subscription));
 
