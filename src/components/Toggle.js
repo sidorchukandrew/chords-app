@@ -8,7 +8,6 @@ export default function Toggle({style: providedStyles, enabled, onChange}) {
       value={enabled}
       onValueChange={onChange}
       trackColor={{true: '#2464eb', false: '#c0c0c0'}}
-      ios_backgroundColor="#2464eb"
       thumbColor="white"
       style={providedStyles}
     />

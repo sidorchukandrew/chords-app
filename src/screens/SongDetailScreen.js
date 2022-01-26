@@ -84,6 +84,7 @@ export default function SongDetailScreen({navigation, route}) {
           song={song}
           onNavigateTo={handleNavigateTo}
           onUpdateSong={handleUpdateSong}
+          navigation={navigation}
         />
       );
     }

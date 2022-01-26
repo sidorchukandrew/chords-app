@@ -11,12 +11,30 @@ import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {reportError} from '../utils/error';
+import AuthApi from '../api/authApi';
+import AlertBubble from '../components/AlertBubble';
 
 export default function ForgotPasswordScreen({navigation}) {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errored, setErrored] = useState(false);
 
   function handleNavigateToLogin() {
     navigation.navigate('Login');
+  }
+
+  async function handleSendInstructions() {
+    try {
+      setLoading(true);
+      await AuthApi.sendResetPasswordInstructions(email);
+      navigation.navigate('Check Email For Password');
+    } catch (error) {
+      reportError(error);
+      setErrored(true);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -36,10 +54,23 @@ export default function ForgotPasswordScreen({navigation}) {
           autoCapitalize="none"
           autoComplete="off"
         />
+        {errored && (
+          <AlertBubble
+            style={styles.alert}
+            message="We were not able to send you reset instructions"
+            dismissable
+            onDismiss={() => setErrored(false)}
+          />
+        )}
       </Container>
       <View style={styles.buttonContainer}>
         <Container size="sm">
-          <Button>Send instructions</Button>
+          <Button
+            loading={loading}
+            disabled={!email}
+            onPress={handleSendInstructions}>
+            Send instructions
+          </Button>
         </Container>
       </View>
     </SafeAreaView>
@@ -74,5 +105,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 5,
     color: '#505050',
+  },
+  alert: {
+    marginTop: 20,
   },
 });

@@ -15,7 +15,6 @@ export default function ToggleField({
         value={enabled}
         onValueChange={onChange}
         trackColor={{true: '#2464eb', false: '#c0c0c0'}}
-        ios_backgroundColor="#2464eb"
         thumbColor="white"
       />
     </View>

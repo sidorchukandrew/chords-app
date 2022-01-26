@@ -5682,11 +5682,6 @@ react-native-config@^1.4.5:
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.4.5.tgz#6fe5895410b75e44fe4f4bf00caaf894a0981f3a"
   integrity sha512-5oiAsoW88SOYDg/0cleJ2vJDqv98FJUbFQYEnH4sdMtEn3AAT3lb7BkTGW8HO/t3Vk9VOruwxUUnO4tzuxzCsw==
 
-react-native-device-info@^8.4.8:
-  version "8.4.8"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.8.tgz#fc92ae423e47db6cfbf30c30012e09cee63727fa"
-  integrity sha512-92676ZWHZHsPM/EW1ulgb2MuVfjYfMWRTWMbLcrCsipkcMaZ9Traz5mpsnCS7KZpsOksnvUinzDIjsct2XGc6Q==
-
 react-native-draggable-flatlist@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-3.0.4.tgz#f2eb6612c3cfde34abc8f2a3523d6dabd7905bd0"
@@ -7292,3 +7287,8 @@ yargs@^16.1.1:
     string-width "^4.2.0"
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
+
+zxcvbn@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/zxcvbn/-/zxcvbn-4.4.2.tgz#28ec17cf09743edcab056ddd8b1b06262cc73c30"
+  integrity sha1-KOwXzwl0PtyrBW3dixsGJizHPDA=

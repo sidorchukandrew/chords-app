@@ -18,7 +18,12 @@ import ThemeOptionsBottomSheet from './ThemeOptionsBottomSheet';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 
-export default function SongDetailsTab({song, onNavigateTo, onUpdateSong}) {
+export default function SongDetailsTab({
+  song,
+  onNavigateTo,
+  onUpdateSong,
+  navigation,
+}) {
   const [genreOptionsVisible, setGenreOptionsVisible] = useState(false);
   const [genreBeingViewed, setGenreBeingViewed] = useState();
   const [themeOptionsVisible, setThemeOptionsVisible] = useState(false);
@@ -118,7 +123,7 @@ export default function SongDetailsTab({song, onNavigateTo, onUpdateSong}) {
               tag={binder.name}
               style={styles.binderTag}
               textStyle={styles.binderTagText}
-              onPress={() => onNavigateTo('Binder Detail')}
+              onPress={() => navigation.push('Binder Detail', binder)}
             />
           ))}
         </ScrollView>

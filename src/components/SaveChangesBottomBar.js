@@ -22,7 +22,11 @@ export default function SaveChangesBottomBar({song}) {
   const [sheetVisible, setSheetVisible] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  if (isEmpty(formatEdits[`${song.id}`]) && isEmpty(songEdits[`${song.id}`]))
+  if (
+    (isEmpty(formatEdits[`${song?.id}`]) &&
+      isEmpty(songEdits[`${song?.id}`])) ||
+    !song
+  )
     return null;
 
   Animated.loop(

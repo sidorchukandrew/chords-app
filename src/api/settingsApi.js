@@ -7,4 +7,10 @@ export default class SettingsApi {
       headers: constructAuthHeaders(),
     });
   }
+
+  static updateNotificationSetting(id, updates) {
+    return api().put(`/users/me/notification_settings/${id}`, updates, {
+      headers: constructAuthHeaders(),
+    });
+  }
 }

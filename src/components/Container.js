@@ -5,10 +5,13 @@ export default function Container({
   children,
   size = 'md',
   style: providedStyles,
+  padded = true,
 }) {
   return (
     <View style={[styles.spacing, providedStyles]}>
-      <View style={[styles.container, widths[size]]}>{children}</View>
+      <View style={[styles.container, widths[size], padded && styles.padding]}>
+        {children}
+      </View>
     </View>
   );
 }
@@ -30,6 +33,8 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
+  },
+  padding: {
     paddingHorizontal: 15,
   },
 });

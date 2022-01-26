@@ -15,11 +15,13 @@ import {login} from '../redux/slices/authSlice';
 import {reportError} from '../utils/error';
 import {setAuthInStorage} from '../services/authService';
 import {useDispatch} from 'react-redux';
+import AlertBubble from '../components/AlertBubble';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errored, setErrored] = useState(false);
   const dispatch = useDispatch();
 
   function handleNavigateToSignUp() {
@@ -45,6 +47,7 @@ export default function LoginScreen({navigation}) {
       navigation.navigate('Login Team');
     } catch (error) {
       reportError(error);
+      setErrored(true);
       setLoading(false);
     }
   }
@@ -73,6 +76,13 @@ export default function LoginScreen({navigation}) {
           onPress={handleNavigateToForgotPassword}>
           <Text style={styles.buttonText}>Forgot password?</Text>
         </TouchableOpacity>
+        {errored && (
+          <AlertBubble
+            dismissable
+            onDismiss={() => setErrored(false)}
+            message="We were not able to log you in. Are you sure you have an account?"
+          />
+        )}
       </Container>
       <View style={styles.buttonContainer}>
         <Container size="sm">
@@ -129,6 +139,6 @@ const styles = StyleSheet.create({
     color: '#2464eb',
   },
   forgotPasswordButton: {
-    marginTop: 15,
+    marginVertical: 15,
   },
 });

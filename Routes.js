@@ -42,6 +42,8 @@ import {getAllSongs} from './src/services/songsService';
 import {reportError} from './src/utils/error';
 import {selectIsLoggedIn} from './src/redux/slices/authSlice';
 import {useSelector} from 'react-redux';
+import CheckEmailModal from './src/modals/CheckEmailModal';
+import CheckEmailForPasswordModal from './src/modals/CheckEmailForPasswordModal';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -232,7 +234,7 @@ export default function Routes() {
                 component={EditBinderDetailsModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                   title: 'Edit',
                 }}
               />
@@ -271,6 +273,22 @@ export default function Routes() {
                 />
                 <Stack.Screen name="Login Team" component={LoginTeamScreen} />
                 <Stack.Screen name="Create Team" component={CreateTeamScreen} />
+                <Stack.Screen
+                  name="Check Email"
+                  component={CheckEmailModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                  }}
+                />
+                <Stack.Screen
+                  name="Check Email For Password"
+                  component={CheckEmailForPasswordModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                  }}
+                />
               </Stack.Group>
             </>
           )}
