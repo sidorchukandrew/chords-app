@@ -1,3 +1,4 @@
+import appearanceReducer from './slices/appearanceSlice';
 import authReducer from './slices/authSlice';
 import {configureStore} from '@reduxjs/toolkit';
 import performanceReducer from './slices/performanceSlice';
@@ -8,6 +9,7 @@ const store = configureStore({
     auth: authReducer,
     subscription: subscriptionReducer,
     performance: performanceReducer,
+    appearance: appearanceReducer,
   },
 });
 

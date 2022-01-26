@@ -12,7 +12,11 @@ export default function DashboardScreen({navigation}) {
           onOpenTeamsModal={() => navigation.navigate('Choose Team')}
         />
       ),
-      headerLeft: () => <DashboardScreenProfilePicture />,
+      headerLeft: () => (
+        <DashboardScreenProfilePicture
+          onNavigateToAccount={() => navigation.navigate('Account')}
+        />
+      ),
     });
   }, [navigation]);
 

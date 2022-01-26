@@ -34,6 +34,7 @@ export default function ProfilePicture({
           sizes[size],
           styles.initialsContainer,
           determineInitialsBackgroundColor(),
+          providedStyles,
         ]}>
         <Text style={[styles.initialsText, fontSizes[size]]}>
           {getAvatarInitials(member)}
@@ -82,8 +83,7 @@ const fontSizes = {
     fontSize: 17,
   },
   xl: {
-    height: 90,
-    width: 90,
+    fontSize: 35,
   },
 };
 

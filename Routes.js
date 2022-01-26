@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import AccountScreen from './src/screens/AccountScreen';
 import AddGenreModal from './src/modals/AddGenreModal';
 import AddThemeModal from './src/modals/AddThemeModal';
+import AppearanceScreen from './src/screens/AppearanceScreen';
 import AuthScreen from './src/screens/AuthScreen';
 import BinderDetailScreen from './src/screens/BinderDetailScreen';
 import BindersIndexScreen from './src/screens/BindersIndexScreen';
@@ -14,6 +15,7 @@ import CreateSongModal from './src/modals/CreateSongModal';
 import CreateTeamScreen from './src/screens/CreateTeamScreen';
 import DashboardScreen from './src/screens/DashboardScreen';
 import EditBinderDetailsModal from './src/modals/EditBinderDetailsModal';
+import EditProfileScreen from './src/screens/EditProfileScreen';
 import EditSetlistDetailsModal from './src/modals/EditSetlistDetailsModal';
 import EditSongContentScreen from './src/screens/EditSongContentScreen';
 import EditSongDetailsModal from './src/modals/EditSongDetailsModal';
@@ -22,6 +24,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import LoginTeamScreen from './src/screens/LoginTeamScreen';
 import MembersIndexScreen from './src/screens/MembersIndexScreen';
 import {NavigationContainer} from '@react-navigation/native';
+import NotificationSettingsScreen from './src/screens/NotificationSettingsScreen';
 import PerformSetlistScreen from './src/screens/PerformSetlistScreen';
 import PerformSongScreen from './src/screens/PerformSongScreen';
 import SearchScreen from './src/screens/SearchScreen';
@@ -105,6 +108,36 @@ export default function Routes() {
                   component={SetlistDetailScreen}
                   options={({route}) => ({
                     title: '',
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                    headerBackTitle: '',
+                  })}
+                />
+                <Stack.Screen
+                  name="Appearance"
+                  component={AppearanceScreen}
+                  options={({route}) => ({
+                    title: 'Appearance',
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                    headerBackTitle: '',
+                  })}
+                />
+                <Stack.Screen
+                  name="Notification Settings"
+                  component={NotificationSettingsScreen}
+                  options={() => ({
+                    title: 'Notification Settings',
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                    headerBackTitle: '',
+                  })}
+                />
+                <Stack.Screen
+                  name="Edit Profile"
+                  component={EditProfileScreen}
+                  options={({route}) => ({
+                    title: 'Edit Profile',
                     headerShadowVisible: false,
                     headerTitleAlign: 'center',
                     headerBackTitle: '',
@@ -254,7 +287,11 @@ function HomeTabs() {
       screenOptions={{headerShadowVisible: false, headerTitleAlign: 'center'}}>
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Account" component={AccountScreen} />
+      <Tab.Screen
+        name="Account"
+        component={AccountScreen}
+        options={{headerShown: false}}
+      />
       <Tab.Screen name="Songs" component={SongsIndexScreen} />
       <Tab.Screen name="Binders" component={BindersIndexScreen} />
       <Tab.Screen name="Sets" component={SetlistsIndexScreen} />

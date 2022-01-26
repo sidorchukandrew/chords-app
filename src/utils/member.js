@@ -8,7 +8,11 @@ export function getNameOrEmail(member) {
 
 export function getAvatarInitials(member) {
   let titleParts = getNameOrEmail(member).split(' ');
-  initials = titleParts.map(part => part.charAt(0).toUpperCase()).join();
+  initials = titleParts.map(part => part.charAt(0).toUpperCase()).join('');
 
   return initials;
+}
+
+export function hasName(member) {
+  return !!member.first_name || !!member.last_name;
 }

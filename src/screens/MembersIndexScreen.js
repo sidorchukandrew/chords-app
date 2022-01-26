@@ -8,6 +8,7 @@ import {
 import Container from '../components/Container';
 import ItemSeparator from '../components/ItemSeparator';
 import MembersListRow from '../components/MembersListRow';
+import NoDataMessage from '../components/NoDataMessage';
 import SearchFilterBar from '../components/SearchFilterBar';
 import TeamsApi from '../api/teamsApi';
 import {pluralize} from '../utils/string';
@@ -68,7 +69,7 @@ export default function MembersIndexScreen() {
         refreshing={refreshing}
         onRefresh={handleRefresh}
         ItemSeparatorComponent={ItemSeparator}
-        ListHeaderComponent={() => (
+        ListHeaderComponent={
           <SearchFilterBar
             query={query}
             onQueryChange={setQuery}
@@ -77,7 +78,8 @@ export default function MembersIndexScreen() {
               'member',
             )}`}
           />
-        )}
+        }
+        ListEmptyComponent={<NoDataMessage message="No members to show" />}
       />
     </Container>
   );

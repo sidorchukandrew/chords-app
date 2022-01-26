@@ -64,6 +64,12 @@ const authSlice = createSlice({
     setCurrentUser: (state, {payload}) => {
       state.currentUser = payload;
     },
+    updateCurrentUser: (state, {payload}) => {
+      state.currentUser = {...state.currentUser, ...payload};
+    },
+    updateCurrentMember: (state, {payload}) => {
+      state.currentMember = {...state.currentMember, ...payload};
+    },
   },
 });
 
@@ -79,8 +85,15 @@ export const selectIsLoggedIn = state =>
 export const selectCurrentUser = state => state.auth?.currentUser;
 export const selectCurrentTeam = state => state.auth?.currentTeam;
 
-export const {login, logout, loginTeam, setMembership, setCurrentUser} =
-  authSlice.actions;
+export const {
+  login,
+  logout,
+  loginTeam,
+  setMembership,
+  setCurrentUser,
+  updateCurrentMember,
+  updateCurrentUser,
+} = authSlice.actions;
 
 export const selectCurrentMember = state => {
   let permissions = state.auth?.currentMember.role.permissions.map(

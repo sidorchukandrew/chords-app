@@ -5,10 +5,10 @@ import React from 'react';
 import {selectCurrentUser} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 
-export default function DashboardScreenProfilePicture() {
+export default function DashboardScreenProfilePicture({onNavigateToAccount}) {
   const currentUser = useSelector(selectCurrentUser);
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={onNavigateToAccount}>
       <ProfilePicture
         url={currentUser?.image_url}
         size="md"

@@ -1,5 +1,6 @@
-import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+
+import React from 'react';
 
 export default function AccentButton({
   children,
@@ -7,13 +8,14 @@ export default function AccentButton({
   style: providedStyles,
   full,
   icon,
+  textStyle,
 }) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.button, full && styles.full, providedStyles]}>
       {icon}
-      <Text style={styles.buttonText}>{children}</Text>
+      <Text style={[styles.buttonText, textStyle]}>{children}</Text>
     </TouchableOpacity>
   );
 }
