@@ -26,8 +26,9 @@ export function getPreferredKey(song) {
 export function buildContent(song) {
   console.log('Building');
   let content = song?.content;
-  if (!content || !song?.format) return <Text></Text>;
+  if (!content || !song?.format) return <Text />;
 
+  console.log(song.show_roadmap);
   if (song.roadmap?.length > 0 && song.show_roadmap)
     content = fromRoadmap(song);
 

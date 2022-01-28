@@ -88,6 +88,7 @@ export default function SaveChangesBottomBar({song}) {
       await saveCapoChanges(updates);
       delete updates.capo_key;
     }
+
     await updateSong(song.id, updates);
   }
 

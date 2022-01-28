@@ -42,11 +42,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   container: {
-    padding: 10,
+    padding: 20,
     flex: 1,
   },
   saveButton: {
-    marginBottom: 5,
+    marginBottom: 8,
   },
   filler: {
     flex: 1,

@@ -11,6 +11,7 @@ import {EDIT_SONGS} from '../utils/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RectButton from '../components/RectButton';
 import {selectCurrentMember} from '../redux/slices/authSlice';
+import ItemSeparator from '../components/ItemSeparator';
 
 export default function FontBottomSheetScreen() {
   const song = useSelector(selectSongOnScreen);
@@ -45,6 +46,7 @@ export default function FontBottomSheetScreen() {
         <Text style={styles.fontFamily}>Roboto Mono</Text>
         {song.format?.font === 'Roboto Mono' && checkmarkIcon}
       </RectButton>
+      <ItemSeparator />
       <RectButton
         styles={styles.button}
         onPress={() => handleFontChange('Open Sans')}>

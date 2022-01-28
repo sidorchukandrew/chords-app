@@ -92,28 +92,31 @@ export default function SongsIndexScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        onRefresh={handleRefresh}
-        refreshing={refreshing}
-        ItemSeparatorComponent={ItemSeparator}
-        ListHeaderComponent={
-          <SearchFilterBar
-            query={query}
-            onQueryChange={setQuery}
-            placeholder={`Search ${songs?.length} songs`}
-          />
-        }
-        data={filteredSongs()}
-        renderItem={renderSongRow}
-        ListEmptyComponent={
-          <NoDataMessage
-            message="You have no songs in your library yet"
-            showAddButton={currentMember.can(ADD_SONGS)}
-            buttonTitle="Add songs"
-            onButtonPress={handleCreateSong}
-          />
-        }
-      />
+      <Container size="lg">
+        <FlatList
+          onRefresh={handleRefresh}
+          refreshing={refreshing}
+          ItemSeparatorComponent={ItemSeparator}
+          ListHeaderComponent={
+            <SearchFilterBar
+              query={query}
+              onQueryChange={setQuery}
+              placeholder={`Search ${songs?.length} songs`}
+            />
+          }
+          data={filteredSongs()}
+          renderItem={renderSongRow}
+          ListEmptyComponent={
+            <NoDataMessage
+              message="You have no songs in your library yet"
+              showAddButton={currentMember.can(ADD_SONGS)}
+              buttonTitle="Add songs"
+              onButtonPress={handleCreateSong}
+            />
+          }
+          style={{height: '100%'}}
+        />
+      </Container>
       {currentMember.can(ADD_SONGS) && (
         <CircleButton style={styles.addButton} onPress={handleCreateSong}>
           <Icon name="plus" size={35} color="white" />

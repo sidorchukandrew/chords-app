@@ -110,7 +110,6 @@ export default function SetlistDetailScreen({route, navigation}) {
 
     let movedSong = setlist.songs[from];
 
-    reorderedSongs.forEach(song => console.log(song.name, song.position));
     setSetlist(currentSetlist => ({...currentSetlist, songs: reorderedSongs}));
     updateScheduledSong(setlist.id, movedSong.id, to, reorderedSongs);
   }

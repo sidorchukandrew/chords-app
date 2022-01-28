@@ -21,6 +21,7 @@ import SaveChangesBottomBar from '../components/SaveChangesBottomBar';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
 import SongContent from '../components/SongContent';
 import {useEffect} from 'react';
+import Roadmap from '../components/Roadmap';
 
 export default function PerformSongScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
@@ -65,6 +66,7 @@ export default function PerformSongScreen({navigation}) {
   return (
     <>
       <ScrollView style={styles.container}>
+        <Roadmap roadmap={song.roadmap} song={song} />
         <SongContent song={song} />
       </ScrollView>
       <SaveChangesBottomBar song={song} />

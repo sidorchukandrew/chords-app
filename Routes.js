@@ -54,7 +54,7 @@ export default function Routes() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      intervalRef.current = setInterval(refreshStorage, 90000);
+      intervalRef.current = setInterval(refreshStorage, 120000);
     }
 
     return () => {

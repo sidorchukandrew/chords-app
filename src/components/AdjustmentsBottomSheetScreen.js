@@ -47,8 +47,8 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
       />
       <ToggleField
         label="Show roadmap"
-        enabled={!song.show_roadmap}
-        onChange={newValue => handleUpdateField('show_roadmap', !newValue)}
+        enabled={song.show_roadmap}
+        onChange={newValue => handleUpdateField('show_roadmap', newValue)}
         style={styles.field}
       />
       <Divider size="sm" style={{flexGrow: 0}} />

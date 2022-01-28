@@ -8,6 +8,7 @@ export async function getAllSongs({refresh = false} = {}) {
   if (refresh || !hasSongsSet()) {
     console.log('getting songs from api');
     return SongsApi.getAll().then(({data}) => {
+      data.sort((songA, songB) => songA.name.localeCompare(songB.name));
       data.forEach(setSongInStorage);
       return data;
     });
@@ -56,9 +57,16 @@ export function updateSong(songId, updates) {
     team_id: getTeamId(),
   };
 
+  if (params.roadmap) {
+    params.roadmap = params.roadmap?.join('@');
+  }
+
   return SongsApi.updateOne(songId, params).then(({data}) => {
     if (hasSongSet(songId)) {
       let songInStorage = getSongFromStorage(songId);
+      if (data.roadmap) {
+        data.roadmap = data.roadmap.split('@');
+      }
       setSongInStorage({...songInStorage, ...data});
     }
     return data;
@@ -126,6 +134,9 @@ function hasSongsSet() {
 }
 
 export function setSongInStorage(song) {
+  if (typeof song.roadmap === 'string') {
+    song.roadmap = [];
+  }
   let stringified = JSON.stringify(song);
   storage.set(`${song.id}`, stringified);
 }
@@ -140,6 +151,7 @@ function getSongsFromStorage() {
     songs.push(JSON.parse(stringified));
   });
 
+  songs.sort((songA, songB) => songA.name.localeCompare(songB.name));
   return songs;
 }
 

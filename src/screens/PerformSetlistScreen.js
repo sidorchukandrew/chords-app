@@ -21,6 +21,7 @@ import SaveChangesBottomBar from '../components/SaveChangesBottomBar';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
 import SongContent from '../components/SongContent';
 import {hasAnyKeysSet} from '../utils/song';
+import Roadmap from '../components/Roadmap';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const windowWidth = useWindowDimensions().width;
@@ -80,6 +81,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView style={styles.slideContainer}>
+            <Roadmap roadmap={song.roadmap} song={song} />
             <SongContent song={songOnScreen} />
           </ScrollView>
           <SaveChangesBottomBar song={song} />
@@ -89,6 +91,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView style={styles.slideContainer}>
+            <Roadmap roadmap={song.roadmap} song={song} />
             <SongContent song={song} />
           </ScrollView>
         </>
