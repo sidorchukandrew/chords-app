@@ -6,7 +6,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import Toggle from '../components/Toggle';
 import {determineCapos} from '../utils/capo';
-import {updateSongOnScreen} from '../redux/slices/performanceSlice';
+import {
+  storeSongEdits,
+  updateSongOnScreen,
+} from '../redux/slices/performanceSlice';
 import {useDispatch} from 'react-redux';
 
 export default function CapoBottomSheetScreen({route, navigation}) {
@@ -26,6 +29,13 @@ export default function CapoBottomSheetScreen({route, navigation}) {
 
   function handleChange(capoKey) {
     setSong(currentSong => {
+      let edits = {
+        songId: song.id,
+        updates: {
+          capo_key: capoKey,
+        },
+      };
+      dispatch(storeSongEdits(edits));
       if (currentSong.capo) {
         let updatedCapo = {...currentSong.capo, capo_key: capoKey};
         dispatch(updateSongOnScreen({capo: updatedCapo}));
@@ -40,6 +50,14 @@ export default function CapoBottomSheetScreen({route, navigation}) {
   function handleRemoveCapo() {
     setSong(currentSong => ({...currentSong, capo: null}));
     dispatch(updateSongOnScreen({capo: null}));
+    let edits = {
+      songId: song.id,
+      updates: {
+        capo_key: null,
+        capoId: song?.capo?.id,
+      },
+    };
+    dispatch(storeSongEdits(edits));
   }
 
   function handleToggle(toggleValue) {

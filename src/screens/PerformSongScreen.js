@@ -6,7 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {clearEdits, selectSongOnScreen} from '../redux/slices/performanceSlice';
+import {
+  clearEdits,
+  selectSongOnScreen,
+  updateSongOnScreen,
+} from '../redux/slices/performanceSlice';
 import {getPreferredKey, hasAnyKeysSet} from '../utils/song';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -18,27 +22,24 @@ import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet
 import SongContent from '../components/SongContent';
 import {useEffect} from 'react';
 
-export default function PerformSongScreen({route, navigation}) {
+export default function PerformSongScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
-
   const dispatch = useDispatch();
   const [keyOptionsVisible, setKeyOptionsVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
 
   useEffect(() => {
     dispatch(clearEdits());
-  }, []);
+    let show_capo = song.capo;
+    let show_transposed = song.transposed_key;
+
+    dispatch(updateSongOnScreen({show_capo, show_transposed}));
+  }, [dispatch]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            width: 100,
-          }}>
+        <View style={styles.headerButtonsContainer}>
           {hasAnyKeysSet(song) && (
             <Button
               style={{marginRight: 15, height: 35, width: 35, borderRadius: 8}}
@@ -60,6 +61,7 @@ export default function PerformSongScreen({route, navigation}) {
       ),
     });
   }, [navigation, song]);
+
   return (
     <>
       <ScrollView style={styles.container}>
@@ -84,5 +86,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 10,
+  },
+  headerButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: 100,
   },
 });

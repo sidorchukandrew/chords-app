@@ -33,7 +33,7 @@ export function buildContent(song) {
 
   // if (isChordPro(content)) content = formatChordPro(content);
 
-  if (!song.format.chords_hidden && (song.show_transposed || song.capo)) {
+  if (!song.format.chords_hidden && (song.show_transposed || song.show_capo)) {
     content = transpose({...song, content: content});
   }
 
@@ -85,7 +85,7 @@ export function transpose(song) {
     linesOfSong.forEach((line, index) => {
       let transposedLine;
       if (isChordLine(line)) {
-        if (song.capo) {
+        if (song.capo && song.show_capo) {
           if (song.show_transposed && song.transposed_key) {
             transposedLine = Transposer.transpose(line)
               .fromKey(song.original_key)

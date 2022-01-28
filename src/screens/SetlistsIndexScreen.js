@@ -13,6 +13,7 @@ import SegmentedControl from '../components/SegmentedControl';
 import {getAllSetlists} from '../services/setlistsService';
 import {reportError} from '../utils/error';
 import {useFocusEffect} from '@react-navigation/native';
+import Container from '../components/Container';
 
 export default function SetlistsIndexScreen({navigation, route}) {
   const [setType, setSetType] = useState('Upcoming');
@@ -114,37 +115,40 @@ export default function SetlistsIndexScreen({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        ListHeaderComponent={
-          <>
-            <SearchFilterBar
-              query={query}
-              onQueryChange={setQuery}
-              placeholder={`Search ${
-                setType === 'Upcoming'
-                  ? filteredUpcomingSets().length
-                  : filteredPastSets().length
-              } sets`}
-            />
-            <View style={styles.typePicker}>
-              <SegmentedControl
-                options={['Upcoming', 'Past']}
-                selected={setType}
-                onPress={setSetType}
-                style={{maxWidth: 200}}
+      <Container size="lg">
+        <FlatList
+          ListHeaderComponent={
+            <>
+              <SearchFilterBar
+                query={query}
+                onQueryChange={setQuery}
+                placeholder={`Search ${
+                  setType === 'Upcoming'
+                    ? filteredUpcomingSets().length
+                    : filteredPastSets().length
+                } sets`}
               />
-            </View>
-          </>
-        }
-        data={
-          setType === 'Upcoming' ? filteredUpcomingSets() : filteredPastSets()
-        }
-        renderItem={renderSetRow}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-        ListEmptyComponent={<NoDataMessage message={'No sets to show'} />}
-        ItemSeparatorComponent={ItemSeparator}
-      />
+              <View style={styles.typePicker}>
+                <SegmentedControl
+                  options={['Upcoming', 'Past']}
+                  selected={setType}
+                  onPress={setSetType}
+                  style={{maxWidth: 200}}
+                />
+              </View>
+            </>
+          }
+          data={
+            setType === 'Upcoming' ? filteredUpcomingSets() : filteredPastSets()
+          }
+          renderItem={renderSetRow}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          ListEmptyComponent={<NoDataMessage message={'No sets to show'} />}
+          ItemSeparatorComponent={ItemSeparator}
+          style={{height: '100%'}}
+        />
+      </Container>
       <CircleButton
         style={styles.addButton}
         onPress={() => navigation.navigate('Create Setlist')}>

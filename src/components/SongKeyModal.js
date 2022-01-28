@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useState} from 'react/cjs/react.development';
 import {MAJOR_KEYS_WITH_SPACES, MINOR_KEYS_WITH_SPACES} from '../utils/music';
 import AccentButton from './AccentButton';
+import BottomSheetModal from './BottomSheetModal';
 import Button from './Button';
 import ConfirmCancelButtons from './ConfirmCancelButtons';
 import Modal from './Modal';
@@ -13,6 +13,11 @@ export default function SongKeyModal({onClose, visible, songKey, onChange}) {
   const [originalKey, setOriginalKey] = useState(songKey || 'G');
   const [quality, setQuality] = useState('Major');
   const [keyRows, setKeyRows] = useState(MAJOR_KEYS_WITH_SPACES);
+  const sheetRef = useRef();
+
+  useEffect(() => {
+    if (visible) sheetRef.current?.present();
+  }, [visible, sheetRef]);
 
   useEffect(() => {
     setOriginalKey(songKey || 'G');
@@ -26,11 +31,20 @@ export default function SongKeyModal({onClose, visible, songKey, onChange}) {
 
   function handleConfirm() {
     onChange?.(originalKey);
+    handleClose();
+  }
+
+  function handleClose() {
+    sheetRef?.current.dismiss();
     onClose();
   }
 
   return (
-    <Modal visible={visible} onClose={onClose} style={styles.modal}>
+    <BottomSheetModal
+      ref={sheetRef}
+      visible={visible}
+      onDismiss={onClose}
+      style={styles.modal}>
       <Text style={styles.selectedKey}>{originalKey}</Text>
       <View style={styles.qualityPickerContainer}>
         <SegmentedControl
@@ -52,8 +66,8 @@ export default function SongKeyModal({onClose, visible, songKey, onChange}) {
           ))}
         </View>
       ))}
-      <ConfirmCancelButtons onCancel={onClose} onConfirm={handleConfirm} />
-    </Modal>
+      <ConfirmCancelButtons onCancel={handleClose} onConfirm={handleConfirm} />
+    </BottomSheetModal>
   );
 }
 

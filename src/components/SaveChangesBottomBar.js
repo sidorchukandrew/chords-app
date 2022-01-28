@@ -13,6 +13,11 @@ import SaveChangesBottomSheet from './SaveChangesBottomSheet';
 import {isEmpty} from '../utils/object';
 import {reportError} from '../utils/error';
 import {updateSong} from '../services/songsService';
+import {
+  createCapoForSong,
+  deleteCapoFromSong,
+  updateCapo,
+} from '../services/caposService';
 
 export default function SaveChangesBottomBar({song}) {
   const opacity = useRef(new Animated.Value(1)).current;
@@ -79,7 +84,23 @@ export default function SaveChangesBottomBar({song}) {
 
   async function saveSongChanges() {
     let updates = songEdits[song.id];
+    if ('capo_key' in updates) {
+      await saveCapoChanges(updates);
+      delete updates.capo_key;
+    }
     await updateSong(song.id, updates);
+  }
+
+  async function saveCapoChanges({capo_key: updatedCapoKey, capoId}) {
+    if (updatedCapoKey === null && capoId) {
+      await deleteCapoFromSong(capoId, song.id);
+    } else if (updatedCapoKey !== null && song?.capo?.id) {
+      let updatedCapo = await updateCapo(song.capo.id, song.id, updatedCapoKey);
+      dispatch(updateSongOnScreen({capo: updatedCapo}));
+    } else if (updatedCapoKey !== null && !song?.capo?.id) {
+      let createdCapo = await createCapoForSong(updatedCapoKey, song.id);
+      dispatch(updateSongOnScreen({capo: createdCapo}));
+    }
   }
 
   return (

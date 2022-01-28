@@ -24,7 +24,13 @@ import {hasAnyKeysSet} from '../utils/song';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const windowWidth = useWindowDimensions().width;
-  const [songs, setSongs] = useState(route.params.songs);
+  const [songs, setSongs] = useState(() => {
+    return route.params.songs?.map(song => ({
+      ...song,
+      show_transposed: !!song.transposed_key,
+      show_capo: !!song.capo,
+    }));
+  });
   const [songIndex, setSongIndex] = useState(0);
   const [keyOptionsSheetVisible, setKeyOptionsSheetVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);

@@ -224,7 +224,7 @@ export default function Routes() {
                 component={EditSongDetailsModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                   title: 'Edit Song',
                 }}
               />

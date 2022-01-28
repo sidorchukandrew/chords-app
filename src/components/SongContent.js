@@ -27,6 +27,7 @@ function areEqual(prevProps, nextProps) {
     prevSong.show_transposed === nextSong.show_transposed &&
     prevSong.transposed_key === nextSong.transposed_key &&
     prevSong.capo === nextSong.capo &&
+    prevSong.show_capo === nextSong.show_capo &&
     prevSong.chords_hidden === nextSong.chords_hidden &&
     prevSong.roadmap === nextSong.roadmap &&
     prevSong.show_roadmap === nextSong.show_roadmap &&

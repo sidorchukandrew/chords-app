@@ -41,7 +41,13 @@ export default function SongContentTab({song, onPerform, onEdit}) {
       </View>
       <View style={styles.content}>
         {song.content ? (
-          <SongContent song={song} />
+          <SongContent
+            song={{
+              ...song,
+              show_transposed: !!song.transposed_key,
+              show_capo: !!song.capo,
+            }}
+          />
         ) : (
           <Text>No lyrics have been added yet</Text>
         )}
