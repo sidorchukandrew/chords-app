@@ -8,7 +8,11 @@ import {
   selectCurrentTeam,
   setMembership,
 } from '../redux/slices/authSlice';
-import {setMemberInStorage, setTeamInStorage} from '../services/authService';
+import {
+  setMemberInStorage,
+  setSubscriptionInStorage,
+  setTeamInStorage,
+} from '../services/authService';
 import {useDispatch, useSelector} from 'react-redux';
 
 import AccentButton from '../components/AccentButton';
@@ -73,6 +77,7 @@ export default function ChooseTeamModal({navigation}) {
       });
 
       dispatch(setSubscription(teamResult.data.subscription));
+      setSubscriptionInStorage(teamResult.data.subscription);
 
       let membershipResult = await UsersApi.getTeamMembership();
       dispatch(setMembership({role: membershipResult.data.role}));

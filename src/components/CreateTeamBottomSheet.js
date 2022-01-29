@@ -1,7 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {loginTeam, setMembership} from '../redux/slices/authSlice';
-import {setMemberInStorage, setTeamInStorage} from '../services/authService';
+import {
+  setMemberInStorage,
+  setSubscriptionInStorage,
+  setTeamInStorage,
+} from '../services/authService';
 
 import BottomSheet from './BottomSheet';
 import Button from './Button';
@@ -44,6 +48,7 @@ export default function CreateTeamBottomSheet({
         loginTeam({...teamResult.data.team, members: teamResult.data.members}),
       );
       dispatch(setSubscription(teamResult.data.subscription));
+      setSubscriptionInStorage(teamResult.data.subscription);
       setTeamInStorage({
         ...teamResult.data.team,
         members: teamResult.data.members,

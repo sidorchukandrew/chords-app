@@ -9,14 +9,16 @@ export default function SegmentedControl({
 }) {
   return (
     <View style={[styles.container, providedStyles]}>
-      {options.map(option => (
-        <TouchableOpacity
-          key={option}
-          onPress={() => onPress(option)}
-          style={[styles.option, selected === option && styles.selected]}>
-          <Text style={styles.optionText}>{option}</Text>
-        </TouchableOpacity>
-      ))}
+      {options.map(option =>
+        option ? (
+          <TouchableOpacity
+            key={option}
+            onPress={() => onPress(option)}
+            style={[styles.option, selected === option && styles.selected]}>
+            <Text style={styles.optionText}>{option}</Text>
+          </TouchableOpacity>
+        ) : null,
+      )}
     </View>
   );
 }

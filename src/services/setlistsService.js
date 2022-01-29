@@ -9,26 +9,22 @@ const storage = new MMKV({id: 'setlists'});
 
 export function getAllSetlists({refresh = false} = {}) {
   if (refresh || !hasSetlistsSet()) {
-    console.log('Getting setlists from api');
     return SetlistsApi.getAll().then(({data}) => {
       data.forEach(expandSongsAndPersist);
       return getSetlistsFromStorage();
     });
   } else {
-    console.log('Getting setlists from storage');
     return getSetlistsFromStorage();
   }
 }
 
 export function getSetlistById(id, {refresh = false} = {}) {
   if (refresh || !hasSetlistSet(id)) {
-    console.log('Does not have setlist set locally, fetching from api');
     return SetlistsApi.getOne(id).then(({data}) => {
       setSetlistInStorage(data);
       return getSetlistFromStorage(id);
     });
   } else {
-    console.log('Getting setlist from storage');
     let setlist = getSetlistFromStorage(id);
     let songs = setlist.songs?.map(song => ({
       ...getSongById(song.id),

@@ -1,3 +1,3 @@
-export function reportError({response}) {
-  console.log(response);
+export function reportError(error) {
+  console.log(error);
 }

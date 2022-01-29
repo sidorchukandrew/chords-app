@@ -59,7 +59,7 @@ export default function SongDetailsTab({
   }
 
   return (
-    <View>
+    <ScrollView>
       <Section
         title="Details"
         button={
@@ -142,7 +142,7 @@ export default function SongDetailsTab({
         song={song}
         onThemeRemoved={handleThemeRemoved}
       />
-    </View>
+    </ScrollView>
   );
 }
 

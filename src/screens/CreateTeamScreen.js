@@ -11,7 +11,11 @@ import {
   setCurrentUser,
   setMembership,
 } from '../redux/slices/authSlice';
-import {setMemberInStorage, setTeamInStorage} from '../services/authService';
+import {
+  setMemberInStorage,
+  setSubscriptionInStorage,
+  setTeamInStorage,
+} from '../services/authService';
 
 import Button from '../components/Button';
 import Container from '../components/Container';
@@ -48,6 +52,7 @@ export default function CreateTeamScreen({navigation}) {
       });
 
       dispatch(setSubscription(teamResult.data.subscription));
+      setSubscriptionInStorage(teamResult.data.subscription);
 
       let membershipResult = await UsersApi.getTeamMembership();
       dispatch(setMembership({role: membershipResult.data.role}));

@@ -2,6 +2,10 @@ import {MMKV} from 'react-native-mmkv';
 
 const storage = new MMKV({id: 'auth'});
 
+export function setSubscriptionInStorage(subscription) {
+  setInStorage('currentSubscription', subscription);
+}
+
 export function setUserInStorage(user) {
   setInStorage('currentUser', user);
 }
@@ -44,6 +48,12 @@ export function getCurrentUser() {
 
 export function getCurrentMember() {
   let currentMember = storage.getString('currentMember');
+
+  return currentMember ? JSON.parse(currentMember) : null;
+}
+
+export function getCurrentSubscriptionFromStorage() {
+  let currentMember = storage.getString('currentSubscription');
 
   return currentMember ? JSON.parse(currentMember) : null;
 }

@@ -7,6 +7,7 @@ import {
 } from '../redux/slices/authSlice';
 import {
   setMemberInStorage,
+  setSubscriptionInStorage,
   setTeamInStorage,
   setUserInStorage,
 } from '../services/authService';
@@ -62,6 +63,7 @@ export default function LoginTeamScreen({navigation}) {
       });
 
       dispatch(setSubscription(teamResult.data.subscription));
+      setSubscriptionInStorage(teamResult.data.subscription);
 
       let membershipResult = await UsersApi.getTeamMembership();
       dispatch(setMembership({role: membershipResult.data.role}));

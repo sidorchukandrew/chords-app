@@ -18,8 +18,13 @@ import SongDetailsTab from '../components/SongDetailsTab';
 import SongOptionsBottomSheet from '../components/SongOptionsBottomSheet';
 import {reportError} from '../utils/error';
 import {setSongOnScreen} from '../redux/slices/performanceSlice';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
+import {selectCurrentMember} from '../redux/slices/authSlice';
+import {VIEW_FILES} from '../utils/auth';
+import SongFilesTab from '../components/SongFilesTab';
+import {uploadFiles} from 'react-native-fs';
 
 export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
@@ -28,6 +33,9 @@ export default function SongDetailScreen({navigation, route}) {
   const [loading, setLoading] = useState(false);
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [files, setFiles] = useState([]);
+  const currentSubscription = useSelector(selectCurrentSubscription);
+  const currentMember = useSelector(selectCurrentMember);
   const dispatch = useDispatch();
 
   useFocusEffect(
@@ -69,6 +77,10 @@ export default function SongDetailScreen({navigation, route}) {
     navigation.navigate('Edit Song Content', song);
   }
 
+  function handleFilesUploaded(uploadedFiles) {
+    setFiles(uploadedFiles);
+  }
+
   function renderTab() {
     if (tab === 'Song') {
       return (
@@ -85,6 +97,15 @@ export default function SongDetailScreen({navigation, route}) {
           onNavigateTo={handleNavigateTo}
           onUpdateSong={handleUpdateSong}
           navigation={navigation}
+        />
+      );
+    } else if (tab === 'Files') {
+      return (
+        <SongFilesTab
+          files={files}
+          song={song}
+          onFilesLoaded={setFiles}
+          onFilesUploaded={handleFilesUploaded}
         />
       );
     }
@@ -108,19 +129,23 @@ export default function SongDetailScreen({navigation, route}) {
     }
   }
 
+  function canViewFiles() {
+    return currentSubscription.isPro && currentMember.can(VIEW_FILES);
+  }
+
   return (
     <>
-      <ScrollView style={styles.container}>
-        <Container size="lg">
-          <SegmentedControl
-            options={['Song', 'Details']}
-            selected={tab}
-            onPress={setTab}
-            style={styles.tabContainer}
-          />
-        </Container>
+      <Container size="lg" style={{flexGrow: 0, backgroundColor: 'white'}}>
+        <SegmentedControl
+          options={['Song', 'Details', canViewFiles() && 'Files']}
+          selected={tab}
+          onPress={setTab}
+          style={styles.tabContainer}
+        />
+      </Container>
+      <View style={styles.container}>
         {loading ? <LoadingIndicator /> : renderTab()}
-      </ScrollView>
+      </View>
       <SongOptionsBottomSheet
         visible={optionsSheetVisible}
         onDismiss={() => setOptionsSheetVisible(false)}
@@ -143,6 +168,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   tabContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
 });

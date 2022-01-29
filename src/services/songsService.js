@@ -6,27 +6,23 @@ const storage = new MMKV({id: 'songs'});
 
 export async function getAllSongs({refresh = false} = {}) {
   if (refresh || !hasSongsSet()) {
-    console.log('getting songs from api');
     return SongsApi.getAll().then(({data}) => {
       data.sort((songA, songB) => songA.name.localeCompare(songB.name));
       data.forEach(setSongInStorage);
       return data;
     });
   } else {
-    console.log('Getting songs from storage');
     return getSongsFromStorage();
   }
 }
 
 export function getSongById(id) {
   if (!hasSongSet(id)) {
-    console.log('Does not have song set locally, fetching from api');
     return SongsApi.getAll().then(({data}) => {
       data.forEach(setSongInStorage);
       return getSongFromStorage(id);
     });
   } else {
-    console.log('Getting song from storage');
     return getSongFromStorage(id);
   }
 }

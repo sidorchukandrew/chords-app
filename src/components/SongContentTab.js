@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import AccentButton from '../components/AccentButton';
 import Container from './Container';
@@ -8,51 +8,53 @@ import SongContent from '../components/SongContent';
 
 export default function SongContentTab({song, onPerform, onEdit}) {
   return (
-    <Container>
-      <View style={styles.shortcutsContainer}>
-        <AccentButton
-          style={{marginRight: 5}}
-          full
-          onPress={onEdit}
-          icon={
-            <Icon
-              name="pencil"
-              size={20}
-              style={styles.shortcutIcon}
-              color="#2464eb"
+    <ScrollView>
+      <Container>
+        <View style={styles.shortcutsContainer}>
+          <AccentButton
+            style={{marginRight: 5}}
+            full
+            onPress={onEdit}
+            icon={
+              <Icon
+                name="pencil"
+                size={20}
+                style={styles.shortcutIcon}
+                color="#2464eb"
+              />
+            }>
+            Edit
+          </AccentButton>
+          <AccentButton
+            style={{marginLeft: 5}}
+            full
+            onPress={onPerform}
+            icon={
+              <Icon
+                name="play-circle"
+                size={20}
+                color="#2464eb"
+                style={styles.shortcutIcon}
+              />
+            }>
+            Perform
+          </AccentButton>
+        </View>
+        <View style={styles.content}>
+          {song.content ? (
+            <SongContent
+              song={{
+                ...song,
+                show_transposed: !!song.transposed_key,
+                show_capo: !!song.capo,
+              }}
             />
-          }>
-          Edit
-        </AccentButton>
-        <AccentButton
-          style={{marginLeft: 5}}
-          full
-          onPress={onPerform}
-          icon={
-            <Icon
-              name="play-circle"
-              size={20}
-              color="#2464eb"
-              style={styles.shortcutIcon}
-            />
-          }>
-          Perform
-        </AccentButton>
-      </View>
-      <View style={styles.content}>
-        {song.content ? (
-          <SongContent
-            song={{
-              ...song,
-              show_transposed: !!song.transposed_key,
-              show_capo: !!song.capo,
-            }}
-          />
-        ) : (
-          <Text>No lyrics have been added yet</Text>
-        )}
-      </View>
-    </Container>
+          ) : (
+            <Text>No lyrics have been added yet</Text>
+          )}
+        </View>
+      </Container>
+    </ScrollView>
   );
 }
 
