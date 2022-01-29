@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: 20,
+    marginTop: 10,
   },
   shortcutIcon: {
     marginRight: 8,
