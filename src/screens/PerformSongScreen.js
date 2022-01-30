@@ -43,20 +43,20 @@ export default function PerformSongScreen({navigation}) {
         <View style={styles.headerButtonsContainer}>
           {hasAnyKeysSet(song) && (
             <Button
-              style={{marginRight: 15, height: 35, width: 35, borderRadius: 8}}
+              style={styles.songKeyButton}
               onPress={() => setKeyOptionsVisible(true)}>
               {getPreferredKey(song)}
             </Button>
           )}
           <TouchableOpacity
-            style={{padding: 3}}
+            style={styles.adjustmentsButton}
             onPress={() => setAdjustmentsSheetVisible(true)}>
             <Icon name="tune-vertical" size={22} color="#2464eb" />
           </TouchableOpacity>
         </View>
       ),
       headerTitle: props => (
-        <Text style={{fontWeight: '600', fontSize: 16}} numberOfLines={1}>
+        <Text style={styles.titleText} numberOfLines={1}>
           {props.children}
         </Text>
       ),
@@ -94,5 +94,18 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     width: 100,
+  },
+  songKeyButton: {
+    marginRight: 15,
+    height: 35,
+    width: 35,
+    borderRadius: 8,
+  },
+  adjustmentsButton: {
+    padding: 3,
+  },
+  titleText: {
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
