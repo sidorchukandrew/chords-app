@@ -8,7 +8,12 @@ import RectButton from './RectButton';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 
-export default function SongOptionsBottomSheet({visible, onDismiss, onDelete}) {
+export default function SongOptionsBottomSheet({
+  visible,
+  onDismiss,
+  onDelete,
+  onPrint,
+}) {
   const sheetRef = useRef();
   const currentMember = useSelector(selectCurrentMember);
 
@@ -22,6 +27,12 @@ export default function SongOptionsBottomSheet({visible, onDismiss, onDelete}) {
     onDelete();
   }
 
+  function handlePrint() {
+    onPrint();
+    sheetRef.current?.dismiss();
+    onDismiss();
+  }
+
   return (
     <>
       <BottomSheet
@@ -29,7 +40,7 @@ export default function SongOptionsBottomSheet({visible, onDismiss, onDelete}) {
         onDismiss={onDismiss}
         ref={sheetRef}>
         <View style={styles.sheet}>
-          <RectButton styles={styles.button}>
+          <RectButton styles={styles.button} onPress={handlePrint}>
             <Icon name="printer" size={20} color="#505050" />
             <Text style={styles.buttonText}>Print</Text>
           </RectButton>

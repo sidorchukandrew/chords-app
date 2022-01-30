@@ -28,7 +28,6 @@ export function buildContent(song) {
   let content = song?.content;
   if (!content || !song?.format) return <Text />;
 
-  console.log(song.show_roadmap);
   if (song.roadmap?.length > 0 && song.show_roadmap)
     content = fromRoadmap(song);
 
@@ -181,12 +180,12 @@ export function isChordLine(line) {
       }
     });
 
-    return numChordMatches >= parts.length / 2;
+    return numChordMatches > parts.length / 2;
   } else {
     return false;
   }
 }
-function isNewLine(line) {
+export function isNewLine(line) {
   return line === '';
 }
 

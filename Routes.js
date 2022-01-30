@@ -44,6 +44,7 @@ import {selectIsLoggedIn} from './src/redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 import CheckEmailModal from './src/modals/CheckEmailModal';
 import CheckEmailForPasswordModal from './src/modals/CheckEmailForPasswordModal';
+import PrintSongModal from './src/modals/PrintSongModal';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -248,13 +249,20 @@ export default function Routes() {
                   title: 'Edit',
                 }}
               />
-
               <Stack.Screen
                 name="Choose Team"
                 component={ChooseTeamModal}
                 options={{
                   headerShown: false,
                   presentation: 'fullScreenModal',
+                }}
+              />
+              <Stack.Screen
+                name="Print Song"
+                component={PrintSongModal}
+                options={{
+                  headerShown: false,
+                  presentation: 'containedModal',
                 }}
               />
             </>

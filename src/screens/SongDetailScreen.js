@@ -1,11 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {deleteSong, getSongById} from '../services/songsService';
 
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
@@ -24,7 +18,6 @@ import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {VIEW_FILES} from '../utils/auth';
 import SongFilesTab from '../components/SongFilesTab';
-import {uploadFiles} from 'react-native-fs';
 
 export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
@@ -79,6 +72,11 @@ export default function SongDetailScreen({navigation, route}) {
 
   function handleFilesUploaded(uploadedFiles) {
     setFiles(uploadedFiles);
+  }
+
+  function handleShowPrintModal() {
+    dispatch(setSongOnScreen(song));
+    navigation.navigate('Print Song');
   }
 
   function renderTab() {
@@ -150,6 +148,7 @@ export default function SongDetailScreen({navigation, route}) {
         visible={optionsSheetVisible}
         onDismiss={() => setOptionsSheetVisible(false)}
         onDelete={() => setConfirmDeleteVisible(true)}
+        onPrint={handleShowPrintModal}
       />
       <ConfirmDeleteModal
         visible={confirmDeleteVisible}
