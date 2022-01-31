@@ -3,8 +3,17 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SWATCH_COLORS} from './BinderColorSwatch';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function ColorSwatchOption({color, selected, onPress}) {
+export default function ColorSwatchOption({
+  color,
+  selected,
+  onPress,
+  useHexColor,
+  hexValue,
+}) {
   function determineColor() {
+    if (useHexColor) {
+      return hexValue;
+    }
     if (!color || color === 'None') {
       return styles.transparentSwatch;
     } else {

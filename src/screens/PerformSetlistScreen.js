@@ -10,6 +10,7 @@ import {
 import {
   selectSongOnScreen,
   setSongOnScreen,
+  updateSongOnScreen,
 } from '../redux/slices/performanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -22,8 +23,11 @@ import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet
 import SongContent from '../components/SongContent';
 import {hasAnyKeysSet} from '../utils/song';
 import Roadmap from '../components/Roadmap';
+import Note from '../components/Note';
 
 export default function PerformSetlistScreen({navigation, route}) {
+  const {width} = useWindowDimensions();
+  const MIN_WIDTH_TO_SHOW_NOTES = 500;
   const windowWidth = useWindowDimensions().width;
   const [songs, setSongs] = useState(() => {
     return route.params.songs?.map(song => ({
@@ -83,6 +87,16 @@ export default function PerformSetlistScreen({navigation, route}) {
           <ScrollView style={styles.slideContainer}>
             <Roadmap roadmap={song.roadmap} song={song} />
             <SongContent song={songOnScreen} />
+            {width > MIN_WIDTH_TO_SHOW_NOTES &&
+              song.notes?.map(note => (
+                <Note
+                  key={note.id}
+                  note={note}
+                  onChanged={changes => handleNoteChanged(note.id, changes)}
+                  song={song}
+                  onDeleted={handleNoteDeleted}
+                />
+              ))}
           </ScrollView>
           <SaveChangesBottomBar song={song} />
         </>
@@ -93,6 +107,16 @@ export default function PerformSetlistScreen({navigation, route}) {
           <ScrollView style={styles.slideContainer}>
             <Roadmap roadmap={song.roadmap} song={song} />
             <SongContent song={song} />
+            {width > MIN_WIDTH_TO_SHOW_NOTES &&
+              song.notes?.map(note => (
+                <Note
+                  key={note.id}
+                  note={note}
+                  onChanged={changes => handleNoteChanged(note.id, changes)}
+                  song={song}
+                  onDeleted={handleNoteDeleted}
+                />
+              ))}
           </ScrollView>
         </>
       );
@@ -102,6 +126,24 @@ export default function PerformSetlistScreen({navigation, route}) {
   function handleSwipedToSong(index) {
     setSongIndex(index);
     dispatch(setSongOnScreen(songs[index]));
+  }
+
+  function handleNoteChanged(noteId, changes) {
+    let updatedNote = songOnScreen.notes?.find(note => note.id === noteId);
+    updatedNote = {...updatedNote, ...changes};
+
+    let updatedNotes = songOnScreen.notes.map(note =>
+      note.id === noteId ? updatedNote : note,
+    );
+
+    dispatch(updateSongOnScreen({notes: updatedNotes}));
+  }
+
+  function handleNoteDeleted(noteToDeleteId) {
+    let updatedNotes = songOnScreen?.notes.filter(
+      note => note.id !== noteToDeleteId,
+    );
+    dispatch(updateSongOnScreen({notes: updatedNotes}));
   }
 
   return (

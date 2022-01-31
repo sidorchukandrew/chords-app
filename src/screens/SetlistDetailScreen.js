@@ -175,7 +175,7 @@ export default function SetlistDetailScreen({route, navigation}) {
         <DraggableFlatList
           activationDistance={20}
           data={setlist.songs}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={item => item.id}
           renderItem={renderSongRow}
           ListHeaderComponent={
             <SetlistDetailHeader
@@ -189,6 +189,7 @@ export default function SetlistDetailScreen({route, navigation}) {
             <RefreshControl onRefresh={handleRefresh} refreshing={refreshing} />
           }
           onDragEnd={handleReorder}
+          style={{height: '100%'}}
         />
       </Container>
       <AddSongsToSetlistBottomSheet

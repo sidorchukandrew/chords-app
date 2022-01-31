@@ -63,7 +63,6 @@ export default function AddThemeModal({navigation, route}) {
     try {
       setSaving(true);
       await addThemesToSong(selectedThemeIds, song.id);
-      console.log('here');
       navigation.goBack();
     } catch (error) {
       setSaving(false);

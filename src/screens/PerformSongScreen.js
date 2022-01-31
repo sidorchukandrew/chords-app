@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {
@@ -22,8 +23,11 @@ import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet
 import SongContent from '../components/SongContent';
 import {useEffect} from 'react';
 import Roadmap from '../components/Roadmap';
+import Note from '../components/Note';
 
 export default function PerformSongScreen({navigation}) {
+  const {width} = useWindowDimensions();
+  const MIN_WIDTH_TO_SHOW_NOTES = 500;
   const song = useSelector(selectSongOnScreen);
   const dispatch = useDispatch();
   const [keyOptionsVisible, setKeyOptionsVisible] = useState(false);
@@ -63,11 +67,37 @@ export default function PerformSongScreen({navigation}) {
     });
   }, [navigation, song]);
 
+  function handleNoteChanged(noteId, changes) {
+    let updatedNote = song.notes?.find(note => note.id === noteId);
+    updatedNote = {...updatedNote, ...changes};
+
+    let updatedNotes = song.notes.map(note =>
+      note.id === noteId ? updatedNote : note,
+    );
+
+    dispatch(updateSongOnScreen({notes: updatedNotes}));
+  }
+
+  function handleNoteDeleted(noteToDeleteId) {
+    let updatedNotes = song?.notes.filter(note => note.id !== noteToDeleteId);
+    dispatch(updateSongOnScreen({notes: updatedNotes}));
+  }
+
   return (
     <>
       <ScrollView style={styles.container}>
         <Roadmap roadmap={song.roadmap} song={song} />
         <SongContent song={song} />
+        {width > MIN_WIDTH_TO_SHOW_NOTES &&
+          song.notes?.map(note => (
+            <Note
+              key={note.id}
+              note={note}
+              onChanged={changes => handleNoteChanged(note.id, changes)}
+              song={song}
+              onDeleted={handleNoteDeleted}
+            />
+          ))}
       </ScrollView>
       <SaveChangesBottomBar song={song} />
       <KeyOptionsBottomSheet

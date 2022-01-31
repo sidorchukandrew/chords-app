@@ -36,7 +36,7 @@ export default function AccountScreen({navigation}) {
         <Container size="md">
           <View style={styles.profileInfo}>
             <ProfilePicture
-              url={currentUser?.image_url}
+              url={currentMember?.image_url}
               size="xl"
               member={currentMember}
               style={styles.profilePicture}

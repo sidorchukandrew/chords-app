@@ -6,6 +6,7 @@ import FontBottomSheetScreen from '../screens/FontBottomSheetScreen';
 import FontSizeBottomSheetScreen from '../screens/FontSizeBottomSheetScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {ScrollView} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
@@ -20,36 +21,38 @@ export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
       onDismiss={onDismiss}
       ref={sheetRef}
       snapIndex={1}>
-      <NavigationContainer independent>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="SongAdjusments Menu"
-            component={AdjustmentsBottomSheetScreen}
-            options={() => ({
-              title: '',
-              headerShadowVisible: false,
-            })}
-          />
-          <Stack.Screen
-            name="SongAdjustments Font"
-            component={FontBottomSheetScreen}
-            options={() => ({
-              title: 'Font',
-              headerShadowVisible: false,
-              headerTitleAlign: 'left',
-            })}
-          />
+      <ScrollView style={{flexGrow: 0}}>
+        <NavigationContainer independent>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="SongAdjusments Menu"
+              component={AdjustmentsBottomSheetScreen}
+              options={() => ({
+                title: '',
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="SongAdjustments Font"
+              component={FontBottomSheetScreen}
+              options={() => ({
+                title: 'Font',
+                headerShadowVisible: false,
+                headerTitleAlign: 'left',
+              })}
+            />
 
-          <Stack.Screen
-            name="SongAdjustments FontSize"
-            component={FontSizeBottomSheetScreen}
-            options={() => ({
-              title: 'Size',
-              headerShadowVisible: false,
-            })}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen
+              name="SongAdjustments FontSize"
+              component={FontSizeBottomSheetScreen}
+              options={() => ({
+                title: 'Size',
+                headerShadowVisible: false,
+              })}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ScrollView>
     </BottomSheet>
   );
 }

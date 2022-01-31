@@ -31,9 +31,6 @@ export default function EditProfileScreen({navigation}) {
   const [phoneNumber, setPhoneNumber] = useState(
     currentMember?.phone_number || '',
   );
-  const [timezone, setTimezone] = useState(
-    currentMember?.timezone || 'America/New_York',
-  );
   const [updates, setUpdates] = useState({});
   const [imageUrl, setImageUrl] = useState(currentMember?.image_url || null);
   const dispatch = useDispatch();
@@ -129,13 +126,6 @@ export default function EditProfileScreen({navigation}) {
             value={phoneNumber}
             onChange={newValue =>
               handleFieldChange('phone_number', newValue, setPhoneNumber)
-            }
-          />
-          <FormField
-            label="Timezone"
-            value={timezone}
-            onChange={newValue =>
-              handleFieldChange('timezone', newValue, setTimezone)
             }
           />
         </View>

@@ -9,14 +9,22 @@ import {useDispatch, useSelector} from 'react-redux';
 import Divider from './Divider';
 import {EDIT_SONGS} from '../utils/auth';
 import FormatDetailButton from './FormatDetailButton';
-import React from 'react';
+import React, {useState} from 'react';
 import ToggleField from './ToggleField';
 import {selectCurrentMember} from '../redux/slices/authSlice';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
+import RectButton from './RectButton';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {reportError} from '../utils/error';
+import LoadingIndicator from './LoadingIndicator';
+import {addNoteToSong} from '../services/notesService';
 
 export default function AdjustmentsBottomSheetScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
   const dispatch = useDispatch();
   const currentMember = useSelector(selectCurrentMember);
+  const currentSubscription = useSelector(selectCurrentSubscription);
+  const [creatingNote, setCreatingNote] = useState(false);
 
   function handleUpdateField(field, value) {
     dispatch(updateSongOnScreen({[field]: value}));
@@ -34,6 +42,21 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
         },
       };
       dispatch(storeFormatEdits(edits));
+    }
+  }
+
+  async function handleCreateNote() {
+    try {
+      setCreatingNote(true);
+      let data = await addNoteToSong(song.id, {x: 0, y: 0});
+      console.log(data);
+      let updatedNotes = song.notes?.concat(data) || [data];
+
+      dispatch(updateSongOnScreen({notes: updatedNotes}));
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setCreatingNote(false);
     }
   }
 
@@ -75,6 +98,20 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
         onChange={newValue => handleUpdateFormat('italic_chords', newValue)}
         style={styles.field}
       />
+      {currentSubscription.isPro && (
+        <>
+          <Divider size="sm" style={{flexGrow: 0}} />
+          <RectButton
+            styles={[styles.field, styles.actionButton]}
+            onPress={handleCreateNote}>
+            <View style={styles.actionButtonLeftContainer}>
+              <Icon name="note-plus" size={22} color="#2464eb" />
+              <Text style={styles.label}>Add note</Text>
+            </View>
+            {creatingNote && <LoadingIndicator style={{flexGrow: 0}} />}
+          </RectButton>
+        </>
+      )}
     </View>
   );
 }
@@ -87,5 +124,20 @@ const styles = StyleSheet.create({
   field: {
     paddingHorizontal: 10,
     height: 50,
+  },
+  label: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: '500',
+    marginHorizontal: 10,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  actionButtonLeftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
