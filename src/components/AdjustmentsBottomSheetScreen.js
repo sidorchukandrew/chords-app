@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {reportError} from '../utils/error';
 import LoadingIndicator from './LoadingIndicator';
 import {addNoteToSong} from '../services/notesService';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default function AdjustmentsBottomSheetScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
@@ -61,7 +62,9 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      style={styles.container}>
       <ToggleField
         label="Show chords"
         enabled={!song.format?.chords_hidden}
@@ -112,7 +115,7 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
           </RectButton>
         </>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
