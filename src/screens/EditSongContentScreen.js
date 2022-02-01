@@ -5,6 +5,7 @@ import Container from '../components/Container';
 import LoadingIndicator from '../components/LoadingIndicator';
 import {reportError} from '../utils/error';
 import {updateSong} from '../services/songsService';
+import {FONTS} from '../utils/song';
 
 export default function EditSongContentScreen({navigation, route}) {
   const [localContent, setLocalContent] = useState(
@@ -17,7 +18,7 @@ export default function EditSongContentScreen({navigation, route}) {
 
   const handleGoBack = useCallback(() => {
     navigation.navigate('Song Detail', song);
-  }, [song.content]);
+  }, [song, navigation]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -68,7 +69,7 @@ export default function EditSongContentScreen({navigation, route}) {
         value={localContent}
         onChangeText={handleContentChange}
         multiline
-        style={styles.input}
+        style={[styles.input, {fontFamily: FONTS[song.format?.font].regular}]}
         placeholder="Start typing here"
       />
     </Container>
@@ -84,6 +85,7 @@ const styles = StyleSheet.create({
     height: '100%',
     marginBottom: 10,
     textAlignVertical: 'top',
+    fontSize: 18,
   },
   saveButton: {
     width: 40,

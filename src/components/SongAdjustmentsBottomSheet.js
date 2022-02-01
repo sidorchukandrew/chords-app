@@ -21,38 +21,36 @@ export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
       onDismiss={onDismiss}
       ref={sheetRef}
       snapIndex={1}>
-      <ScrollView style={{flexGrow: 0}}>
-        <NavigationContainer independent>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="SongAdjusments Menu"
-              component={AdjustmentsBottomSheetScreen}
-              options={() => ({
-                title: '',
-                headerShadowVisible: false,
-              })}
-            />
-            <Stack.Screen
-              name="SongAdjustments Font"
-              component={FontBottomSheetScreen}
-              options={() => ({
-                title: 'Font',
-                headerShadowVisible: false,
-                headerTitleAlign: 'left',
-              })}
-            />
+      <NavigationContainer independent>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="SongAdjusments Menu"
+            component={AdjustmentsBottomSheetScreen}
+            options={() => ({
+              title: '',
+              headerShadowVisible: false,
+            })}
+          />
+          <Stack.Screen
+            name="SongAdjustments Font"
+            component={FontBottomSheetScreen}
+            options={() => ({
+              title: 'Font',
+              headerShadowVisible: false,
+              headerTitleAlign: 'left',
+            })}
+          />
 
-            <Stack.Screen
-              name="SongAdjustments FontSize"
-              component={FontSizeBottomSheetScreen}
-              options={() => ({
-                title: 'Size',
-                headerShadowVisible: false,
-              })}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ScrollView>
+          <Stack.Screen
+            name="SongAdjustments FontSize"
+            component={FontSizeBottomSheetScreen}
+            options={() => ({
+              title: 'Size',
+              headerShadowVisible: false,
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </BottomSheet>
   );
 }

@@ -16,6 +16,7 @@ import {useSelector} from 'react-redux';
 import {selectSongOnScreen} from '../redux/slices/performanceSlice';
 import {buildPdfContent} from '../utils/pdf';
 import RNPrint from 'react-native-print';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 export default function PrintSongModal({navigation}) {
   const song = useSelector(selectSongOnScreen);
@@ -31,6 +32,12 @@ export default function PrintSongModal({navigation}) {
         base64: true,
         padding: 46,
         bgColor: '#ffffff',
+        fonts: [
+          resolveAssetSource(
+            require('../../assets/fonts/RobotoMono-Regular.ttf'),
+            require('../../assets/fonts/OpenSans-Regular.ttf'),
+          ).uri,
+        ],
       };
 
       let file = await RNHTMLtoPDF.convert(options);

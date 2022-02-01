@@ -61,15 +61,23 @@ function getStyles(format, line) {
 }
 
 function getLyricStyles(format) {
-  let styles = {fontSize: format.font_size};
+  let styles = {
+    fontSize: format.font_size,
+    fontFamily: FONTS[format.font].regular,
+  };
   return styles;
 }
 
 function getChordStyles(format) {
   let styles = {fontSize: format.font_size};
 
-  if (format.bold_chords) styles.fontWeight = '600';
-  if (format.italic_chords) styles.fontStyle = 'italic';
+  if (format.bold_chords && format.italic_chords)
+    styles.fontFamily = FONTS[format.font].boldItalic;
+  else if (format.bold_chords) styles.fontFamily = FONTS[format.font].bold;
+  else if (format.italic_chords) styles.fontFamily = FONTS[format.font].italic;
+  else {
+    styles.fontFamily = FONTS[format.font].regular;
+  }
   return styles;
 }
 
@@ -197,3 +205,18 @@ function isChord(potentialChord) {
     return false;
   }
 }
+
+export const FONTS = {
+  'Roboto Mono': {
+    regular: 'RobotoMono-Regular',
+    boldItalic: 'RobotoMono-BoldItalic',
+    bold: 'RobotoMono-Bold',
+    italic: 'RobotoMono-Italic',
+  },
+  'Open Sans': {
+    regular: 'OpenSans-Regular',
+    boldItalic: 'OpenSans-BoldItalic',
+    bold: 'OpenSans-Bold',
+    italic: 'OpenSans-Italic',
+  },
+};
