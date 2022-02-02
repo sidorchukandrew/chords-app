@@ -9,22 +9,49 @@ export default function Tag({
   textStyle,
   onPress,
   inverse,
+  size = 'md',
 }) {
   return (
     <TouchableOpacity
       style={[
         styles.tagContainer,
         inverse && styles.inverseContainerColor,
+        SIZES[size],
         providedStyles,
       ]}
       onPress={onPress}>
       <Text
-        style={[styles.tagText, inverse && styles.inverseTextColor, textStyle]}>
+        style={[
+          styles.tagText,
+          inverse && styles.inverseTextColor,
+          FONT_SIZES[size],
+          textStyle,
+        ]}>
         {tag}
       </Text>
     </TouchableOpacity>
   );
 }
+
+const SIZES = {
+  sm: {
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+  },
+  md: {
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+  },
+};
+
+const FONT_SIZES = {
+  sm: {
+    fontSize: 12,
+  },
+  md: {
+    fontSize: 14,
+  },
+};
 
 const styles = StyleSheet.create({
   tagContainer: {

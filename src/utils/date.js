@@ -10,3 +10,11 @@ export function format(date, formatString) {
 
   return dayjs(date).format(formatString);
 }
+
+export function isToday(date) {
+  return dayjs().isSame(date, 'day');
+}
+
+export function sortDates(dateA, dateB) {
+  return dayjs(dateA).isAfter(dayjs(dateB)) ? 1 : -1;
+}

@@ -200,7 +200,7 @@ export default function Routes() {
                 component={CreateSetlistModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                 }}
               />
               <Stack.Screen
@@ -312,7 +312,11 @@ function HomeTabs() {
       tabBar={props => <TabBar {...props} />}
       screenOptions={{headerShadowVisible: false, headerTitleAlign: 'center'}}>
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{headerShown: false}}
+      />
       <Tab.Screen
         name="Account"
         component={AccountScreen}

@@ -1,18 +1,29 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import Input from '../components/Input';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import SearchFilterBar from '../components/SearchFilterBar';
+import Container from '../components/Container';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
   return (
-    <View>
-      <Input
-        placeholder="Search your library"
-        value={query}
-        onChange={setQuery}
-      />
-    </View>
+    <SafeAreaView style={styles.screen}>
+      <Container size="lg" style={styles.container}>
+        <SearchFilterBar
+          placeholder="What are you looking for?"
+          onQueryChange={setQuery}
+          query={query}
+        />
+      </Container>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
+  container: {
+    paddingVertical: 20,
+  },
+});

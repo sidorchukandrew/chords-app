@@ -1,6 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {deleteSong, getSongById} from '../services/songsService';
+import {
+  addToRecentlyViewedSongs,
+  deleteSong,
+  getSongById,
+} from '../services/songsService';
 
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import Container from '../components/Container';
@@ -38,6 +42,7 @@ export default function SongDetailScreen({navigation, route}) {
           setLoading(true);
           let data = await getSongById(song.id);
           setSong(data);
+          addToRecentlyViewedSongs(data);
         } catch (error) {
           reportError(error);
         } finally {

@@ -3,6 +3,7 @@ import SongsApi from '../api/songsApi';
 import {getTeamId} from '../utils/auth';
 
 const storage = new MMKV({id: 'songs'});
+const recentlyViewedStorage = new MMKV({id: 'recentlyViewed'});
 
 export async function getAllSongs({refresh = false} = {}) {
   if (refresh || !hasSongsSet()) {
@@ -163,4 +164,31 @@ export function getSongFromStorage(id) {
 
 export function clearAllSongs() {
   storage.clearAll();
+  recentlyViewedStorage.clearAll();
+}
+
+export function addToRecentlyViewedSongs(song) {
+  let songs = [];
+
+  if (recentlyViewedStorage.contains('songs')) {
+    songs = JSON.parse(recentlyViewedStorage.getString('songs'));
+  }
+
+  songs.unshift(song.id);
+  songs = [...new Set(songs)];
+  songs = songs.slice(0, 5);
+
+  let stringified = JSON.stringify(songs);
+  recentlyViewedStorage.set('songs', stringified);
+}
+
+export function getRecentlyViewedSongs() {
+  let songs = [];
+
+  if (recentlyViewedStorage.contains('songs')) {
+    songs = JSON.parse(recentlyViewedStorage.getString('songs'));
+  }
+
+  songs = songs.map(songId => getSongFromStorage(songId));
+  return songs;
 }

@@ -9,7 +9,7 @@ export default function DashboardScreenTitle({onOpenTeamsModal}) {
   const currentTeam = useSelector(selectCurrentTeam);
 
   return (
-    <View>
+    <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={onOpenTeamsModal}>
         <Text style={styles.title}>{currentTeam.name}</Text>
         <Icon name="chevron-down" color="black" size={18} />
@@ -19,6 +19,9 @@ export default function DashboardScreenTitle({onOpenTeamsModal}) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
   title: {
     color: 'black',
     fontWeight: '500',

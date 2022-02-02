@@ -112,7 +112,7 @@ export function updateScheduledSong(
   return SetlistsApi.updateScheduledSong(setlistId, songId, apiUpdates).then(
     () => {
       if (hasSetlistSet(setlistId)) {
-        setlist = getSetlistFromStorage(setlistId);
+        let setlist = getSetlistFromStorage(setlistId);
         setlist.songs = reorderedSongs;
 
         setSetlistInStorage(setlist);
