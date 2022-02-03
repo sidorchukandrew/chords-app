@@ -81,6 +81,7 @@ export default function MembersIndexScreen() {
         }
         ListEmptyComponent={<NoDataMessage message="No members to show" />}
         style={{height: '100%'}}
+        ListHeaderComponentStyle={styles.headerContainer}
       />
     </Container>
   );
@@ -89,5 +90,8 @@ export default function MembersIndexScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+  },
+  headerContainer: {
+    marginBottom: 15,
   },
 });

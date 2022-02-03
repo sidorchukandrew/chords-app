@@ -22,7 +22,6 @@ export default function UpcomingSetsWidget({
   style: providedStyles,
 }) {
   const [upcomingSets, setUpcomingSets] = useState([]);
-
   useFocusEffect(
     React.useCallback(() => {
       async function fetchUpcomingSets() {
@@ -53,10 +52,9 @@ export default function UpcomingSetsWidget({
       ) : (
         <ScrollView style={{maxHeight: 130}}>
           {upcomingSets.map((set, index) => (
-            <>
+            <View key={set.id}>
               <TouchableOpacity
                 style={styles.row}
-                key={set.id}
                 onPress={() => navigation.navigate('Setlist Detail', set)}>
                 <View>
                   <Text style={styles.name}>{set.name}</Text>
@@ -78,7 +76,7 @@ export default function UpcomingSetsWidget({
                 {isToday(set.scheduled_date) && <Tag tag="Today" size="sm" />}
               </TouchableOpacity>
               {index < upcomingSets.length - 1 && <ItemSeparator />}
-            </>
+            </View>
           ))}
         </ScrollView>
       )}

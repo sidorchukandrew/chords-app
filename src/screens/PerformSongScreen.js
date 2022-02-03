@@ -85,7 +85,11 @@ export default function PerformSongScreen({navigation}) {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        pinchGestureEnabled
+        maximumZoomScale={4}
+        minimumZoomScale={0.5}>
         <Roadmap roadmap={song.roadmap} song={song} />
         <SongContent song={song} />
         {width > MIN_WIDTH_TO_SHOW_NOTES &&

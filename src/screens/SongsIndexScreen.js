@@ -104,6 +104,7 @@ export default function SongsIndexScreen({navigation}) {
               placeholder={`Search ${songs?.length} songs`}
             />
           }
+          ListHeaderComponentStyle={styles.headerContainer}
           data={filteredSongs()}
           renderItem={renderSongRow}
           ListEmptyComponent={
@@ -139,8 +140,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    paddingVertical: 11,
+    paddingHorizontal: 6,
   },
   keyBadge: {
     marginLeft: 10,
@@ -149,5 +150,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
+  },
+  headerContainer: {
+    marginBottom: 15,
   },
 });

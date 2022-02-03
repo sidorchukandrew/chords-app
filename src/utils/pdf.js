@@ -22,7 +22,7 @@ export function buildPdfContent(song) {
   let linesOfSong = content.split(/\r\n|\r|\n/);
 
   let textLines = linesOfSong.map((line, index) => {
-    if (isNewLine(line)) return '<p></p>';
+    if (isNewLine(line)) return '<br/>';
     else if (isChordLine(line) && song.format.chords_hidden) {
       return '';
     } else {

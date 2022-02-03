@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
   typePicker: {
     alignItems: 'center',
     marginBottom: 10,
+    marginTop: 15,
   },
   detailsContainer: {
     flexDirection: 'row',

@@ -245,7 +245,7 @@ export default function Routes() {
                 component={EditSetlistDetailsModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                   title: 'Edit',
                 }}
               />
@@ -254,7 +254,7 @@ export default function Routes() {
                 component={ChooseTeamModal}
                 options={{
                   headerShown: false,
-                  presentation: 'fullScreenModal',
+                  presentation: 'containedModal',
                 }}
               />
               <Stack.Screen

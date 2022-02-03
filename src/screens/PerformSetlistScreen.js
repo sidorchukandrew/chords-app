@@ -84,7 +84,11 @@ export default function PerformSetlistScreen({navigation, route}) {
     if (index === songIndex) {
       return (
         <>
-          <ScrollView style={styles.slideContainer}>
+          <ScrollView
+            style={styles.slideContainer}
+            pinchGestureEnabled
+            maximumZoomScale={4}
+            minimumZoomScale={0.5}>
             <Roadmap roadmap={song.roadmap} song={song} />
             <SongContent song={songOnScreen} />
             {width > MIN_WIDTH_TO_SHOW_NOTES &&
@@ -104,7 +108,11 @@ export default function PerformSetlistScreen({navigation, route}) {
     } else {
       return (
         <>
-          <ScrollView style={styles.slideContainer}>
+          <ScrollView
+            style={styles.slideContainer}
+            pinchGestureEnabled
+            maximumZoomScale={4}
+            minimumZoomScale={0.5}>
             <Roadmap roadmap={song.roadmap} song={song} />
             <SongContent song={song} />
             {width > MIN_WIDTH_TO_SHOW_NOTES &&

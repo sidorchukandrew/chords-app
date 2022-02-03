@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   container: {
-    marginBottom: 0,
+    marginBottom: 15,
   },
 });

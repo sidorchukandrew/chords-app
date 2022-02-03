@@ -19,7 +19,6 @@ export default function SearchInput({placeholder = 'Search', value, onChange}) {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 5,
-    paddingVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -28,5 +27,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 15,
     flex: 1,
+    paddingVertical: 10,
   },
 });

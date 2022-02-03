@@ -10,8 +10,7 @@ export const subscriptionSlice = createSlice({
   reducers: {
     setSubscription: (state, {payload}) => {
       state.subscription = payload;
-      state.subscription.isPro = true;
-      // payload?.stripe_price_id === 'REPLACE_THIS';
+      state.subscription.isPro = payload?.stripe_price_id === 'REPLACE_THIS';
     },
   },
 });

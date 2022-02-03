@@ -47,22 +47,20 @@ export default function BindersIndexScreen({navigation}) {
 
   function renderBinderRow({item: binder}) {
     return (
-      <Container size="lg">
-        <TouchableOpacity
-          style={styles.row}
-          onPress={() => handleNavigateTo(binder)}>
-          <BinderColorSwatch color={binder.color} style={styles.colorSwatch} />
-          <View style={{width: '100%'}}>
-            <Text style={styles.name}>{binder.name}</Text>
-            {/* <View style={styles.binderDetailsContainer}>
+      <TouchableOpacity
+        style={styles.row}
+        onPress={() => handleNavigateTo(binder)}>
+        <BinderColorSwatch color={binder.color} style={styles.colorSwatch} />
+        <View style={{width: '100%'}}>
+          <Text style={styles.name}>{binder.name}</Text>
+          {/* <View style={styles.binderDetailsContainer}>
             <View style={styles.detailContainer}>
             <IonIcon name="musical-notes" size={18} color="#505050" />
             <Text style={styles.detailText}>{binder.songs?.length}</Text>
             </View>
           </View> */}
-          </View>
-        </TouchableOpacity>
-      </Container>
+        </View>
+      </TouchableOpacity>
     );
   }
 
@@ -93,28 +91,32 @@ export default function BindersIndexScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-        ListHeaderComponent={
-          <SearchFilterBar
-            query={query}
-            onQueryChange={setQuery}
-            placeholder={`Search ${binders?.length} binders`}
-          />
-        }
-        ItemSeparatorComponent={ItemSeparator}
-        data={filteredBinders()}
-        renderItem={renderBinderRow}
-        ListEmptyComponent={
-          <NoDataMessage
-            message="You have no binders yet"
-            showAddButton={currentMember.can(ADD_BINDERS)}
-            buttonTitle="Add binder"
-            onButtonPress={handleCreateBinder}
-          />
-        }
-      />
+      <Container size="lg">
+        <FlatList
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          ListHeaderComponent={
+            <SearchFilterBar
+              query={query}
+              onQueryChange={setQuery}
+              placeholder={`Search ${binders?.length} binders`}
+            />
+          }
+          ItemSeparatorComponent={ItemSeparator}
+          data={filteredBinders()}
+          renderItem={renderBinderRow}
+          style={{height: '100%'}}
+          ListEmptyComponent={
+            <NoDataMessage
+              message="You have no binders yet"
+              showAddButton={currentMember.can(ADD_BINDERS)}
+              buttonTitle="Add binder"
+              onButtonPress={handleCreateBinder}
+            />
+          }
+          ListHeaderComponentStyle={styles.headerContainer}
+        />
+      </Container>
       {currentMember.can(ADD_BINDERS) && (
         <CircleButton style={styles.addButton} onPress={handleCreateBinder}>
           <Icon name="plus" size={35} color="white" />
@@ -166,5 +168,8 @@ const styles = StyleSheet.create({
   detailText: {
     marginLeft: 7,
     color: '#505050',
+  },
+  headerContainer: {
+    marginBottom: 15,
   },
 });
