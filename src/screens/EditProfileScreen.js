@@ -127,6 +127,7 @@ export default function EditProfileScreen({navigation}) {
             onChange={newValue =>
               handleFieldChange('phone_number', newValue, setPhoneNumber)
             }
+            keyboardType="phone-pad"
           />
         </View>
       </Container>

@@ -18,7 +18,11 @@ export default function NoteColorsBottomSheet({
   }, [visible, sheetRef]);
 
   return (
-    <BottomSheet snapPoints={['20%']} ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight
+      ref={sheetRef}
+      onDismiss={onDismiss}>
       <View style={styles.container}>
         <Text style={styles.title}>Choose a color</Text>
         <View style={styles.swatchesContainer}>

@@ -27,7 +27,11 @@ export default function BinderColorSwatchesBottomSheet({
   }, [visible, sheetRef]);
 
   return (
-    <BottomSheet snapPoints={['20%']} ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet
+      dynamicHeight
+      snapPoints={['CONTENT_HEIGHT']}
+      ref={sheetRef}
+      onDismiss={onDismiss}>
       <View style={styles.container}>
         <Text style={styles.title}>Choose a color</Text>
         <View style={styles.swatchesContainer}>

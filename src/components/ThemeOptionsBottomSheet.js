@@ -32,7 +32,11 @@ export default function ThemeOptionsBottomSheet({
   }
 
   return (
-    <BottomSheet ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet
+      ref={sheetRef}
+      onDismiss={onDismiss}
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight>
       <View style={styles.sheet}>
         <RectButton styles={styles.button} onPress={handleRemoveTheme}>
           <Icon name="delete" size={20} color="#ef4444" />

@@ -2,11 +2,11 @@ import {DELETE_SETLISTS, EDIT_SETLISTS} from '../utils/auth';
 import React, {useEffect, useRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-import BottomSheet from './BottomSheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RectButton from './RectButton';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
+import BottomSheet from './BottomSheet';
 
 export default function SetlistOptionsBottomSheet({
   visible,
@@ -35,8 +35,9 @@ export default function SetlistOptionsBottomSheet({
 
   return (
     <BottomSheet
-      snapPoints={['40%', '60%']}
+      snapPoints={['CONTENT_HEIGHT', '20%']}
       onDismiss={onDismiss}
+      dynamicHeight
       ref={sheetRef}>
       <View style={styles.sheet}>
         {currentMember.can(EDIT_SETLISTS) && (

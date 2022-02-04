@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   dashboardText: {
-    fontSize: 20,
-    fontWeight: '500',
+    fontSize: 25,
+    fontWeight: '600',
     marginBottom: 20,
   },
 });

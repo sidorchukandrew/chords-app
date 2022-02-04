@@ -31,7 +31,8 @@ export default function NoteOptionsBottomSheet({
 
   return (
     <BottomSheet
-      snapPoints={['40%', '60%']}
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight
       onDismiss={onDismiss}
       ref={sheetRef}>
       <View style={styles.sheet}>

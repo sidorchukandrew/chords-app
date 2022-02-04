@@ -55,7 +55,11 @@ export default function RenameFileBottomSheet({
   }
 
   return (
-    <BottomSheet ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet
+      ref={sheetRef}
+      onDismiss={onDismiss}
+      dynamicHeight
+      snapPoints={['CONTENT_HEIGHT']}>
       <View style={styles.sheet}>
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={handleDismiss}>

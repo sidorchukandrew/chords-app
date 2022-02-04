@@ -6,7 +6,6 @@ import FontBottomSheetScreen from '../screens/FontBottomSheetScreen';
 import FontSizeBottomSheetScreen from '../screens/FontSizeBottomSheetScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {ScrollView} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {

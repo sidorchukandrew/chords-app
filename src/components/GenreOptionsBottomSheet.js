@@ -32,7 +32,11 @@ export default function GenreOptionsBottomSheet({
   }
 
   return (
-    <BottomSheet ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet
+      ref={sheetRef}
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight
+      onDismiss={onDismiss}>
       <View style={styles.sheet}>
         <RectButton styles={styles.button} onPress={handleRemoveGenre}>
           <Icon name="delete" size={20} color="#ef4444" />

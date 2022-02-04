@@ -36,7 +36,11 @@ export default function RoadmapOptionsBottomSheet({
   }
 
   return (
-    <BottomSheet onDismiss={onDismiss} ref={sheetRef}>
+    <BottomSheet
+      onDismiss={onDismiss}
+      dynamicHeight
+      snapPoints={['CONTENT_HEIGHT']}
+      ref={sheetRef}>
       <View style={styles.sheet}>
         <RectButton styles={styles.button} onPress={handleRearrangeSections}>
           <Icon size={22} color="#505050" name="swap-horizontal" />

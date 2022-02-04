@@ -22,7 +22,11 @@ export default function SaveChangesBottomSheet({
   }, [visible, sheetRef]);
 
   return (
-    <BottomSheet onDismiss={onDismiss} ref={sheetRef}>
+    <BottomSheet
+      onDismiss={onDismiss}
+      ref={sheetRef}
+      dynamicHeight
+      snapPoints={['CONTENT_HEIGHT']}>
       <View style={styles.container}>
         <Text style={styles.title}>You have unsaved changes for this song</Text>
         <Button style={styles.saveButton} loading={saving} onPress={onSave}>

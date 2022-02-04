@@ -1,14 +1,33 @@
-import {BottomSheetBackdrop, BottomSheetModal} from '@gorhom/bottom-sheet';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+  useBottomSheetDynamicSnapPoints,
+} from '@gorhom/bottom-sheet';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 
 const BottomSheet = React.forwardRef(
   (
-    {children, snapPoints = ['25%', '50%'], onDismiss, detached, snapIndex = 0},
+    {
+      children,
+      snapPoints = ['25%', '50%'],
+      onDismiss,
+      detached,
+      snapIndex = 0,
+      dynamicHeight,
+    },
     sheetRef,
   ) => {
     const [windowWidth, setWindowWidth] = useState(0);
     const window = useWindowDimensions();
+
+    const {
+      animatedHandleHeight,
+      animatedSnapPoints,
+      animatedContentHeight,
+      handleContentLayout,
+    } = useBottomSheetDynamicSnapPoints(snapPoints);
 
     useEffect(() => {
       setWindowWidth(window.width);
@@ -23,7 +42,31 @@ const BottomSheet = React.forwardRef(
       return {marginHorizontal: actualMargin};
     }
 
-    return (
+    return dynamicHeight ? (
+      <BottomSheetModal
+        style={[styles.shadow, getHorizontalMargins()]}
+        onDismiss={onDismiss}
+        ref={sheetRef}
+        index={snapIndex}
+        snapPoints={animatedSnapPoints}
+        detached={detached}
+        contentHeight={animatedContentHeight}
+        handleHeight={animatedHandleHeight}
+        bottomInset={detached ? 40 : 0}
+        backdropComponent={props => (
+          <BottomSheetBackdrop
+            {...props}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+          />
+        )}>
+        <BottomSheetView
+          onLayout={handleContentLayout}
+          style={{paddingBottom: 20}}>
+          {children}
+        </BottomSheetView>
+      </BottomSheetModal>
+    ) : (
       <BottomSheetModal
         style={[styles.shadow, getHorizontalMargins()]}
         onDismiss={onDismiss}

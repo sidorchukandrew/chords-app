@@ -38,7 +38,11 @@ export default function SectionNameBottomSheet({
   }
 
   return (
-    <BottomSheet ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight
+      ref={sheetRef}
+      onDismiss={onDismiss}>
       <View style={styles.container}>
         <FormField label="Name" value={localName} onChange={setLocalName} />
         <ConfirmCancelButtons

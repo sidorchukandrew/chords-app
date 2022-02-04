@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
   },
   resultText: {},
   dashboardText: {
-    fontSize: 20,
-    fontWeight: '500',
+    fontSize: 25,
+    fontWeight: '600',
     marginVertical: 20,
   },
 });

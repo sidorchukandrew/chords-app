@@ -34,7 +34,11 @@ export default function FileOptionsBottomSheet({
   }
 
   return (
-    <BottomSheet ref={sheetRef} onDismiss={onDismiss}>
+    <BottomSheet
+      ref={sheetRef}
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight
+      onDismiss={onDismiss}>
       <View style={styles.sheet}>
         {currentMember.can(EDIT_FILES) && (
           <RectButton styles={styles.button} onPress={handleRename}>
