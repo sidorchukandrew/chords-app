@@ -13,6 +13,7 @@ export default function GenreOptionsBottomSheet({
   onGenreRemoved,
   genre,
   song,
+  isConnected,
 }) {
   const sheetRef = useRef();
 
@@ -38,9 +39,23 @@ export default function GenreOptionsBottomSheet({
       dynamicHeight
       onDismiss={onDismiss}>
       <View style={styles.sheet}>
-        <RectButton styles={styles.button} onPress={handleRemoveGenre}>
-          <Icon name="delete" size={20} color="#ef4444" />
-          <Text style={[styles.buttonText, styles.deleteColor]}>Remove</Text>
+        <RectButton
+          styles={styles.button}
+          onPress={handleRemoveGenre}
+          disabled={!isConnected}>
+          <Icon
+            name="delete"
+            size={20}
+            color={isConnected ? '#ef4444' : '#d0d0d0'}
+          />
+          <Text
+            style={[
+              styles.buttonText,
+              styles.deleteColor,
+              !isConnected && styles.disabledColor,
+            ]}>
+            Remove
+          </Text>
         </RectButton>
       </View>
     </BottomSheet>
@@ -65,5 +80,8 @@ const styles = StyleSheet.create({
   },
   deleteColor: {
     color: '#ef4444',
+  },
+  disabledColor: {
+    color: '#d0d0d0',
   },
 });

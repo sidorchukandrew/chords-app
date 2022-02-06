@@ -6,6 +6,7 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import {reportError} from '../utils/error';
 import {updateSong} from '../services/songsService';
 import {FONTS} from '../utils/song';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function EditSongContentScreen({navigation, route}) {
   const [localContent, setLocalContent] = useState(
@@ -15,6 +16,7 @@ export default function EditSongContentScreen({navigation, route}) {
 
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const {isConnected} = useNetInfo();
 
   const handleGoBack = useCallback(() => {
     navigation.navigate('Song Detail', song);
@@ -31,7 +33,10 @@ export default function EditSongContentScreen({navigation, route}) {
             <LoadingIndicator />
           ) : (
             <Text
-              style={[styles.saveButtonText, !dirty && styles.disabledText]}>
+              style={[
+                styles.saveButtonText,
+                (!dirty || !isConnected) && styles.disabledText,
+              ]}>
               Save
             </Text>
           )}
@@ -43,7 +48,7 @@ export default function EditSongContentScreen({navigation, route}) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, dirty, saving, handleGoBack, localContent]);
+  }, [navigation, dirty, saving, handleGoBack, localContent, isConnected]);
 
   function handleContentChange(newContent) {
     setDirty(true);

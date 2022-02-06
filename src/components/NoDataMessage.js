@@ -9,6 +9,7 @@ export default function NoDataMessage({
   message,
   onButtonPress,
   showAddButton,
+  disabled,
 }) {
   return (
     <>
@@ -16,7 +17,7 @@ export default function NoDataMessage({
         <View style={styles.noDataContainer}>
           <Text style={styles.noDataText}>{message}</Text>
           {showAddButton && (
-            <Button onPress={onButtonPress}>
+            <Button onPress={onButtonPress} disabled={disabled}>
               <Text>{buttonTitle}</Text>
             </Button>
           )}

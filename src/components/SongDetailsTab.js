@@ -23,6 +23,7 @@ export default function SongDetailsTab({
   onNavigateTo,
   onUpdateSong,
   navigation,
+  isConnected,
 }) {
   const [genreOptionsVisible, setGenreOptionsVisible] = useState(false);
   const [genreBeingViewed, setGenreBeingViewed] = useState();
@@ -63,8 +64,16 @@ export default function SongDetailsTab({
       <Section
         title="Details"
         button={
-          <TouchableOpacity onPress={() => onNavigateTo('Edit Song Details')}>
-            <Text style={styles.editButtonText}>Edit</Text>
+          <TouchableOpacity
+            onPress={() => onNavigateTo('Edit Song Details')}
+            disabled={!isConnected}>
+            <Text
+              style={[
+                styles.editButtonText,
+                !isConnected && styles.disabledColor,
+              ]}>
+              Edit
+            </Text>
           </TouchableOpacity>
         }
         showButton={currentMember.can(EDIT_SONGS)}>
@@ -79,8 +88,14 @@ export default function SongDetailsTab({
         title="Themes"
         showButton={currentMember.can(EDIT_SONGS)}
         button={
-          <TouchableOpacity onPress={() => onNavigateTo('Add Theme')}>
-            <Icon color="#0969da" size={20} name="plus" />
+          <TouchableOpacity
+            onPress={() => onNavigateTo('Add Theme')}
+            disabled={!isConnected}>
+            <Icon
+              color={isConnected ? '#0969da' : '#d0d0d0'}
+              size={20}
+              name="plus"
+            />
           </TouchableOpacity>
         }>
         <ScrollView horizontal style={styles.listContainer}>
@@ -98,8 +113,14 @@ export default function SongDetailsTab({
       <Section
         title="Genres"
         button={
-          <TouchableOpacity onPress={() => onNavigateTo('Add Genre')}>
-            <Icon color="#0969da" size={20} name="plus" />
+          <TouchableOpacity
+            onPress={() => onNavigateTo('Add Genre')}
+            disabled={!isConnected}>
+            <Icon
+              color={isConnected ? '#0969da' : '#d0d0d0'}
+              size={20}
+              name="plus"
+            />
           </TouchableOpacity>
         }
         showButton={currentMember.can(EDIT_SONGS)}>
@@ -134,6 +155,7 @@ export default function SongDetailsTab({
         genre={genreBeingViewed}
         song={song}
         onGenreRemoved={handleGenreRemoved}
+        isConnected={isConnected}
       />
       <ThemeOptionsBottomSheet
         visible={themeOptionsVisible}
@@ -141,6 +163,7 @@ export default function SongDetailsTab({
         theme={themeBeingViewed}
         song={song}
         onThemeRemoved={handleThemeRemoved}
+        isConnected={isConnected}
       />
     </ScrollView>
   );
@@ -165,4 +188,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   addIcon: {},
+  disabledColor: {
+    color: '#d0d0d0',
+  },
 });

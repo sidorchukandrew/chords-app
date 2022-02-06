@@ -29,6 +29,7 @@ import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function SetlistDetailScreen({route, navigation}) {
   const [setlist, setSetlist] = useState(route.params);
@@ -40,6 +41,7 @@ export default function SetlistDetailScreen({route, navigation}) {
   const [refreshing, setRefreshing] = useState(false);
   const itemRefs = useRef(new Map());
   const currentMember = useSelector(selectCurrentMember);
+  const {isConnected} = useNetInfo();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -76,9 +78,14 @@ export default function SetlistDetailScreen({route, navigation}) {
       headerRight: () => (
         <>
           <TouchableOpacity
+            disabled={!isConnected}
             style={styles.headerButton}
             onPress={() => setAddSongsSheetVisible(true)}>
-            <Icon name="plus" size={22} color="#2464eb" />
+            <Icon
+              name="plus"
+              size={22}
+              color={isConnected ? '#2464eb' : '#a0a0a0'}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.headerButton}
@@ -88,7 +95,7 @@ export default function SetlistDetailScreen({route, navigation}) {
         </>
       ),
     });
-  }, [navigation]);
+  }, [navigation, isConnected]);
 
   function renderSongRow(params) {
     return (
@@ -98,6 +105,7 @@ export default function SetlistDetailScreen({route, navigation}) {
         onNavigateToSong={handleNavigateToSong}
         onRemove={handleRemoveSong}
         editable={currentMember.can(EDIT_SETLISTS)}
+        isConnected={isConnected}
       />
     );
   }
@@ -138,6 +146,7 @@ export default function SetlistDetailScreen({route, navigation}) {
           message="No songs in this set yet"
           onButtonPress={() => setAddSongsSheetVisible(true)}
           showAddButton
+          disabled={!isConnected}
         />
       );
     }
@@ -203,6 +212,7 @@ export default function SetlistDetailScreen({route, navigation}) {
         onDismiss={() => setOptionsSheetVisible(false)}
         onDelete={() => setConfirmDeleteVisible(true)}
         onNavigateTo={handleNavigateTo}
+        isConnected={isConnected}
       />
       <ConfirmDeleteModal
         visible={confirmDeleteVisible}

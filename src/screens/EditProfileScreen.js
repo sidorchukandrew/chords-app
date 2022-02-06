@@ -22,6 +22,7 @@ import {isEmpty} from '../utils/object';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {reportError} from '../utils/error';
 import {updateCurrentUser as updateUserInApi} from '../services/usersService';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function EditProfileScreen({navigation}) {
   const currentMember = useSelector(selectCurrentMember);
@@ -33,6 +34,7 @@ export default function EditProfileScreen({navigation}) {
   );
   const [updates, setUpdates] = useState({});
   const [imageUrl, setImageUrl] = useState(currentMember?.image_url || null);
+  const {isConnected} = useNetInfo();
   const dispatch = useDispatch();
 
   function handleFieldChange(field, value, setter) {
@@ -73,14 +75,16 @@ export default function EditProfileScreen({navigation}) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={handleSave}>
+        <TouchableOpacity
+          onPress={handleSave}
+          disabled={isEmpty(updates) || !isConnected}>
           {loading ? (
             <LoadingIndicator />
           ) : (
             <Text
               style={[
                 styles.saveButtonText,
-                isEmpty(updates) && styles.disabledText,
+                (isEmpty(updates) || !isConnected) && styles.disabledText,
               ]}>
               Save
             </Text>
@@ -88,7 +92,7 @@ export default function EditProfileScreen({navigation}) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, updates, loading]);
+  }, [navigation, updates, loading, isConnected]);
 
   return (
     <ScrollView style={styles.screen}>

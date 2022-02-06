@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 import {ADD_SONGS} from '../utils/auth';
 import CircleButton from '../components/CircleButton';
@@ -10,13 +10,13 @@ import KeyBadge from '../components/KeyBadge';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
 import SearchFilterBar from '../components/SearchFilterBar';
-import {getAllSetlists} from '../services/setlistsService';
 import {getAllSongs} from '../services/songsService';
 import {hasAnyKeysSet} from '../utils/song';
 import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function SongsIndexScreen({navigation}) {
   const [songs, setSongs] = useState([]);
@@ -24,6 +24,7 @@ export default function SongsIndexScreen({navigation}) {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
+  const {isConnected} = useNetInfo();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -113,13 +114,17 @@ export default function SongsIndexScreen({navigation}) {
               showAddButton={currentMember.can(ADD_SONGS)}
               buttonTitle="Add songs"
               onButtonPress={handleCreateSong}
+              disabled={!isConnected}
             />
           }
           style={{height: '100%'}}
         />
       </Container>
       {currentMember.can(ADD_SONGS) && (
-        <CircleButton style={styles.addButton} onPress={handleCreateSong}>
+        <CircleButton
+          style={styles.addButton}
+          onPress={handleCreateSong}
+          disabled={!isConnected}>
           <Icon name="plus" size={35} color="white" />
         </CircleButton>
       )}

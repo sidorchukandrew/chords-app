@@ -7,9 +7,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 export default function NoteOptionsBottomSheet({
   visible,
   onDismiss,
-  note,
   onChangeColor,
   onDelete,
+  isConnected,
 }) {
   const sheetRef = useRef();
 
@@ -36,14 +36,38 @@ export default function NoteOptionsBottomSheet({
       onDismiss={onDismiss}
       ref={sheetRef}>
       <View style={styles.sheet}>
-        <RectButton styles={styles.button} onPress={handleShowChangeColorSheet}>
-          <Icon name="palette" size={22} color="#505050" />
-          <Text style={styles.buttonText}>Change color</Text>
+        <RectButton
+          styles={styles.button}
+          onPress={handleShowChangeColorSheet}
+          disabled={!isConnected}>
+          <Icon
+            name="palette"
+            size={22}
+            color={isConnected ? '#505050' : '#d0d0d0'}
+          />
+          <Text
+            style={[styles.buttonText, !isConnected && styles.disabledColor]}>
+            Change color
+          </Text>
         </RectButton>
 
-        <RectButton styles={styles.button} onPress={handleDelete}>
-          <Icon name="delete" size={20} color="#ef4444" />
-          <Text style={[styles.buttonText, styles.deleteColor]}>Delete</Text>
+        <RectButton
+          styles={styles.button}
+          onPress={handleDelete}
+          disabled={!isConnected}>
+          <Icon
+            name="delete"
+            size={20}
+            color={isConnected ? '#ef4444' : '#d0d0d0'}
+          />
+          <Text
+            style={[
+              styles.buttonText,
+              styles.deleteColo,
+              !isConnected && styles.disabledColor,
+            ]}>
+            Delete
+          </Text>
         </RectButton>
       </View>
     </BottomSheet>
@@ -68,5 +92,8 @@ const styles = StyleSheet.create({
   },
   deleteColor: {
     color: '#ef4444',
+  },
+  disabledColor: {
+    color: '#d0d0d0',
   },
 });

@@ -31,6 +31,7 @@ import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function BinderDetailScreen({navigation, route}) {
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
@@ -41,6 +42,7 @@ export default function BinderDetailScreen({navigation, route}) {
   const [deleting, setDeleting] = useState(false);
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const {isConnected} = useNetInfo();
 
   const currentMember = useSelector(selectCurrentMember);
 
@@ -69,8 +71,13 @@ export default function BinderDetailScreen({navigation, route}) {
           {currentMember.can(EDIT_BINDERS) && (
             <TouchableOpacity
               style={styles.headerButton}
-              onPress={() => setAddSongsSheetVisible(true)}>
-              <Icon name="plus" size={22} color="#2464eb" />
+              onPress={() => setAddSongsSheetVisible(true)}
+              disabled={!isConnected}>
+              <Icon
+                name="plus"
+                size={22}
+                color={isConnected ? '#2464eb' : '#a0a0a0'}
+              />
             </TouchableOpacity>
           )}
           <TouchableOpacity
@@ -81,7 +88,7 @@ export default function BinderDetailScreen({navigation, route}) {
         </>
       ),
     });
-  }, [navigation, currentMember]);
+  }, [navigation, currentMember, isConnected]);
 
   function renderRow({item: song}) {
     return (
@@ -168,7 +175,10 @@ export default function BinderDetailScreen({navigation, route}) {
   function renderHiddenItem({item: song}) {
     return (
       <View style={styles.hiddenRow}>
-        <SwipeListDeleteButton onPress={() => handleRemoveSong(song.id)} />
+        <SwipeListDeleteButton
+          onPress={() => handleRemoveSong(song.id)}
+          enabled={isConnected}
+        />
       </View>
     );
   }
@@ -224,6 +234,7 @@ export default function BinderDetailScreen({navigation, route}) {
         onDismiss={() => setOptionsSheetVisible(false)}
         onDelete={() => setConfirmDeleteVisible(true)}
         onNavigateTo={handleNavigateTo}
+        isConnected={isConnected}
       />
       <ConfirmDeleteModal
         visible={confirmDeleteVisible}

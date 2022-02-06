@@ -45,6 +45,8 @@ import {useSelector} from 'react-redux';
 import CheckEmailModal from './src/modals/CheckEmailModal';
 import CheckEmailForPasswordModal from './src/modals/CheckEmailForPasswordModal';
 import PrintSongModal from './src/modals/PrintSongModal';
+import {useNetInfo} from '@react-native-community/netinfo';
+import Snackbar from 'react-native-snackbar';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -52,6 +54,7 @@ const Stack = createNativeStackNavigator();
 export default function Routes() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const intervalRef = useRef();
+  const {isConnected} = useNetInfo();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -73,6 +76,18 @@ export default function Routes() {
       reportError(error);
     }
   }, []);
+
+  if (isLoggedIn && !isConnected) {
+    Snackbar.show({
+      text: "No internet connection. Some functionality will not be available until you've reconnected.",
+      duration: Snackbar.LENGTH_LONG,
+      action: {
+        text: 'CLOSE',
+        onPress: () => Snackbar.dismiss(),
+        textColor: '#eaeaea',
+      },
+    });
+  }
 
   return (
     <BottomSheetModalProvider>

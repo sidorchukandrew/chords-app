@@ -17,9 +17,20 @@ import NoteColorsBottomSheet from './NoteColorsBottomSheet';
 import {reportError} from '../utils/error';
 import {deleteNoteFromSong, updateNoteOnSong} from '../services/notesService';
 import _ from 'lodash';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function Note({note, onDeleted, onChanged, song}) {
+  const clamp = useCallback(() => {
+    let noteWidthPlusPadding = 200 + 70;
+    if (note.x > width) {
+      return width - noteWidthPlusPadding;
+    } else {
+      return note.x;
+    }
+  }, [note, width]);
+
   const {width} = useWindowDimensions();
+  const {isConnected} = useNetInfo();
 
   const pressed = useSharedValue(false);
   const x = useSharedValue(clamp());
@@ -29,21 +40,12 @@ export default function Note({note, onDeleted, onChanged, song}) {
 
   useEffect(() => {
     x.value = clamp();
-  }, [width]);
-
-  function clamp() {
-    let noteWidthPlusPadding = 200 + 70;
-    if (note.x > width) {
-      return width - noteWidthPlusPadding;
-    } else {
-      return note.x;
-    }
-  }
+  }, [width, clamp, x]);
 
   function handleCoordinatesChange(newX, newY) {
     try {
-      console.log('Saving coordinates');
       onChanged({x: newX, y: newY});
+      console.log('Saving coordinates');
       updateNoteOnSong(note.id, song.id, {x: newX, y: newY});
     } catch (error) {
       reportError();
@@ -112,7 +114,7 @@ export default function Note({note, onDeleted, onChanged, song}) {
       },
       [1200],
     ),
-    [],
+    [isConnected],
   );
 
   function handleContentChange(newContent) {
@@ -156,6 +158,7 @@ export default function Note({note, onDeleted, onChanged, song}) {
         note={note}
         onChangeColor={() => setShowColorsSheet(true)}
         onDelete={handleDelete}
+        isConnected={isConnected}
       />
       <NoteColorsBottomSheet
         visible={showColorsSheet}

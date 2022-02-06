@@ -15,11 +15,13 @@ import React, {useEffect, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import RectButton from './RectButton';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function AppMenu({visible, onClose, onNavigateTo}) {
   const sheetRef = useRef();
   const [windowWidth, setWindowWidth] = useState(0);
   const window = useWindowDimensions();
+  const {isConnected} = useNetInfo();
 
   useEffect(() => {
     // if (windowWidth > window.width || windowWidth === 0) {
@@ -99,9 +101,17 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
 
         <RectButton
           styles={styles.button}
-          onPress={() => handleNavigateTo('Choose Team')}>
-          <Icon name="swap-horizontal" size={20} style={styles.icon} />
-          <Text style={styles.text}>Switch teams</Text>
+          onPress={() => handleNavigateTo('Choose Team')}
+          disabled={!isConnected}>
+          <Icon
+            name="swap-horizontal"
+            size={20}
+            style={styles.icon}
+            color={isConnected ? '#374251' : '#d0d0d0'}
+          />
+          <Text style={[styles.text, !isConnected && styles.disabledColor]}>
+            Switch teams
+          </Text>
         </RectButton>
       </BottomSheetView>
     </BottomSheetModal>
@@ -120,11 +130,13 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 20,
-    color: '#374251',
   },
   text: {
     fontSize: 17,
     color: '#374251',
     fontWeight: '600',
+  },
+  disabledColor: {
+    color: '#d0d0d0',
   },
 });

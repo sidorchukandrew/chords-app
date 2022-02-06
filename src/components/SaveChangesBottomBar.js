@@ -18,6 +18,7 @@ import {
   deleteCapoFromSong,
   updateCapo,
 } from '../services/caposService';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function SaveChangesBottomBar({song}) {
   const opacity = useRef(new Animated.Value(1)).current;
@@ -26,6 +27,7 @@ export default function SaveChangesBottomBar({song}) {
   const dispatch = useDispatch();
   const [sheetVisible, setSheetVisible] = useState(false);
   const [saving, setSaving] = useState(false);
+  const {isConnected} = useNetInfo();
 
   if (
     (isEmpty(formatEdits[`${song?.id}`]) &&
@@ -124,6 +126,7 @@ export default function SaveChangesBottomBar({song}) {
         onCancel={handleCancel}
         onSave={handleSave}
         saving={saving}
+        isConnected={isConnected}
       />
     </>
   );

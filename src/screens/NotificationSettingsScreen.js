@@ -17,7 +17,6 @@ export default function NotificationSettingsScreen() {
       try {
         setLoading(true);
         let {data} = await SettingsApi.getNotificationSettings();
-        console.log(data);
         setSettings(data);
       } catch (error) {
         reportError(error);

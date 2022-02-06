@@ -11,6 +11,7 @@ export default function SaveChangesBottomSheet({
   onCancel,
   onSave,
   saving,
+  isConnected,
 }) {
   const sheetRef = useRef();
 
@@ -29,7 +30,11 @@ export default function SaveChangesBottomSheet({
       snapPoints={['CONTENT_HEIGHT']}>
       <View style={styles.container}>
         <Text style={styles.title}>You have unsaved changes for this song</Text>
-        <Button style={styles.saveButton} loading={saving} onPress={onSave}>
+        <Button
+          style={styles.saveButton}
+          loading={saving}
+          onPress={onSave}
+          disabled={!isConnected}>
           Save now
         </Button>
         <AccentButton onPress={onCancel}>Cancel</AccentButton>

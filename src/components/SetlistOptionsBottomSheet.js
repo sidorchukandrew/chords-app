@@ -13,6 +13,7 @@ export default function SetlistOptionsBottomSheet({
   onDismiss,
   onNavigateTo,
   onDelete,
+  isConnected,
 }) {
   const sheetRef = useRef();
   const currentMember = useSelector(selectCurrentMember);
@@ -41,15 +42,39 @@ export default function SetlistOptionsBottomSheet({
       ref={sheetRef}>
       <View style={styles.sheet}>
         {currentMember.can(EDIT_SETLISTS) && (
-          <RectButton styles={styles.button} onPress={handleEdit}>
-            <Icon name="pencil" size={20} color="#505050" />
-            <Text style={styles.buttonText}>Edit details</Text>
+          <RectButton
+            styles={styles.button}
+            onPress={handleEdit}
+            disabled={!isConnected}>
+            <Icon
+              name="pencil"
+              size={20}
+              color={isConnected ? '#505050' : '#d0d0d0'}
+            />
+            <Text
+              style={[styles.buttonText, !isConnected && styles.disabledColor]}>
+              Edit details
+            </Text>
           </RectButton>
         )}
         {currentMember.can(DELETE_SETLISTS) && (
-          <RectButton styles={styles.button} onPress={handleDelete}>
-            <Icon name="delete" size={20} color="#ef4444" />
-            <Text style={[styles.buttonText, styles.deleteColor]}>Delete</Text>
+          <RectButton
+            styles={styles.button}
+            onPress={handleDelete}
+            disabled={!isConnected}>
+            <Icon
+              name="delete"
+              size={20}
+              color={isConnected ? '#ef4444' : '#d0d0d0'}
+            />
+            <Text
+              style={[
+                styles.buttonText,
+                styles.deleteColor,
+                !isConnected && styles.disabledColor,
+              ]}>
+              Delete
+            </Text>
           </RectButton>
         )}
       </View>
@@ -75,5 +100,8 @@ const styles = StyleSheet.create({
   },
   deleteColor: {
     color: '#ef4444',
+  },
+  disabledColor: {
+    color: '#d0d0d0',
   },
 });

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 import BottomSheet from './BottomSheet';
@@ -13,6 +13,7 @@ export default function SongOptionsBottomSheet({
   onDismiss,
   onDelete,
   onPrint,
+  isConnected,
 }) {
   const sheetRef = useRef();
   const currentMember = useSelector(selectCurrentMember);
@@ -46,9 +47,21 @@ export default function SongOptionsBottomSheet({
             <Text style={styles.buttonText}>Print</Text>
           </RectButton>
           {currentMember.can(DELETE_SONGS) && (
-            <RectButton styles={styles.button} onPress={handleDelete}>
-              <Icon name="delete" size={20} color="#ef4444" />
-              <Text style={[styles.buttonText, styles.deleteColor]}>
+            <RectButton
+              styles={styles.button}
+              onPress={handleDelete}
+              disabled={!isConnected}>
+              <Icon
+                name="delete"
+                size={20}
+                color={isConnected ? '#ef4444' : '#d0d0d0'}
+              />
+              <Text
+                style={[
+                  styles.buttonText,
+                  styles.deleteColor,
+                  !isConnected && styles.disabledColor,
+                ]}>
                 Delete
               </Text>
             </RectButton>
@@ -77,5 +90,8 @@ const styles = StyleSheet.create({
   },
   deleteColor: {
     color: '#ef4444',
+  },
+  disabledColor: {
+    color: '#d0d0d0',
   },
 });

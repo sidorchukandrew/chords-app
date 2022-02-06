@@ -14,6 +14,7 @@ import {getAllSetlists} from '../services/setlistsService';
 import {reportError} from '../utils/error';
 import {useFocusEffect} from '@react-navigation/native';
 import Container from '../components/Container';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function SetlistsIndexScreen({navigation, route}) {
   const [setType, setSetType] = useState('Upcoming');
@@ -22,6 +23,7 @@ export default function SetlistsIndexScreen({navigation, route}) {
   const [pastSets, setPastSets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const {isConnected} = useNetInfo();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -151,7 +153,8 @@ export default function SetlistsIndexScreen({navigation, route}) {
       </Container>
       <CircleButton
         style={styles.addButton}
-        onPress={() => navigation.navigate('Create Setlist')}>
+        onPress={() => navigation.navigate('Create Setlist')}
+        disabled={!isConnected}>
         <Icon name="plus" size={35} color="white" />
       </CircleButton>
     </View>

@@ -5,9 +5,13 @@ export default function RectButton({
   children,
   onPress,
   styles: providedStyles,
+  disabled,
 }) {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, providedStyles]}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.button, providedStyles]}
+      disabled={disabled}>
       {children}
     </TouchableOpacity>
   );

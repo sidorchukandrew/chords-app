@@ -22,6 +22,7 @@ import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {VIEW_FILES} from '../utils/auth';
 import SongFilesTab from '../components/SongFilesTab';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
@@ -34,6 +35,7 @@ export default function SongDetailScreen({navigation, route}) {
   const currentSubscription = useSelector(selectCurrentSubscription);
   const currentMember = useSelector(selectCurrentMember);
   const dispatch = useDispatch();
+  const {isConnected} = useNetInfo();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -100,6 +102,7 @@ export default function SongDetailScreen({navigation, route}) {
           onNavigateTo={handleNavigateTo}
           onUpdateSong={handleUpdateSong}
           navigation={navigation}
+          isConnected={isConnected}
         />
       );
     } else if (tab === 'Files') {
@@ -154,6 +157,7 @@ export default function SongDetailScreen({navigation, route}) {
         onDismiss={() => setOptionsSheetVisible(false)}
         onDelete={() => setConfirmDeleteVisible(true)}
         onPrint={handleShowPrintModal}
+        isConnected={isConnected}
       />
       <ConfirmDeleteModal
         visible={confirmDeleteVisible}

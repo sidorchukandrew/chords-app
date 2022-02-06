@@ -15,6 +15,7 @@ import {reportError} from '../utils/error';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function BindersIndexScreen({navigation}) {
   const [query, setQuery] = useState('');
@@ -22,6 +23,7 @@ export default function BindersIndexScreen({navigation}) {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
+  const {isConnected} = useNetInfo();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -112,13 +114,17 @@ export default function BindersIndexScreen({navigation}) {
               showAddButton={currentMember.can(ADD_BINDERS)}
               buttonTitle="Add binder"
               onButtonPress={handleCreateBinder}
+              disabled={!isConnected}
             />
           }
           ListHeaderComponentStyle={styles.headerContainer}
         />
       </Container>
       {currentMember.can(ADD_BINDERS) && (
-        <CircleButton style={styles.addButton} onPress={handleCreateBinder}>
+        <CircleButton
+          style={styles.addButton}
+          onPress={handleCreateBinder}
+          disabled={!isConnected}>
           <Icon name="plus" size={35} color="white" />
         </CircleButton>
       )}

@@ -15,6 +15,7 @@ export default function SetlistSongRowItem({
   itemRefs,
   onRemove,
   editable,
+  isConnected,
 }) {
   return (
     <OpacityDecorator>
@@ -29,7 +30,10 @@ export default function SetlistSongRowItem({
         }}
         renderUnderlayLeft={() => (
           <View style={styles.hiddenRow}>
-            <SwipeListDeleteButton onPress={() => onRemove(song.id)} />
+            <SwipeListDeleteButton
+              onPress={() => onRemove(song.id)}
+              enabled={isConnected}
+            />
           </View>
         )}
         snapPointsLeft={[75]}>
@@ -37,7 +41,7 @@ export default function SetlistSongRowItem({
           style={styles.row}
           onPress={() => onNavigateToSong(song)}
           underlayColor="white"
-          onLongPress={editable ? drag : null}
+          onLongPress={editable && isConnected ? drag : null}
           disabled={isActive}>
           <>
             <Text style={styles.songName}>{song.name}</Text>

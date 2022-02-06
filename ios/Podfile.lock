@@ -290,6 +290,8 @@ PODS:
   - react-native-mmkv (1.6.2):
     - MMKV
     - React-Core
+  - react-native-netinfo (7.1.9):
+    - React-Core
   - react-native-pdf (6.4.0):
     - React-Core
   - react-native-print (0.10.0):
@@ -461,6 +463,7 @@ DEPENDENCIES:
   - react-native-html-to-pdf (from `../node_modules/react-native-html-to-pdf`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - react-native-print (from `../node_modules/react-native-print`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -554,6 +557,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-pdf:
     :path: "../node_modules/react-native-pdf"
   react-native-print:
@@ -644,6 +649,7 @@ SPEC CHECKSUMS:
   react-native-html-to-pdf: 4c5c6e26819fe202971061594058877aa9b25265
   react-native-image-picker: 5fe0a96bef4935bbdfb02f59b910bf40d5526109
   react-native-mmkv: c5adce7da6e16b9ea875180a4c9a6be958ae8a81
+  react-native-netinfo: 87e5bfaf21ea5c6c110941290aa481dd8e849f98
   react-native-pdf: a6a5a3f0bdf340eb2eed6c96034424d2cc3f84b0
   react-native-print: 1ae7a4ce4bf673b975f2ec9c4e00ad0c9b60e8aa
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057

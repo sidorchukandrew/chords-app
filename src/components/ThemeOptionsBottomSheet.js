@@ -13,6 +13,7 @@ export default function ThemeOptionsBottomSheet({
   onThemeRemoved,
   theme,
   song,
+  isConnected,
 }) {
   const sheetRef = useRef();
 
@@ -38,9 +39,23 @@ export default function ThemeOptionsBottomSheet({
       snapPoints={['CONTENT_HEIGHT']}
       dynamicHeight>
       <View style={styles.sheet}>
-        <RectButton styles={styles.button} onPress={handleRemoveTheme}>
-          <Icon name="delete" size={20} color="#ef4444" />
-          <Text style={[styles.buttonText, styles.deleteColor]}>Remove</Text>
+        <RectButton
+          styles={styles.button}
+          onPress={handleRemoveTheme}
+          disabled={!isConnected}>
+          <Icon
+            name="delete"
+            size={20}
+            color={isConnected ? '#ef4444' : '#d0d0d0'}
+          />
+          <Text
+            style={[
+              styles.buttonText,
+              styles.deleteColor,
+              !isConnected && styles.disabledColor,
+            ]}>
+            Remove
+          </Text>
         </RectButton>
       </View>
     </BottomSheet>
@@ -65,5 +80,8 @@ const styles = StyleSheet.create({
   },
   deleteColor: {
     color: '#ef4444',
+  },
+  disabledColor: {
+    color: '#d0d0d0',
   },
 });
