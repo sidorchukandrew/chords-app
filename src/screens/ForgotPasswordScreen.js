@@ -53,6 +53,7 @@ export default function ForgotPasswordScreen({navigation}) {
           value={email}
           autoCapitalize="none"
           autoComplete="off"
+          keyboardType="email-address"
         />
         {errored && (
           <AlertBubble

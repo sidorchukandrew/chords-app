@@ -1,4 +1,4 @@
-import {getSongById, getSongFromStorage} from './songsService';
+import {getSongById} from './songsService';
 
 import {MMKV} from 'react-native-mmkv';
 import SetlistsApi from '../api/setlistsApi';
@@ -114,6 +114,7 @@ export function updateScheduledSong(
       if (hasSetlistSet(setlistId)) {
         let setlist = getSetlistFromStorage(setlistId);
         setlist.songs = reorderedSongs;
+        console.log(reorderedSongs.map(song => song.name));
 
         setSetlistInStorage(setlist);
       }

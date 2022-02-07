@@ -49,6 +49,10 @@ export default function SetlistDetailScreen({route, navigation}) {
         try {
           setLoading(true);
           let data = await getSetlistById(route.params.id);
+          data.songs = data.songs.sort(
+            (songA, songB) => songA.position - songB.position,
+          );
+
           setSetlist(data);
         } catch (error) {
           reportError(error);

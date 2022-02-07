@@ -77,17 +77,19 @@ export default function Routes() {
     }
   }, []);
 
-  if (isLoggedIn && !isConnected) {
-    Snackbar.show({
-      text: "No internet connection. Some functionality will not be available until you've reconnected.",
-      duration: Snackbar.LENGTH_LONG,
-      action: {
-        text: 'CLOSE',
-        onPress: () => Snackbar.dismiss(),
-        textColor: '#eaeaea',
-      },
-    });
-  }
+  useEffect(() => {
+    if (!isConnected && isLoggedIn) {
+      Snackbar.show({
+        text: "No internet connection. Some functionality will not be available until you've reconnected.",
+        duration: Snackbar.LENGTH_LONG,
+        action: {
+          text: 'CLOSE',
+          onPress: () => Snackbar.dismiss(),
+          textColor: '#eaeaea',
+        },
+      });
+    }
+  }, [isConnected, isLoggedIn]);
 
   return (
     <BottomSheetModalProvider>

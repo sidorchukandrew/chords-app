@@ -84,7 +84,7 @@ export default function Roadmap({roadmap = [], song}) {
     <>
       <ScrollView horizontal style={styles.list}>
         <Tag
-          tag="+ Add"
+          tag="+ Roadmap"
           style={styles.section}
           onPress={handleOpenNameSectionModal}
         />

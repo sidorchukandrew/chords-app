@@ -41,7 +41,11 @@ export default function CreateThemeBottomSheet({
   }
 
   return (
-    <BottomSheet onDismiss={handleDismiss} snapPoints={['80%']} ref={sheetRef}>
+    <BottomSheet
+      onDismiss={handleDismiss}
+      ref={sheetRef}
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight>
       <Container>
         <Text style={styles.title}>New theme</Text>
         <FormField label="Theme" value={name} onChange={setName} />

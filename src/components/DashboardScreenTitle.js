@@ -35,5 +35,6 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 10,
   },
 });

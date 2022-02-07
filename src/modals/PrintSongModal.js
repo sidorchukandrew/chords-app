@@ -60,7 +60,9 @@ export default function PrintSongModal({navigation}) {
   return (
     <ScreenModal>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{padding: 5}}>
           <Icon name="close" size={22} color="#404040" />
         </TouchableOpacity>
         <View style={styles.headerRight}>
@@ -73,7 +75,7 @@ export default function PrintSongModal({navigation}) {
         </View>
       </View>
       {uri ? (
-        <Pdf source={{uri: uri}} style={styles.pdf} />
+        <Pdf source={{uri: uri}} style={styles.pdf} minScale={0.5} />
       ) : (
         <LoadingIndicator />
       )}

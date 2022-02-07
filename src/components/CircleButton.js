@@ -11,7 +11,7 @@ export default function CircleButton({
     <TouchableOpacity
       style={[styles.button, disabled && styles.disabledColor, providedStyles]}
       onPress={onPress}
-      disabled>
+      disabled={disabled}>
       {children}
     </TouchableOpacity>
   );

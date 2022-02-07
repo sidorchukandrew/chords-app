@@ -62,6 +62,8 @@ export default function LoginScreen({navigation}) {
           value={email}
           autoCapitalize="none"
           autoComplete="off"
+          clearButtonMode="while-editing"
+          keyboardType="email-address"
         />
         <FormField
           label="Password"
