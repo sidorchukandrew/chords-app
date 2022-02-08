@@ -1,9 +1,7 @@
-import React, {useRef} from 'react';
-import {useEffect, useState} from 'react/cjs/react.development';
+import React, {useRef, useEffect, useState} from 'react';
 
 import BottomSheetModal from './BottomSheetModal';
 import {Calendar} from 'react-native-calendars';
-import Modal from './Modal';
 import {StyleSheet} from 'react-native';
 import dayjs from 'dayjs';
 import {format} from '../utils/date';

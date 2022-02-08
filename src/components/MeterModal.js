@@ -1,6 +1,5 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useEffect, useState} from 'react/cjs/react.development';
 import {COMMON_METERS} from '../utils/music';
 import BottomSheetModal from './BottomSheetModal';
 import ConfirmCancelButtons from './ConfirmCancelButtons';

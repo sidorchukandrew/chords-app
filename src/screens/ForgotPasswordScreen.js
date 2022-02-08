@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useState} from 'react/cjs/react.development';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';

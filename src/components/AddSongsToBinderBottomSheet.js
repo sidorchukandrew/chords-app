@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 
 import BottomSheet from './BottomSheet';
 import Button from './Button';
@@ -13,7 +13,6 @@ import {getAllSongs} from '../services/songsService';
 import {hasAnyKeysSet} from '../utils/song';
 import {pluralize} from '../utils/string';
 import {reportError} from '../utils/error';
-import {useState} from 'react/cjs/react.development';
 
 export default function AddSongsToBinderBottomSheet({
   visible,
