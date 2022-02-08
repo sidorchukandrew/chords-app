@@ -7,6 +7,7 @@ import {
   loginTeam,
   selectCurrentTeam,
   setMembership,
+  updateInitialLoadComplete,
 } from '../redux/slices/authSlice';
 import {
   setMemberInStorage,
@@ -87,9 +88,13 @@ export default function ChooseTeamModal({navigation}) {
       clearAllSetlists();
       clearAllSongs();
 
+      dispatch(updateInitialLoadComplete(false));
+
       await getAllSongs({refresh: true});
       await getAllBinders({refresh: true});
       await getAllSetlists({refresh: true});
+
+      dispatch(updateInitialLoadComplete(true));
 
       navigation.pop();
     } catch (error) {

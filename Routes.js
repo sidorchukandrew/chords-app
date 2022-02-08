@@ -40,8 +40,11 @@ import {getAllBinders} from './src/services/bindersService';
 import {getAllSetlists} from './src/services/setlistsService';
 import {getAllSongs} from './src/services/songsService';
 import {reportError} from './src/utils/error';
-import {selectIsLoggedIn} from './src/redux/slices/authSlice';
-import {useSelector} from 'react-redux';
+import {
+  selectIsLoggedIn,
+  updateInitialLoadComplete,
+} from './src/redux/slices/authSlice';
+import {useDispatch, useSelector} from 'react-redux';
 import CheckEmailModal from './src/modals/CheckEmailModal';
 import CheckEmailForPasswordModal from './src/modals/CheckEmailForPasswordModal';
 import PrintSongModal from './src/modals/PrintSongModal';
@@ -55,17 +58,25 @@ export default function Routes() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const intervalRef = useRef();
   const {isConnected} = useNetInfo();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      intervalRef.current = setInterval(refreshStorage, 120000);
+    async function scheduleRefresh() {
+      if (isLoggedIn) {
+        dispatch(updateInitialLoadComplete(false));
+        await refreshStorage();
+        dispatch(updateInitialLoadComplete(true));
+        intervalRef.current = setInterval(refreshStorage, 120000);
+      }
     }
+
+    scheduleRefresh();
 
     return () => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     };
-  }, [isLoggedIn, refreshStorage]);
+  }, [isLoggedIn, refreshStorage, dispatch]);
 
   const refreshStorage = useCallback(async () => {
     try {
@@ -78,17 +89,23 @@ export default function Routes() {
   }, []);
 
   useEffect(() => {
+    let timeoutId;
     if (!isConnected && isLoggedIn) {
-      Snackbar.show({
-        text: "No internet connection. Some functionality will not be available until you've reconnected.",
-        duration: Snackbar.LENGTH_LONG,
-        action: {
-          text: 'CLOSE',
-          onPress: () => Snackbar.dismiss(),
-          textColor: '#eaeaea',
-        },
-      });
+      console.log("Detected that there's no internet");
+      timeoutId = setTimeout(() => {
+        Snackbar.show({
+          text: "No internet connection. Some functionality will not be available until you've reconnected.",
+          duration: Snackbar.LENGTH_LONG,
+          action: {
+            text: 'CLOSE',
+            onPress: () => Snackbar.dismiss(),
+            textColor: '#eaeaea',
+          },
+        });
+      }, 5000);
     }
+
+    return () => clearTimeout(timeoutId);
   }, [isConnected, isLoggedIn]);
 
   return (

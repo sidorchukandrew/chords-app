@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {getCurrentSubscriptionFromStorage} from '../../services/authService';
+import Config from 'react-native-config';
 
 const initialState = {
   subscription: getCurrentSubscriptionFromStorage(),
@@ -10,7 +11,8 @@ export const subscriptionSlice = createSlice({
   reducers: {
     setSubscription: (state, {payload}) => {
       state.subscription = payload;
-      state.subscription.isPro = payload?.stripe_price_id === 'REPLACE_THIS';
+      state.subscription.isPro =
+        payload?.stripe_price_id === Config.STRIPE_PRO_PRICE_ID;
     },
   },
 });

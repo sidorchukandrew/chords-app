@@ -1,9 +1,5 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {
-  logout,
-  selectCurrentMember,
-  selectCurrentUser,
-} from '../redux/slices/authSlice';
+import {logout, selectCurrentMember} from '../redux/slices/authSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 import AccentButton from '../components/AccentButton';
@@ -19,15 +15,14 @@ import {hasName} from '../utils/member';
 
 export default function AccountScreen({navigation}) {
   const dispatch = useDispatch();
-  const currentUser = useSelector(selectCurrentUser);
   const currentMember = useSelector(selectCurrentMember);
 
   function handleLogout() {
-    dispatch(logout());
     clearAuthStorage();
     clearAllSongs();
     clearAllSetlists();
     clearAllBinders();
+    dispatch(logout());
   }
 
   return (

@@ -46,7 +46,7 @@ export default function LoginScreen({navigation}) {
       setAuthInStorage(auth);
       navigation.navigate('Login Team');
     } catch (error) {
-      reportError(error);
+      reportError(error, {showError: false});
       setErrored(true);
       setLoading(false);
     }

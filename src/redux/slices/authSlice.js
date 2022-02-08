@@ -30,6 +30,7 @@ function buildInitialState() {
     currentTeam,
     currentUser,
     currentMember,
+    initialLoadComplete: false,
   };
 }
 
@@ -54,6 +55,7 @@ const authSlice = createSlice({
       state.currentMember = null;
       state.currentTeam = null;
       state.currentMember = null;
+      state.initialLoadComplete = false;
     },
     loginTeam: (state, {payload}) => {
       state.currentTeam = payload;
@@ -69,6 +71,9 @@ const authSlice = createSlice({
     },
     updateCurrentMember: (state, {payload}) => {
       state.currentMember = {...state.currentMember, ...payload};
+    },
+    updateInitialLoadComplete: (state, {payload}) => {
+      state.initialLoadComplete = payload;
     },
   },
 });
@@ -93,6 +98,7 @@ export const {
   setCurrentUser,
   updateCurrentMember,
   updateCurrentUser,
+  updateInitialLoadComplete,
 } = authSlice.actions;
 
 export const selectCurrentMember = state => {
@@ -108,3 +114,6 @@ export const selectCurrentMember = state => {
     },
   };
 };
+
+export const selectInitialLoadComplete = state =>
+  state.auth?.initialLoadComplete;

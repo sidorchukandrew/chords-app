@@ -1,6 +1,6 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {format, isPast} from '../utils/date';
+import {format, isPast, sortDates} from '../utils/date';
 
 import CircleButton from '../components/CircleButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -37,8 +37,16 @@ export default function SetlistsIndexScreen({navigation, route}) {
           sets?.forEach(set =>
             isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
           );
-          setUpcomingSets(upcoming);
-          setPastSets(past);
+          setUpcomingSets(
+            upcoming.sort((setA, setB) =>
+              sortDates(setA.scheduled_date, setB.scheduled_date),
+            ),
+          );
+          setPastSets(
+            past.sort((setA, setB) =>
+              sortDates(setB.scheduled_date, setA.scheduled_date),
+            ),
+          );
         } catch (error) {
           reportError(error);
         } finally {

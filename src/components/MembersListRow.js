@@ -7,16 +7,18 @@ import {getNameOrEmail} from '../utils/member';
 
 export default function MembersListRow({member, onPress, me}) {
   return (
-    <TouchableOpacity style={styles.row}>
+    <TouchableOpacity style={styles.row} disabled>
       <View style={styles.avatar}>
         <ProfilePicture url={member?.image_url} size="lg" member={member} />
       </View>
       <View>
         <Text style={styles.name}>{getNameOrEmail(member)}</Text>
-        <View style={{flexDirection: 'row'}}>
-          <Tag tag="Me" />
-          <View />
-        </View>
+        {me && (
+          <View style={{flexDirection: 'row'}}>
+            <Tag tag="Me" />
+            <View />
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -31,6 +33,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 10,
   },
   avatar: {
     paddingRight: 15,
