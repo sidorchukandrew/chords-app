@@ -54,11 +54,11 @@ export default function AccountScreen({navigation}) {
               text="Notifications"
               onPress={() => navigation.push('Notification Settings')}
             />
-            <AccountMenuButton
+            {/* <AccountMenuButton
               icon="palette-outline"
               text="Appearance"
               onPress={() => navigation.push('Appearance')}
-            />
+            /> */}
           </View>
         </Container>
       </ScrollView>

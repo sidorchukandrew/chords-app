@@ -45,7 +45,6 @@ export default function Note({note, onDeleted, onChanged, song}) {
   function handleCoordinatesChange(newX, newY) {
     try {
       onChanged({x: newX, y: newY});
-      console.log('Saving coordinates');
       updateNoteOnSong(note.id, song.id, {x: newX, y: newY});
     } catch (error) {
       reportError();
@@ -59,8 +58,16 @@ export default function Note({note, onDeleted, onChanged, song}) {
       ctx.startY = y.value;
     },
     onActive: (event, ctx) => {
-      x.value = ctx.startX + event.translationX;
-      y.value = ctx.startY + event.translationY;
+      let newX = ctx.startX + event.translationX;
+
+      if (newX >= 0) {
+        x.value = ctx.startX + event.translationX;
+      }
+
+      let newY = ctx.startY + event.translationY;
+      if (newY >= 5) {
+        y.value = ctx.startY + event.translationY;
+      }
     },
     onEnd: (event, ctx) => {
       pressed.value = false;
