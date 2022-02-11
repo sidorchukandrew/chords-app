@@ -41,7 +41,10 @@ import {getAllSetlists} from './src/services/setlistsService';
 import {getAllSongs} from './src/services/songsService';
 import {reportError} from './src/utils/error';
 import {
+  loginTeam,
   selectIsLoggedIn,
+  setCurrentUser,
+  setMembership,
   updateInitialLoadComplete,
 } from './src/redux/slices/authSlice';
 import {useDispatch, useSelector} from 'react-redux';
@@ -50,6 +53,15 @@ import CheckEmailForPasswordModal from './src/modals/CheckEmailForPasswordModal'
 import PrintSongModal from './src/modals/PrintSongModal';
 import {useNetInfo} from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import UsersApi from './src/api/usersApi';
+import {
+  setMemberInStorage,
+  setSubscriptionInStorage,
+  setTeamInStorage,
+  setUserInStorage,
+} from './src/services/authService';
+import TeamsApi from './src/api/teamsApi';
+import {setSubscription} from './src/redux/slices/subscriptionSlice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -78,6 +90,21 @@ export default function Routes() {
     };
   }, [isLoggedIn, refreshStorage, dispatch]);
 
+  useEffect(() => {
+    async function scheduleRefresh() {
+      if (isLoggedIn) {
+        intervalRef.current = setInterval(refreshUserAndTeam, 920000);
+      }
+    }
+
+    scheduleRefresh();
+
+    return () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
+  }, [isLoggedIn, refreshUserAndTeam]);
+
   const refreshStorage = useCallback(async () => {
     try {
       await getAllSongs({refresh: true});
@@ -87,6 +114,32 @@ export default function Routes() {
       reportError(error);
     }
   }, []);
+
+  const refreshUserAndTeam = useCallback(async () => {
+    try {
+      let userResult = await UsersApi.getCurrentUser();
+      dispatch(setCurrentUser(userResult.data));
+      setUserInStorage(userResult.data);
+
+      let teamResult = await TeamsApi.getCurrentTeam();
+      dispatch(
+        loginTeam({...teamResult.data.team, members: teamResult.data.members}),
+      );
+      setTeamInStorage({
+        ...teamResult.data.team,
+        members: teamResult.data.members,
+      });
+
+      dispatch(setSubscription(teamResult.data.subscription));
+      setSubscriptionInStorage(teamResult.data.subscription);
+
+      let membershipResult = await UsersApi.getTeamMembership();
+      dispatch(setMembership({role: membershipResult.data.role}));
+      setMemberInStorage({role: membershipResult.data.role});
+    } catch (error) {
+      reportError(error);
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     let timeoutId;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import AccentButton from '../components/AccentButton';
 import Button from '../components/Button';
 import Container from '../components/Container';
@@ -14,7 +14,7 @@ export default function AuthScreen({navigation}) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.filler}>
         <Text style={styles.title}>Cadence</Text>
       </View>
@@ -26,7 +26,7 @@ export default function AuthScreen({navigation}) {
           <AccentButton onPress={handleNavigateToLogin}>Login</AccentButton>
         </Container>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

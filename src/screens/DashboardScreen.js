@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import DashboardScreenProfilePicture from '../components/DashboardScreenProfilePicture';
 import DashboardScreenTitle from '../components/DashboardScreenTitle';
@@ -28,16 +28,18 @@ export default function DashboardScreen({navigation}) {
   }, [navigation]);
 
   return (
-    <ScrollView style={styles.container}>
-      <Container size="lg">
-        <Text style={styles.dashboardText}>Dashboard</Text>
-      </Container>
-      {initialLoadComplete ? (
-        <DashboardWidgets navigation={navigation} />
-      ) : (
-        <LoadingIndicator />
-      )}
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView>
+        <Container size="lg">
+          <Text style={styles.dashboardText}>Dashboard</Text>
+        </Container>
+        {initialLoadComplete ? (
+          <DashboardWidgets navigation={navigation} />
+        ) : (
+          <LoadingIndicator />
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -45,6 +47,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     paddingVertical: 10,
+    flex: 1,
   },
   dashboardText: {
     fontSize: 25,

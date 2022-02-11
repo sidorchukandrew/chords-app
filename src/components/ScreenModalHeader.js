@@ -1,10 +1,4 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LoadingIndicator from './LoadingIndicator';
@@ -33,7 +27,7 @@ export default function ScreenModalHeader({
     </View>
   );
   return (
-    <SafeAreaView style={styles.header}>
+    <View style={styles.header}>
       <View style={styles.container}>
         {options.backVisible ? (
           <View style={styles.backButtonContainer}>
@@ -53,7 +47,7 @@ export default function ScreenModalHeader({
           <View style={styles.saveButtonContainer} />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

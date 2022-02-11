@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
@@ -65,7 +59,7 @@ export default function SignUpScreen({navigation}) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Container style={styles.formContainer} size="sm">
         <Text style={styles.title}>Create your account</Text>
         <FormField
@@ -124,7 +118,7 @@ export default function SignUpScreen({navigation}) {
           </Button>
         </Container>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

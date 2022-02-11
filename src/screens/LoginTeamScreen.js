@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {
   loginTeam,
   setCurrentUser,
@@ -104,7 +104,7 @@ export default function LoginTeamScreen({navigation}) {
   if (loadingAllData) return <LoadingIndicator />;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Container style={styles.formContainer} size="sm">
         <Text style={styles.title}>Choose a team to login to</Text>
         {renderContent()}
@@ -116,7 +116,7 @@ export default function LoginTeamScreen({navigation}) {
           </AccentButton>
         </Container>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

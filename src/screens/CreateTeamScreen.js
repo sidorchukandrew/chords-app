@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {
   loginTeam,
   setCurrentUser,
@@ -69,7 +63,7 @@ export default function CreateTeamScreen({navigation}) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Container style={styles.formContainer} size="sm">
         <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
           <Icon name="chevron-left" size={16} color="#505050" />
@@ -85,7 +79,7 @@ export default function CreateTeamScreen({navigation}) {
           </Button>
         </Container>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

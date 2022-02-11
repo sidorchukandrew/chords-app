@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Button from '../components/Button';
 import Container from '../components/Container';
 import FormField from '../components/FormField';
@@ -37,7 +31,7 @@ export default function ForgotPasswordScreen({navigation}) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Container style={styles.formContainer} size="sm">
         <TouchableOpacity
           style={styles.backButton}
@@ -73,7 +67,7 @@ export default function ForgotPasswordScreen({navigation}) {
           </Button>
         </Container>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

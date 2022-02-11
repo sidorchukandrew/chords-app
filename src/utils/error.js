@@ -6,9 +6,10 @@ export function reportError(error, {showError = true}) {
 
   Sentry.captureException(error);
   if (showError) {
-    Snackbar.show({
+    Snackbar?.show({
       text: 'Uh oh, looks like an error just occurred. Support has been notified.',
       duration: Snackbar.LENGTH_LONG,
+      numberOfLines: 3,
       action: {
         text: 'CLOSE',
         onPress: () => Snackbar.dismiss(),

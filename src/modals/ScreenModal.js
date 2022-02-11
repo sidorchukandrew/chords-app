@@ -1,9 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {StyleSheet, View} from 'react-native';
 
 export default function ScreenModal({children}) {
-  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
+  return <View style={styles.container}>{children}</View>;
 }
 
 const styles = StyleSheet.create({

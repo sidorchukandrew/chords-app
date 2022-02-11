@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "iphone": "react-native run-ios --simulator=\"iPhone 8\"",
+    "iphone": "react-native run-ios --simulator=\"iPhone X\"",
     "ipad": "react-native run-ios --simulator=\"iPad (9th generation)\"",
     "start": "react-native start",
     "test": "jest",

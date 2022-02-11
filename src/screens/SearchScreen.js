@@ -1,6 +1,5 @@
 import React, {useCallback, useState} from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   View,
   Text,
@@ -80,83 +79,77 @@ export default function SearchScreen({navigation}) {
   );
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <ScrollView>
-        <Container size="lg" style={styles.container}>
-          <Text style={styles.dashboardText}>Search</Text>
-          <SearchFilterBar
-            placeholder="What are you looking for?"
-            onQueryChange={handleQueryChange}
-            query={query}
-          />
-          <View style={styles.resultsContainer}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitleText}>Songs</Text>
-              {searchResults.songs?.length === 0 ? (
-                <NoDataMessage message="No songs to show" />
-              ) : (
-                searchResults.songs?.map((song, index) => (
-                  <View key={song.id}>
-                    <TouchableOpacity
-                      style={styles.row}
-                      onPress={() => navigation.navigate('Song Detail', song)}>
-                      <Text>{song.name}</Text>
-                    </TouchableOpacity>
-                    {index < searchResults.songs.length - 1 && (
-                      <ItemSeparator />
-                    )}
-                  </View>
-                ))
-              )}
-            </View>
-
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitleText}>Binders</Text>
-              {searchResults.binders?.length === 0 ? (
-                <NoDataMessage message="No binders to show" />
-              ) : (
-                searchResults.binders?.map((binder, index) => (
-                  <View key={binder.id}>
-                    <TouchableOpacity
-                      style={styles.row}
-                      onPress={() =>
-                        navigation.navigate('Binder Detail', binder)
-                      }>
-                      <Text>{binder.name}</Text>
-                    </TouchableOpacity>
-                    {index < searchResults.binders.length - 1 && (
-                      <ItemSeparator />
-                    )}
-                  </View>
-                ))
-              )}
-            </View>
-
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitleText}>Sets</Text>
-              {searchResults.setlists?.length === 0 ? (
-                <NoDataMessage message="No sets to show" />
-              ) : (
-                searchResults.setlists?.map((set, index) => (
-                  <View key={set.id}>
-                    <TouchableOpacity
-                      style={styles.row}
-                      onPress={() =>
-                        navigation.navigate('Setlist Detail', set)
-                      }>
-                      <Text>{set.name}</Text>
-                    </TouchableOpacity>
-                    {index < searchResults.setlists.length - 1 && (
-                      <ItemSeparator />
-                    )}
-                  </View>
-                ))
-              )}
-            </View>
+    <ScrollView style={styles.screen}>
+      <Container size="lg" style={styles.container}>
+        <Text style={styles.dashboardText}>Search</Text>
+        <SearchFilterBar
+          placeholder="What are you looking for?"
+          onQueryChange={handleQueryChange}
+          query={query}
+        />
+        <View style={styles.resultsContainer}>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitleText}>Songs</Text>
+            {searchResults.songs?.length === 0 ? (
+              <NoDataMessage message="No songs to show" />
+            ) : (
+              searchResults.songs?.map((song, index) => (
+                <View key={song.id}>
+                  <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => navigation.navigate('Song Detail', song)}>
+                    <Text>{song.name}</Text>
+                  </TouchableOpacity>
+                  {index < searchResults.songs.length - 1 && <ItemSeparator />}
+                </View>
+              ))
+            )}
           </View>
-        </Container>
-      </ScrollView>
-    </SafeAreaView>
+
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitleText}>Binders</Text>
+            {searchResults.binders?.length === 0 ? (
+              <NoDataMessage message="No binders to show" />
+            ) : (
+              searchResults.binders?.map((binder, index) => (
+                <View key={binder.id}>
+                  <TouchableOpacity
+                    style={styles.row}
+                    onPress={() =>
+                      navigation.navigate('Binder Detail', binder)
+                    }>
+                    <Text>{binder.name}</Text>
+                  </TouchableOpacity>
+                  {index < searchResults.binders.length - 1 && (
+                    <ItemSeparator />
+                  )}
+                </View>
+              ))
+            )}
+          </View>
+
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitleText}>Sets</Text>
+            {searchResults.setlists?.length === 0 ? (
+              <NoDataMessage message="No sets to show" />
+            ) : (
+              searchResults.setlists?.map((set, index) => (
+                <View key={set.id}>
+                  <TouchableOpacity
+                    style={styles.row}
+                    onPress={() => navigation.navigate('Setlist Detail', set)}>
+                    <Text>{set.name}</Text>
+                  </TouchableOpacity>
+                  {index < searchResults.setlists.length - 1 && (
+                    <ItemSeparator />
+                  )}
+                </View>
+              ))
+            )}
+          </View>
+        </View>
+      </Container>
+    </ScrollView>
   );
 }
 
