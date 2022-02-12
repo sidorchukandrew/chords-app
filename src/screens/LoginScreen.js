@@ -65,6 +65,7 @@ export default function LoginScreen({navigation}) {
           value={password}
           autoCapitalize="none"
           autoComplete="off"
+          clearButtonMode="while-editing"
           secureTextEntry
         />
         <TouchableOpacity

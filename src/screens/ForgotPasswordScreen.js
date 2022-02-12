@@ -23,7 +23,7 @@ export default function ForgotPasswordScreen({navigation}) {
       await AuthApi.sendResetPasswordInstructions(email);
       navigation.navigate('Check Email For Password');
     } catch (error) {
-      reportError(error);
+      reportError(error, {showError: false});
       setErrored(true);
     } finally {
       setLoading(false);
@@ -47,6 +47,7 @@ export default function ForgotPasswordScreen({navigation}) {
           autoCapitalize="none"
           autoComplete="off"
           keyboardType="email-address"
+          clearButtonMode="while-editing"
         />
         {errored && (
           <AlertBubble

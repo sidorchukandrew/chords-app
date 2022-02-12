@@ -42,7 +42,7 @@ export default function SignUpScreen({navigation}) {
       clearState();
       navigation.navigate('Check Email');
     } catch (error) {
-      reportError(error);
+      reportError(error, {showError: false});
       setErrored(true);
     } finally {
       setLoading(false);
@@ -68,6 +68,7 @@ export default function SignUpScreen({navigation}) {
           value={email}
           autoCapitalize="none"
           autoComplete="off"
+          keyboardType="email-address"
         />
         <FormField
           label="Password"
@@ -76,6 +77,7 @@ export default function SignUpScreen({navigation}) {
           autoCapitalize="none"
           autoComplete="off"
           secureTextEntry
+          clearButtonMode="while-editing"
         />
 
         <PasswordRequirements
@@ -89,6 +91,7 @@ export default function SignUpScreen({navigation}) {
           autoCapitalize="none"
           autoComplete="off"
           secureTextEntry
+          clearButtonMode="while-editing"
         />
 
         {errored && (

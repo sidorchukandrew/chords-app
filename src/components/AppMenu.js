@@ -1,25 +1,23 @@
-import BottomSheet, {
+import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import RectButton from './RectButton';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useSelector} from 'react-redux';
+import {selectCurrentTeam} from '../redux/slices/authSlice';
+import ProfilePicture from './ProfilePicture';
 
 export default function AppMenu({visible, onClose, onNavigateTo}) {
   const sheetRef = useRef();
   const [windowWidth, setWindowWidth] = useState(0);
+  const currentTeam = useSelector(selectCurrentTeam);
   const window = useWindowDimensions();
   const {isConnected} = useNetInfo();
 
@@ -65,6 +63,10 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
       )}>
       <BottomSheetView
         style={{paddingTop: 12, paddingBottom: 12, paddingHorizontal: 16}}>
+        <View style={styles.teamDetailsContainer}>
+          <ProfilePicture url={currentTeam.image_url} size="md" />
+          <Text style={styles.teamNameText}>{currentTeam.name}</Text>
+        </View>
         <RectButton
           styles={styles.button}
           onPress={() => handleNavigateTo('Dashboard')}>
@@ -138,5 +140,16 @@ const styles = StyleSheet.create({
   },
   disabledColor: {
     color: '#d0d0d0',
+  },
+  teamDetailsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 18,
+  },
+  teamNameText: {
+    fontWeight: '600',
+    fontSize: 19,
+    color: '#374251',
+    marginLeft: 15,
   },
 });
