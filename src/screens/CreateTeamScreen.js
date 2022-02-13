@@ -21,6 +21,7 @@ import {createTeam} from '../services/teamsService';
 import {reportError} from '../utils/error';
 import {setSubscription} from '../redux/slices/subscriptionSlice';
 import {useDispatch} from 'react-redux';
+import * as Sentry from '@sentry/react-native';
 
 export default function CreateTeamScreen({navigation}) {
   const [name, setName] = useState('');
@@ -35,6 +36,7 @@ export default function CreateTeamScreen({navigation}) {
 
       let userResult = await UsersApi.getCurrentUser();
       dispatch(setCurrentUser(userResult.data));
+      Sentry.setUser(userResult.data);
 
       let teamResult = await TeamsApi.getCurrentTeam();
       dispatch(

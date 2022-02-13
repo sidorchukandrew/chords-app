@@ -62,6 +62,7 @@ import {
 } from './src/services/authService';
 import TeamsApi from './src/api/teamsApi';
 import {setSubscription} from './src/redux/slices/subscriptionSlice';
+import * as Sentry from '@sentry/react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -120,6 +121,7 @@ export default function Routes() {
       let userResult = await UsersApi.getCurrentUser();
       dispatch(setCurrentUser(userResult.data));
       setUserInStorage(userResult.data);
+      Sentry.setUser(userResult.data);
 
       let teamResult = await TeamsApi.getCurrentTeam();
       dispatch(
