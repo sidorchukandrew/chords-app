@@ -54,15 +54,19 @@ export default function SearchScreen({navigation}) {
         newQuery = newQuery?.toLowerCase() || '';
 
         function findSongs() {
-          return songs?.filter(song => songMatches(song, newQuery));
+          return songs?.filter(song => songMatches(song, newQuery)) || [];
         }
 
         function findBinders() {
-          return binders?.filter(binder => binderMatches(binder, newQuery));
+          return (
+            binders?.filter(binder => binderMatches(binder, newQuery)) || []
+          );
         }
 
         function findSetlists() {
-          return setlists.filter(setlist => setlistMatches(setlist, newQuery));
+          return (
+            setlists?.filter(setlist => setlistMatches(setlist, newQuery)) || []
+          );
         }
 
         if (newQuery !== '') {
