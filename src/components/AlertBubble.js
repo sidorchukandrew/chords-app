@@ -7,12 +7,13 @@ export default function AlertBubble({
   title = 'Something went wrong',
   dismissable,
   onDismiss,
+  showTitle = true,
   style: providedStyles,
 }) {
   return (
     <View style={[styles.bubbleContainer, providedStyles]}>
       <View styles={styles.textContainer}>
-        <Text style={styles.titleText}>{title}</Text>
+        {showTitle && <Text style={styles.titleText}>{title}</Text>}
         <Text style={styles.messageText}>{message}</Text>
       </View>
       {dismissable && (

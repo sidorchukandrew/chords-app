@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react-native';
 import Snackbar from 'react-native-snackbar';
 
-export function reportError(error, {showError = true}) {
+export function reportError(error, {showError} = {showError: true}) {
   console.log(error);
 
   Sentry.captureException(error);

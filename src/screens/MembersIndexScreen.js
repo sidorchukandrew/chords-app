@@ -15,17 +15,48 @@ import {pluralize} from '../utils/string';
 import {reportError} from '../utils/error';
 import {setTeamInStorage} from '../services/authService';
 import {useSelector} from 'react-redux';
+import {ADD_MEMBERS} from '../utils/auth';
+import CircleButton from '../components/CircleButton';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNetInfo} from '@react-native-community/netinfo';
+import SegmentedControl from '../components/SegmentedControl';
+import PendingInvitationRow from '../components/PendingInvitationRow';
+import {useFocusEffect} from '@react-navigation/native';
+import InvitationsApi from '../api/invitationsApi';
+import AddMembersBottomSheet from '../components/AddMembersBottomSheet';
+import InviteByEmailBottomSheet from '../components/InviteByEmailBottomSheet';
 
 export default function MembersIndexScreen() {
   const currentTeam = useSelector(selectCurrentTeam);
   const currentMember = useSelector(selectCurrentMember);
   const [members, setMembers] = useState([]);
+  const [pendingInvitations, setPendingInvitations] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [query, setQuery] = useState('');
+  const {isConnected} = useNetInfo();
+  const [selectedTab, setSelectedTab] = useState('Members');
+  const [addMembersSheetVisible, setAddMembersSheetVisible] = useState(false);
+  const [inviteByEmailSheetVisible, setInviteByEmailSheetVisible] =
+    useState(false);
 
   useEffect(() => {
     if (currentTeam?.members) setMembers(currentTeam.members);
   }, [currentTeam]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      async function fetchData() {
+        try {
+          let {data} = await InvitationsApi.getAll();
+          setPendingInvitations(data);
+        } catch (error) {
+          reportError(error);
+        }
+      }
+
+      fetchData();
+    }, []),
+  );
 
   async function handleRefresh() {
     try {
@@ -37,6 +68,9 @@ export default function MembersIndexScreen() {
       });
 
       setMembers(teamResult.data.members);
+
+      let invitationsResult = await InvitationsApi.getAll();
+      setPendingInvitations(invitationsResult.data);
     } catch (error) {
       reportError(error);
     } finally {
@@ -59,31 +93,115 @@ export default function MembersIndexScreen() {
     });
   }
 
+  function filteredInvitations() {
+    let lowercasedQuery = query.toLowerCase();
+
+    return pendingInvitations.filter(invitation =>
+      invitation.email?.toLowerCase().includes(lowercasedQuery),
+    );
+  }
+
+  function handleInvitationSent(invitation) {
+    setPendingInvitations(currentInvitations => [
+      invitation,
+      ...currentInvitations,
+    ]);
+  }
+
+  function handleInvitationDeleted(invitationToDelete) {
+    setPendingInvitations(currentInvitations =>
+      currentInvitations.filter(
+        invitation => invitation.id !== invitationToDelete.id,
+      ),
+    );
+  }
+
+  function handleInvitationResent(updatedInvitation) {
+    setPendingInvitations(currentInvitations =>
+      currentInvitations.map(invitation =>
+        invitation.id === updatedInvitation.id ? updatedInvitation : invitation,
+      ),
+    );
+  }
+
   return (
-    <Container size="lg" style={styles.container}>
-      <FlatList
-        renderItem={({item}) => (
-          <MembersListRow member={item} me={currentMember.id === item.id} />
-        )}
-        data={filteredMembers()}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-        ItemSeparatorComponent={ItemSeparator}
-        ListHeaderComponent={
-          <SearchFilterBar
-            query={query}
-            onQueryChange={setQuery}
-            placeholder={`Search ${members.length} ${pluralize(
-              members,
-              'member',
-            )}`}
+    <>
+      <Container size="lg" style={styles.container}>
+        <SearchFilterBar
+          query={query}
+          onQueryChange={setQuery}
+          placeholder={`Search ${
+            selectedTab === 'Members'
+              ? members.length
+              : pendingInvitations.length
+          } ${
+            selectedTab === 'Members'
+              ? pluralize(members, 'member')
+              : pluralize(pendingInvitations, 'invitation')
+          }`}
+        />
+        <Container size="sm" style={styles.segmentedControl}>
+          <SegmentedControl
+            options={['Members', 'Invitations']}
+            selected={selectedTab}
+            onPress={setSelectedTab}
           />
-        }
-        ListEmptyComponent={<NoDataMessage message="No members to show" />}
-        style={{height: '100%'}}
-        ListHeaderComponentStyle={styles.headerContainer}
+        </Container>
+        {selectedTab === 'Members' ? (
+          <FlatList
+            renderItem={({item}) => (
+              <MembersListRow member={item} me={currentMember.id === item.id} />
+            )}
+            data={filteredMembers()}
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            ItemSeparatorComponent={ItemSeparator}
+            ListEmptyComponent={<NoDataMessage message="No members to show" />}
+            style={{height: '100%'}}
+            ListHeaderComponentStyle={styles.headerContainer}
+          />
+        ) : (
+          <FlatList
+            renderItem={({item}) => (
+              <PendingInvitationRow
+                invitation={item}
+                onDeleted={handleInvitationDeleted}
+                onResent={handleInvitationResent}
+              />
+            )}
+            data={filteredInvitations()}
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            ItemSeparatorComponent={ItemSeparator}
+            ListEmptyComponent={
+              <NoDataMessage message="No invitations to show" />
+            }
+            style={{height: '100%'}}
+            ListHeaderComponentStyle={styles.headerContainer}
+          />
+        )}
+      </Container>
+      {currentMember.can(ADD_MEMBERS) && (
+        <CircleButton
+          style={styles.addButton}
+          disabled={!isConnected}
+          onPress={() => setAddMembersSheetVisible(true)}>
+          <Icon name="plus" size={35} color="white" />
+        </CircleButton>
+      )}
+      <AddMembersBottomSheet
+        visible={addMembersSheetVisible}
+        onDismiss={() => setAddMembersSheetVisible(false)}
+        onInviteByEmail={() => setInviteByEmailSheetVisible(true)}
       />
-    </Container>
+      <InviteByEmailBottomSheet
+        visible={inviteByEmailSheetVisible}
+        onDismiss={() => setInviteByEmailSheetVisible(false)}
+        members={members}
+        pendingInvitations={pendingInvitations}
+        onInvitationSent={handleInvitationSent}
+      />
+    </>
   );
 }
 
@@ -93,5 +211,13 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     marginBottom: 15,
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+  },
+  segmentedControl: {
+    marginVertical: 15,
   },
 });

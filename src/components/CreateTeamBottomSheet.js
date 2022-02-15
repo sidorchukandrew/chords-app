@@ -70,7 +70,11 @@ export default function CreateTeamBottomSheet({
   }
 
   return (
-    <BottomSheet onDismiss={onDismiss} snapPoints={['80%']} ref={sheetRef}>
+    <BottomSheet
+      onDismiss={onDismiss}
+      snapPoints={['CONTENT_HEIGHT']}
+      dynamicHeight
+      ref={sheetRef}>
       <Container>
         <Text style={styles.title}>New team</Text>
         <FormField label="Team name" value={name} onChange={setName} />
