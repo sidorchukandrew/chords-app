@@ -18,6 +18,7 @@ import {reportError} from '../utils/error';
 import {deleteNoteFromSong, updateNoteOnSong} from '../services/notesService';
 import _ from 'lodash';
 import {useNetInfo} from '@react-native-community/netinfo';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Note({note, onDeleted, onChanged, song}) {
   const clamp = useCallback(() => {
@@ -99,6 +100,19 @@ export default function Note({note, onDeleted, onChanged, song}) {
     };
   }
 
+  function getDarkenedColor() {
+    return {
+      backgroundColor: NOTE_COLORS.find(
+        colorOption => colorOption.color === note.color,
+      ).darkened,
+    };
+  }
+
+  function getIconColor() {
+    return NOTE_COLORS.find(colorOption => colorOption.color === note.color)
+      .icon;
+  }
+
   async function handleColorChange(newColor) {
     onChanged({color: newColor});
 
@@ -147,14 +161,15 @@ export default function Note({note, onDeleted, onChanged, song}) {
       <PanGestureHandler onGestureEvent={eventHandler}>
         <Animated.View
           style={[styles.noteContainer, animatedStyle, getColor()]}>
+          <TextInput
+            value={note.content}
+            onChangeText={handleContentChange}
+            style={styles.input}
+            multiline
+          />
           <LongPressGestureHandler onHandlerStateChange={handleLongPress}>
-            <Animated.View style={{padding: 10}}>
-              <TextInput
-                value={note.content}
-                onChangeText={handleContentChange}
-                style={styles.input}
-                multiline
-              />
+            <Animated.View style={[getDarkenedColor(), styles.rightBar]}>
+              <Icon name="cog-outline" size={20} color={getIconColor()} />
             </Animated.View>
           </LongPressGestureHandler>
         </Animated.View>
@@ -180,7 +195,7 @@ export default function Note({note, onDeleted, onChanged, song}) {
 const styles = StyleSheet.create({
   noteContainer: {
     width: 200,
-    height: 170,
+    height: 80,
     position: 'absolute',
     shadowColor: '#000',
     shadowOffset: {
@@ -192,16 +207,24 @@ const styles = StyleSheet.create({
 
     elevation: 16,
     backgroundColor: '#FEEF86',
+    flexDirection: 'row',
   },
   input: {
     height: '100%',
     textAlignVertical: 'top',
+    flex: 1,
+    padding: 10,
+  },
+  rightBar: {
+    width: 30,
+    paddingVertical: 5,
+    alignItems: 'center',
   },
 });
 
 export const NOTE_COLORS = [
-  {color: 'yellow', hex: '#fde689'},
-  {color: 'green', hex: '#a7f3cf'},
-  {color: 'pink', hex: '#fbd0e8'},
-  {color: 'blue', hex: '#bfdbfe'},
+  {color: 'yellow', hex: '#fde689', darkened: '#fbd34c', icon: '#79360f'},
+  {color: 'green', hex: '#a7f3cf', darkened: '#6ee7b7', icon: '#0d5541'},
+  {color: 'pink', hex: '#fbd0e8', darkened: '#f8a8d4', icon: '#831743'},
+  {color: 'blue', hex: '#bfdbfe', darkened: '#92c6fd', icon: '#294795'},
 ];

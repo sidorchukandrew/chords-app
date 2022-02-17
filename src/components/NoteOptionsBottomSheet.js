@@ -63,7 +63,7 @@ export default function NoteOptionsBottomSheet({
           <Text
             style={[
               styles.buttonText,
-              styles.deleteColo,
+              styles.deleteColor,
               !isConnected && styles.disabledColor,
             ]}>
             Delete

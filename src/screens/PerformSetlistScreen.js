@@ -94,17 +94,19 @@ export default function PerformSetlistScreen({navigation, route}) {
             maximumZoomScale={4}
             minimumZoomScale={0.5}>
             <Roadmap roadmap={song?.roadmap} song={song} />
-            <SongContent song={songOnScreen} />
-            {width > MIN_WIDTH_TO_SHOW_NOTES &&
-              song.notes?.map(note => (
-                <Note
-                  key={note.id}
-                  note={note}
-                  onChanged={changes => handleNoteChanged(note.id, changes)}
-                  song={song}
-                  onDeleted={handleNoteDeleted}
-                />
-              ))}
+            <View style={{position: 'relative'}}>
+              <SongContent song={songOnScreen} />
+              {width > MIN_WIDTH_TO_SHOW_NOTES &&
+                song.notes?.map(note => (
+                  <Note
+                    key={note.id}
+                    note={note}
+                    onChanged={changes => handleNoteChanged(note.id, changes)}
+                    song={song}
+                    onDeleted={handleNoteDeleted}
+                  />
+                ))}
+            </View>
           </ScrollView>
           <SaveChangesBottomBar song={song} />
         </>
@@ -118,17 +120,19 @@ export default function PerformSetlistScreen({navigation, route}) {
             maximumZoomScale={4}
             minimumZoomScale={0.5}>
             <Roadmap roadmap={song?.roadmap} song={song} />
-            <SongContent song={song} />
-            {width > MIN_WIDTH_TO_SHOW_NOTES &&
-              song.notes?.map(note => (
-                <Note
-                  key={note.id}
-                  note={note}
-                  onChanged={changes => handleNoteChanged(note.id, changes)}
-                  song={song}
-                  onDeleted={handleNoteDeleted}
-                />
-              ))}
+            <View style={{position: 'relative'}}>
+              <SongContent song={song} />
+              {width > MIN_WIDTH_TO_SHOW_NOTES &&
+                song.notes?.map(note => (
+                  <Note
+                    key={note.id}
+                    note={note}
+                    onChanged={changes => handleNoteChanged(note.id, changes)}
+                    song={song}
+                    onDeleted={handleNoteDeleted}
+                  />
+                ))}
+            </View>
           </ScrollView>
         </>
       );

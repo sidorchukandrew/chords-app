@@ -40,14 +40,28 @@ export function buildContent(song) {
   let linesOfSong = content.split(/\r\n|\r|\n/);
 
   let textLines = linesOfSong.map((line, index) => {
-    if (isNewLine(line)) return <Text key={index} />;
+    if (isNewLine(line))
+      return (
+        <Text
+          key={index}
+          style={{
+            height: song.format.font_size * 1.5,
+          }}
+        />
+      );
     else if (isChordLine(line) && song.format.chords_hidden) {
       return null;
     } else {
       return (
         <Text
           key={index}
-          style={[getStyles(song.format, line), {color: 'black'}]}>
+          style={[
+            getStyles(song.format, line),
+            {
+              color: 'black',
+              lineHeight: song.format.font_size * 1.5,
+            },
+          ]}>
           {line}
         </Text>
       );
