@@ -32,6 +32,11 @@ export default function AddMembersBottomSheet({
           <Icon name="email-outline" size={18} color="#505050" />
           <Text style={styles.buttonText}>Invite by email</Text>
         </RectButton>
+
+        {/* <RectButton styles={styles.button} onPress={handleInviteByEmail}>
+          <Icon name="export-variant" size={18} color="#505050" />
+          <Text style={styles.buttonText}>Invite through public link</Text>
+        </RectButton> */}
       </View>
     </BottomSheet>
   );

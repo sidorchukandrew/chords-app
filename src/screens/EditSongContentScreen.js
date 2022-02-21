@@ -7,6 +7,7 @@ import {reportError} from '../utils/error';
 import {updateSong} from '../services/songsService';
 import {FONTS} from '../utils/song';
 import {useNetInfo} from '@react-native-community/netinfo';
+import CustomKeyboardAvoidingView from '../components/CustomKeyboardAvoidingView';
 
 export default function EditSongContentScreen({navigation, route}) {
   const [localContent, setLocalContent] = useState(
@@ -70,13 +71,15 @@ export default function EditSongContentScreen({navigation, route}) {
 
   return (
     <Container size="lg" style={styles.container}>
-      <TextInput
-        value={localContent}
-        onChangeText={handleContentChange}
-        multiline
-        style={[styles.input, {fontFamily: FONTS[song.format?.font].regular}]}
-        placeholder="Start typing here"
-      />
+      <CustomKeyboardAvoidingView>
+        <TextInput
+          value={localContent}
+          onChangeText={handleContentChange}
+          multiline
+          style={[styles.input, {fontFamily: FONTS[song.format?.font].regular}]}
+          placeholder="Start typing here"
+        />
+      </CustomKeyboardAvoidingView>
     </Container>
   );
 }

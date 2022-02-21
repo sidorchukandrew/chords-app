@@ -124,62 +124,61 @@ export default function MembersIndexScreen() {
     );
   }
 
+  function renderRow({item}) {
+    if (selectedTab === 'Members') {
+      return <MembersListRow member={item} me={currentMember.id === item.id} />;
+    } else {
+      return (
+        <PendingInvitationRow
+          invitation={item}
+          onDeleted={handleInvitationDeleted}
+          onResent={handleInvitationResent}
+        />
+      );
+    }
+  }
+
   return (
     <>
       <Container size="lg" style={styles.container}>
-        <SearchFilterBar
-          query={query}
-          onQueryChange={setQuery}
-          placeholder={`Search ${
+        <FlatList
+          renderItem={renderRow}
+          data={
             selectedTab === 'Members'
-              ? members.length
-              : pendingInvitations.length
-          } ${
-            selectedTab === 'Members'
-              ? pluralize(members, 'member')
-              : pluralize(pendingInvitations, 'invitation')
-          }`}
-        />
-        <Container size="sm" style={styles.segmentedControl}>
-          <SegmentedControl
-            options={['Members', 'Invitations']}
-            selected={selectedTab}
-            onPress={setSelectedTab}
-          />
-        </Container>
-        {selectedTab === 'Members' ? (
-          <FlatList
-            renderItem={({item}) => (
-              <MembersListRow member={item} me={currentMember.id === item.id} />
-            )}
-            data={filteredMembers()}
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            ItemSeparatorComponent={ItemSeparator}
-            ListEmptyComponent={<NoDataMessage message="No members to show" />}
-            style={{height: '100%'}}
-            ListHeaderComponentStyle={styles.headerContainer}
-          />
-        ) : (
-          <FlatList
-            renderItem={({item}) => (
-              <PendingInvitationRow
-                invitation={item}
-                onDeleted={handleInvitationDeleted}
-                onResent={handleInvitationResent}
+              ? filteredMembers()
+              : filteredInvitations()
+          }
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          ItemSeparatorComponent={ItemSeparator}
+          ListEmptyComponent={<NoDataMessage message="No members to show" />}
+          ListHeaderComponentStyle={styles.headerContainer}
+          ListHeaderComponent={
+            <>
+              <SearchFilterBar
+                query={query}
+                onQueryChange={setQuery}
+                placeholder={`Search ${
+                  selectedTab === 'Members'
+                    ? members.length
+                    : pendingInvitations.length
+                } ${
+                  selectedTab === 'Members'
+                    ? pluralize(members, 'member')
+                    : pluralize(pendingInvitations, 'invitation')
+                }`}
               />
-            )}
-            data={filteredInvitations()}
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            ItemSeparatorComponent={ItemSeparator}
-            ListEmptyComponent={
-              <NoDataMessage message="No invitations to show" />
-            }
-            style={{height: '100%'}}
-            ListHeaderComponentStyle={styles.headerContainer}
-          />
-        )}
+              <Container size="sm" style={styles.segmentedControl}>
+                <SegmentedControl
+                  options={['Members', 'Invitations']}
+                  selected={selectedTab}
+                  onPress={setSelectedTab}
+                />
+              </Container>
+            </>
+          }
+          style={{height: '100%'}}
+        />
       </Container>
       {currentMember.can(ADD_MEMBERS) && (
         <CircleButton

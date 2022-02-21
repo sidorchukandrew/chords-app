@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import AuthApi from '../api/authApi';
 import Button from '../components/Button';
@@ -47,7 +54,9 @@ export default function LoginScreen({navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Container style={styles.formContainer} size="sm">
         <Text style={styles.title}>Let's sign you in</Text>
         <FormField
@@ -99,7 +108,7 @@ export default function LoginScreen({navigation}) {
           </Button>
         </Container>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
