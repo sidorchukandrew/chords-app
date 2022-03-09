@@ -159,7 +159,7 @@ export function hasSongSet(id) {
 export function getSongFromStorage(id) {
   let stringified = storage.getString(`${id}`);
 
-  return JSON.parse(stringified);
+  return stringified ? JSON.parse(stringified) : null;
 }
 
 export function clearAllSongs() {
@@ -190,5 +190,6 @@ export function getRecentlyViewedSongs() {
   }
 
   songs = songs.map(songId => getSongFromStorage(songId));
+  songs = songs.filter(song => !!song);
   return songs;
 }
