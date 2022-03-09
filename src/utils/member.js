@@ -1,14 +1,16 @@
 export function getNameOrEmail(member) {
-  if (member.first_name || member.last_name)
+  if (member.first_name || member.last_name) {
     return [member.first_name, member.last_name].join(' ').trim();
-  else {
+  } else if (member.email) {
     return member.email;
+  } else {
+    return '';
   }
 }
 
 export function getAvatarInitials(member) {
   let titleParts = getNameOrEmail(member).split(' ');
-  initials = titleParts.map(part => part.charAt(0).toUpperCase()).join('');
+  let initials = titleParts.map(part => part.charAt(0).toUpperCase()).join('');
 
   return initials;
 }
