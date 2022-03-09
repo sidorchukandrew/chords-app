@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
 import {
+  clearEdits,
   selectSongOnScreen,
   setSongOnScreen,
   updateSongOnScreen,
@@ -19,11 +19,13 @@ import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
 import SaveChangesBottomBar from '../components/SaveChangesBottomBar';
-import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
 import SongContent from '../components/SongContent';
 import {hasAnyKeysSet} from '../utils/song';
 import Roadmap from '../components/Roadmap';
 import Note from '../components/Note';
+import SetlistNavigation from '../components/SetlistNavigation';
+import {useFocusEffect} from '@react-navigation/native';
+import SetlistAdjustmentsBottomSheet from '../components/SetlistAdjustmentsBottomSheet';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const {width} = useWindowDimensions();
@@ -41,10 +43,17 @@ export default function PerformSetlistScreen({navigation, route}) {
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
   const songOnScreen = useSelector(selectSongOnScreen);
   const dispatch = useDispatch();
+  const carouselRef = useRef();
 
   useEffect(() => {
     dispatch(setSongOnScreen(songs[0]));
-  }, []);
+  }, [dispatch]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(clearEdits());
+    }, [dispatch]),
+  );
 
   useEffect(() => {
     setSongs(currentSongs =>
@@ -142,6 +151,7 @@ export default function PerformSetlistScreen({navigation, route}) {
   function handleSwipedToSong(index) {
     setSongIndex(index);
     dispatch(setSongOnScreen(songs[index]));
+    carouselRef.current.snapToItem(index, true);
   }
 
   function handleNoteChanged(noteId, changes) {
@@ -171,13 +181,20 @@ export default function PerformSetlistScreen({navigation, route}) {
         itemWidth={windowWidth}
         sliderWidth={windowWidth}
         onSnapToItem={handleSwipedToSong}
+        ref={carouselRef}
+      />
+      <SetlistNavigation
+        songs={songs}
+        songIndex={songIndex}
+        onNext={() => handleSwipedToSong(songIndex + 1)}
+        onBack={() => handleSwipedToSong(songIndex - 1)}
       />
       <KeyOptionsBottomSheet
         visible={keyOptionsSheetVisible}
         onDismiss={() => setKeyOptionsSheetVisible(false)}
         song={songOnScreen}
       />
-      <SongAdjustmentsBottomSheet
+      <SetlistAdjustmentsBottomSheet
         visible={adjustmentsSheetVisible}
         onDismiss={() => setAdjustmentsSheetVisible(false)}
       />
