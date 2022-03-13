@@ -25,7 +25,9 @@ export default function SetlistNavigation({onNext, onBack, songs, songIndex}) {
         disabled={!hasPrevious()}
         onPress={onBack}>
         <Text
-          style={[styles.buttonText, !hasPrevious() && styles.disabledColor]}>
+          style={[styles.buttonText, !hasPrevious() && styles.disabledColor]}
+          ellipsizeMode="tail"
+          numberOfLines={2}>
           {getPreviousSongName()}
         </Text>
       </TouchableOpacity>
@@ -34,7 +36,10 @@ export default function SetlistNavigation({onNext, onBack, songs, songIndex}) {
           onPress={onNext}
           disabled={!hasNext()}
           style={[styles.button, {width: '100%'}]}>
-          <Text style={[styles.buttonText, !hasNext() && styles.disabledColor]}>
+          <Text
+            style={[styles.buttonText, !hasNext() && styles.disabledColor]}
+            numberOfLines={2}
+            ellipsizeMode="tail">
             {getNextSongName()}
           </Text>
         </TouchableOpacity>

@@ -59,11 +59,6 @@ export default function PerformSongScreen({navigation}) {
           </TouchableOpacity>
         </View>
       ),
-      headerTitle: props => (
-        <Text style={styles.titleText} numberOfLines={1}>
-          {props.children}
-        </Text>
-      ),
     });
   }, [navigation, song]);
 

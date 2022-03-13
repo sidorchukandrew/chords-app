@@ -23,7 +23,7 @@ export default function SongContentTab({song, onPerform, onEdit}) {
                 color="#2464eb"
               />
             }>
-            Edit
+            Edit lyrics
           </AccentButton>
           <AccentButton
             style={{marginLeft: 5}}

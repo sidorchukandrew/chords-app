@@ -44,7 +44,9 @@ export default function SetlistSongRowItem({
           onLongPress={editable && isConnected ? drag : null}
           disabled={isActive}>
           <>
-            <Text style={styles.songName}>{song.name}</Text>
+            <Text style={styles.songName} numberOfLines={1}>
+              {song.name}
+            </Text>
             {hasAnyKeysSet(song) && (
               <KeyBadge style={styles.keyBadge}>
                 {song.transposed_key || song.original_key}
