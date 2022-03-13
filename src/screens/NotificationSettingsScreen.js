@@ -54,9 +54,9 @@ export default function NotificationSettingsScreen() {
           onChange={handleChange}
         />
       </Container>
-      <Container padded={false}>
+      {/* <Container padded={false}>
         <Divider />
-      </Container>
+      </Container> */}
     </ScrollView>
   );
 }

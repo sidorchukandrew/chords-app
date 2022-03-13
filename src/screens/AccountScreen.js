@@ -12,6 +12,7 @@ import {clearAllSetlists} from '../services/setlistsService';
 import {clearAllSongs} from '../services/songsService';
 import {clearAuthStorage} from '../services/authService';
 import {hasName} from '../utils/member';
+import {clearAppearancePreferences} from '../services/appearanceService';
 
 export default function AccountScreen({navigation}) {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export default function AccountScreen({navigation}) {
     clearAllSongs();
     clearAllSetlists();
     clearAllBinders();
+    clearAppearancePreferences();
     dispatch(logout());
   }
 
@@ -45,20 +47,25 @@ export default function AccountScreen({navigation}) {
           </View>
           <View style={styles.menu}>
             <AccountMenuButton
-              icon="account-circle-outline"
+              underlined
+              icon="account-circle"
               text="Profile"
+              iconBackgroundColor="#f87171"
               onPress={() => navigation.push('Edit Profile')}
             />
             <AccountMenuButton
-              icon="bell-outline"
+              underlined
+              icon="bell"
+              iconBackgroundColor="#fb923c"
               text="Notifications"
               onPress={() => navigation.push('Notification Settings')}
             />
-            {/* <AccountMenuButton
-              icon="palette-outline"
+            <AccountMenuButton
+              icon="palette"
               text="Appearance"
+              iconBackgroundColor="#a78bfa"
               onPress={() => navigation.push('Appearance')}
-            /> */}
+            />
           </View>
         </Container>
       </ScrollView>
@@ -90,16 +97,14 @@ const styles = StyleSheet.create({
   },
   name: {
     color: 'black',
-    fontSize: 22,
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 5,
+    marginTop: 10,
   },
   email: {
-    color: '#505050',
+    color: '#606060',
     fontSize: 16,
-  },
-  menu: {
-    borderTopColor: '#eaeaea',
-    borderTopWidth: 1,
-    borderBottomColor: '#eaeaea',
-    borderBottomWidth: 1,
+    fontWeight: '600',
   },
 });
