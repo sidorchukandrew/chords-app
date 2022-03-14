@@ -18,11 +18,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {reportError} from '../utils/error';
 import LoadingIndicator from './LoadingIndicator';
 import {addNoteToSong} from '../services/notesService';
-import {ScrollView} from 'react-native-gesture-handler';
 import {
+  selectDisableSwipeInSetlist,
   selectShowSetlistNavigation,
+  setDisableSwipeInSetlist,
   setShowSetlistNavigation,
 } from '../redux/slices/appearanceSlice';
+import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 
 export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
@@ -30,6 +32,7 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
   const currentMember = useSelector(selectCurrentMember);
   const currentSubscription = useSelector(selectCurrentSubscription);
   const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
+  const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const [creatingNote, setCreatingNote] = useState(false);
 
   function handleUpdateField(field, value) {
@@ -66,23 +69,29 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
     }
   }
 
-  function handleToggleShowSetlistNavigation(newValue) {
-    dispatch(setShowSetlistNavigation(newValue));
+  function handleToggleShowSetlistNavigation(shouldShow) {
+    if (!shouldShow) {
+      dispatch(setDisableSwipeInSetlist(false));
+    }
+
+    dispatch(setShowSetlistNavigation(shouldShow));
+  }
+
+  function handleToggleDisableSwipeInSetlist(canSwipe) {
+    dispatch(setDisableSwipeInSetlist(canSwipe));
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      style={styles.container}>
+    <BottomSheetScrollView style={styles.container}>
       <ToggleField
         label="Show chords"
-        enabled={!song.format?.chords_hidden}
+        value={!song.format?.chords_hidden}
         onChange={newValue => handleUpdateFormat('chords_hidden', !newValue)}
         style={styles.field}
       />
       <ToggleField
         label="Show roadmap"
-        enabled={song.show_roadmap}
+        value={song.show_roadmap}
         onChange={newValue => handleUpdateField('show_roadmap', newValue)}
         style={styles.field}
       />
@@ -100,13 +109,13 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
       <Divider size="sm" style={{flexGrow: 0}} />
       <ToggleField
         label="Bold chords"
-        enabled={song.format?.bold_chords}
+        value={song.format?.bold_chords}
         onChange={newValue => handleUpdateFormat('bold_chords', newValue)}
         style={styles.field}
       />
       <ToggleField
         label="Italic chords"
-        enabled={song.format?.italic_chords}
+        value={song.format?.italic_chords}
         onChange={newValue => handleUpdateFormat('italic_chords', newValue)}
         style={styles.field}
       />
@@ -126,18 +135,28 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
       )}
       <ToggleField
         label="Show bottom navigation"
-        enabled={showSetlistNavigation}
+        value={showSetlistNavigation}
         onChange={handleToggleShowSetlistNavigation}
         style={styles.field}
       />
-    </ScrollView>
+      <ToggleField
+        style={styles.field}
+        label="Disable swiping"
+        disabled={!showSetlistNavigation}
+        value={disableSwipeInSetlist}
+        onChange={handleToggleDisableSwipeInSetlist}
+      />
+      <View style={{height: 20}} />
+    </BottomSheetScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: 'white',
+    paddingBottom: 20,
+    height: '100%',
   },
   field: {
     paddingHorizontal: 10,

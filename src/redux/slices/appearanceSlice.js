@@ -6,6 +6,9 @@ const initialState = {
   showSetlistNavigation: getAppearanceStorage().getBoolean(
     'showSetlistNavigation',
   ),
+  disableSwipeInSetlist: getAppearanceStorage().getBoolean(
+    'disableSwipeInSetlist',
+  ),
 };
 
 export const appearanceSlice = createSlice({
@@ -20,13 +23,21 @@ export const appearanceSlice = createSlice({
       state.showSetlistNavigation = payload;
       getAppearanceStorage().set('showSetlistNavigation', payload);
     },
+    setDisableSwipeInSetlist: (state, {payload}) => {
+      state.disableSwipeInSetlist = payload;
+      getAppearanceStorage().set('disableSwipeInSetlist', payload);
+    },
   },
 });
 
-export const {setTheme, setShowSetlistNavigation} = appearanceSlice.actions;
+export const {setTheme, setShowSetlistNavigation, setDisableSwipeInSetlist} =
+  appearanceSlice.actions;
 
 export default appearanceSlice.reducer;
 
 export const selectCurrentTheme = state => state.appearance.theme;
 export const selectShowSetlistNavigation = state =>
   state.appearance.showSetlistNavigation;
+
+export const selectDisableSwipeInSetlist = state =>
+  state.appearance.disableSwipeInSetlist;

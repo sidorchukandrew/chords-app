@@ -4,18 +4,22 @@ import React from 'react';
 
 export default function ToggleField({
   label,
-  enabled,
+  value,
   onChange,
   style: providedStyles,
+  disabled = false,
 }) {
   return (
     <View style={[styles.field, providedStyles]}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, disabled && styles.disabledTextColor]}>
+        {label}
+      </Text>
       <Switch
-        value={enabled}
+        value={value}
         onValueChange={onChange}
         trackColor={{true: '#2464eb', false: '#c0c0c0'}}
         thumbColor="white"
+        disabled={disabled}
       />
     </View>
   );
@@ -31,5 +35,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     fontWeight: '500',
+    maxWidth: '80%',
+  },
+  disabledTextColor: {
+    color: '#d0d0d0',
   },
 });

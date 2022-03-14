@@ -1,7 +1,9 @@
 import {StyleSheet, View} from 'react-native';
 import {
   selectCurrentTheme,
+  selectDisableSwipeInSetlist,
   selectShowSetlistNavigation,
+  setDisableSwipeInSetlist,
   setShowSetlistNavigation,
   setTheme,
 } from '../redux/slices/appearanceSlice';
@@ -14,23 +16,41 @@ import ToggleField from '../components/ToggleField';
 export default function AppearanceScreen() {
   const currentTheme = useSelector(selectCurrentTheme);
   const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
+  const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const dispatch = useDispatch();
 
   function handleToggleTheme(isDarkTheme) {
     dispatch(setTheme(isDarkTheme ? 'dark' : 'light'));
   }
 
-  function handleToggleShowSetlistNavigation(newValue) {
-    dispatch(setShowSetlistNavigation(newValue));
+  function handleToggleShowSetlistNavigation(shouldShow) {
+    if (!shouldShow) {
+      dispatch(setDisableSwipeInSetlist(false));
+    }
+
+    dispatch(setShowSetlistNavigation(shouldShow));
+  }
+
+  function handleToggleDisableSwipeInSetlist(canSwipe) {
+    dispatch(setDisableSwipeInSetlist(canSwipe));
   }
 
   return (
     <View style={styles.screen}>
       <Container size="md">
         <ToggleField
-          enabled={showSetlistNavigation}
+          value={showSetlistNavigation}
           label="Show setlist bottom navigation"
           onChange={handleToggleShowSetlistNavigation}
+          style={[styles.field, styles.underline]}
+        />
+
+        <ToggleField
+          value={disableSwipeInSetlist}
+          label="Disable swiping between songs when performing set"
+          onChange={handleToggleDisableSwipeInSetlist}
+          style={styles.field}
+          disabled={!showSetlistNavigation}
         />
       </Container>
     </View>
@@ -52,5 +72,12 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: '500',
     fontSize: 16,
+  },
+  field: {
+    paddingVertical: 10,
+  },
+  underline: {
+    borderBottomColor: '#eaeaea',
+    borderBottomWidth: 1,
   },
 });

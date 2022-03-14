@@ -26,7 +26,10 @@ import Note from '../components/Note';
 import SetlistNavigation from '../components/SetlistNavigation';
 import {useFocusEffect} from '@react-navigation/native';
 import SetlistAdjustmentsBottomSheet from '../components/SetlistAdjustmentsBottomSheet';
-import {selectShowSetlistNavigation} from '../redux/slices/appearanceSlice';
+import {
+  selectDisableSwipeInSetlist,
+  selectShowSetlistNavigation,
+} from '../redux/slices/appearanceSlice';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const {width} = useWindowDimensions();
@@ -44,6 +47,7 @@ export default function PerformSetlistScreen({navigation, route}) {
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
   const songOnScreen = useSelector(selectSongOnScreen);
   const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
+  const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const dispatch = useDispatch();
   const carouselRef = useRef();
 
@@ -184,6 +188,7 @@ export default function PerformSetlistScreen({navigation, route}) {
         sliderWidth={windowWidth}
         onSnapToItem={handleSwipedToSong}
         ref={carouselRef}
+        scrollEnabled={!disableSwipeInSetlist}
       />
       {showSetlistNavigation && (
         <SetlistNavigation

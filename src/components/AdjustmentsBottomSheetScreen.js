@@ -67,13 +67,13 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
       style={styles.container}>
       <ToggleField
         label="Show chords"
-        enabled={!song.format?.chords_hidden}
+        value={!song.format?.chords_hidden}
         onChange={newValue => handleUpdateFormat('chords_hidden', !newValue)}
         style={styles.field}
       />
       <ToggleField
         label="Show roadmap"
-        enabled={song.show_roadmap}
+        value={song.show_roadmap}
         onChange={newValue => handleUpdateField('show_roadmap', newValue)}
         style={styles.field}
       />
@@ -91,13 +91,13 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
       <Divider size="sm" style={{flexGrow: 0}} />
       <ToggleField
         label="Bold chords"
-        enabled={song.format?.bold_chords}
+        value={song.format?.bold_chords}
         onChange={newValue => handleUpdateFormat('bold_chords', newValue)}
         style={styles.field}
       />
       <ToggleField
         label="Italic chords"
-        enabled={song.format?.italic_chords}
+        value={song.format?.italic_chords}
         onChange={newValue => handleUpdateFormat('italic_chords', newValue)}
         style={styles.field}
       />
