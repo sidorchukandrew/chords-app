@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {
   selectCurrentMember,
@@ -23,8 +24,11 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {reportError} from '../utils/error';
 import {updateCurrentUser as updateUserInApi} from '../services/usersService';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export default function EditProfileScreen({navigation}) {
+  const {text, surface, blue} = useTheme();
   const currentMember = useSelector(selectCurrentMember);
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState(currentMember?.first_name || '');
@@ -74,6 +78,8 @@ export default function EditProfileScreen({navigation}) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerTitleStyle: text.primary,
+      headerStyle: surface.primary,
       headerRight: () => (
         <TouchableOpacity
           onPress={handleSave}
@@ -84,7 +90,8 @@ export default function EditProfileScreen({navigation}) {
             <Text
               style={[
                 styles.saveButtonText,
-                (isEmpty(updates) || !isConnected) && styles.disabledText,
+                blue.text,
+                (isEmpty(updates) || !isConnected) && text.disabled,
               ]}>
               Save
             </Text>
@@ -92,10 +99,11 @@ export default function EditProfileScreen({navigation}) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, updates, loading, isConnected]);
+  }, [navigation, updates, loading, isConnected, blue, text]);
 
   return (
-    <ScrollView style={styles.screen}>
+    <KeyboardAwareScrollView style={[surface.primary]}>
+      {/* <ScrollView> */}
       <Container>
         <View style={styles.profilePictureContainer}>
           <ProfilePicture
@@ -107,7 +115,9 @@ export default function EditProfileScreen({navigation}) {
           <TouchableOpacity
             onPress={handleChooseImageFromLibrary}
             style={styles.changePictureButton}>
-            <Text style={styles.changePictureText}>Change profile picture</Text>
+            <Text style={[styles.changePictureText, blue.text]}>
+              Change profile picture
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.fieldContainer}>
@@ -135,14 +145,12 @@ export default function EditProfileScreen({navigation}) {
           />
         </View>
       </Container>
-    </ScrollView>
+      {/* </ScrollView> */}
+    </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    backgroundColor: 'white',
-  },
   profilePictureContainer: {
     alignItems: 'center',
     paddingVertical: 10,
@@ -152,15 +160,10 @@ const styles = StyleSheet.create({
   },
   changePictureText: {
     fontWeight: '500',
-    color: '#2464eb',
   },
   fieldsContainer: {},
   saveButtonText: {
-    color: '#2464eb',
     fontWeight: '600',
     fontSize: 17,
-  },
-  disabledText: {
-    color: '#d0d0d0',
   },
 });

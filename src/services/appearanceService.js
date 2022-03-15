@@ -6,6 +6,8 @@ export function getAppearanceStorage() {
   return storage;
 }
 
-export function clearAppearancePreferences() {
-  storage.clearAll();
+export function resetAppearancePreferences() {
+  storage.set('theme', 'light');
+  storage.set('showSetlistNavigation', false);
+  storage.set('disableSwipeInSetlist', false);
 }

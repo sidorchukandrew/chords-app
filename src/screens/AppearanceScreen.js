@@ -8,6 +8,7 @@ import {
   setTheme,
 } from '../redux/slices/appearanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import Divider from '../components/Divider';
 
 import Container from '../components/Container';
 import React from 'react';
@@ -35,9 +36,20 @@ export default function AppearanceScreen() {
     dispatch(setDisableSwipeInSetlist(canSwipe));
   }
 
+  function isDark() {
+    return currentTheme === 'dark';
+  }
+
   return (
     <View style={styles.screen}>
       <Container size="md">
+        <ToggleField
+          label="Dark theme"
+          style={styles.field}
+          value={isDark()}
+          onChange={handleToggleTheme}
+        />
+        <Divider />
         <ToggleField
           value={showSetlistNavigation}
           label="Show setlist bottom navigation"

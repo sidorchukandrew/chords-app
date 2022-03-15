@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {clearAllBinders, getAllBinders} from '../services/bindersService';
 import {clearAllSetlists, getAllSetlists} from '../services/setlistsService';
@@ -29,6 +29,7 @@ import UsersApi from '../api/usersApi';
 import {getAllTeams} from '../services/teamsService';
 import {reportError} from '../utils/error';
 import {setSubscription} from '../redux/slices/subscriptionSlice';
+import {useTheme} from '../hooks/useTheme';
 
 export default function ChooseTeamModal({navigation}) {
   const [teams, setTeams] = useState([]);
@@ -36,6 +37,7 @@ export default function ChooseTeamModal({navigation}) {
   const currentTeam = useSelector(selectCurrentTeam);
   const dispatch = useDispatch();
   const [createTeamSheetVisible, setCreateTeamSheetVisible] = useState(false);
+  const {surface, border} = useTheme();
 
   useEffect(() => {
     async function fetchData() {

@@ -8,9 +8,11 @@ import DashboardWidgets from '../components/DashboardWidgets';
 import {useSelector} from 'react-redux';
 import {selectInitialLoadComplete} from '../redux/slices/authSlice';
 import LoadingIndicator from '../components/LoadingIndicator';
+import {useTheme} from '../hooks/useTheme';
 
 export default function DashboardScreen({navigation}) {
   const initialLoadComplete = useSelector(selectInitialLoadComplete);
+  const {text, surface} = useTheme();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -28,10 +30,10 @@ export default function DashboardScreen({navigation}) {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, surface.primary]}>
       <ScrollView>
         <Container size="lg">
-          <Text style={styles.dashboardText}>Dashboard</Text>
+          <Text style={[styles.dashboardText, text.primary]}>Dashboard</Text>
         </Container>
         {initialLoadComplete ? (
           <DashboardWidgets navigation={navigation} />

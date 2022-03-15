@@ -27,11 +27,20 @@ export const appearanceSlice = createSlice({
       state.disableSwipeInSetlist = payload;
       getAppearanceStorage().set('disableSwipeInSetlist', payload);
     },
+    resetAppearancePreferences: state => {
+      state.theme = 'light';
+      state.showSetlistNavigation = false;
+      state.disableSwipeInSetlist = false;
+    },
   },
 });
 
-export const {setTheme, setShowSetlistNavigation, setDisableSwipeInSetlist} =
-  appearanceSlice.actions;
+export const {
+  setTheme,
+  setShowSetlistNavigation,
+  setDisableSwipeInSetlist,
+  resetAppearancePreferences,
+} = appearanceSlice.actions;
 
 export default appearanceSlice.reducer;
 

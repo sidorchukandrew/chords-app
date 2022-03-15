@@ -4,7 +4,6 @@ import Routes from './Routes';
 import store from './src/redux/store';
 
 import * as Sentry from '@sentry/react-native';
-import {SafeAreaView} from 'react-native';
 import Config from 'react-native-config';
 
 Sentry.init({
@@ -15,9 +14,7 @@ Sentry.init({
 export default function App() {
   return (
     <Provider store={store}>
-      <SafeAreaView style={{backgroundColor: 'white', flex: 1}}>
-        <Routes />
-      </SafeAreaView>
+      <Routes />
     </Provider>
   );
 }

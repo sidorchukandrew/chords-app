@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LoadingIndicator from './LoadingIndicator';
 import React from 'react';
+import {useTheme} from '../hooks/useTheme';
 
 export default function ScreenModalHeader({
   title,
@@ -12,6 +13,8 @@ export default function ScreenModalHeader({
   options = {saveVisible: false, backVisible: false},
   saving = false,
 }) {
+  const {border, surface, text, icon} = useTheme();
+
   const saveButton = saving ? (
     <View style={styles.saveButtonContainer}>
       <LoadingIndicator />
@@ -27,20 +30,22 @@ export default function ScreenModalHeader({
     </View>
   );
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, surface.primary, border.primary]}>
       <View style={styles.container}>
         {options.backVisible ? (
           <View style={styles.backButtonContainer}>
             <TouchableOpacity onPress={onBackPress} style={[styles.backButton]}>
               <Text>
-                <Icon name="close" color="#4a4a4a" size={22} />
+                <Icon name="close" color={icon.secondary} size={22} />
               </Text>
             </TouchableOpacity>
           </View>
         ) : (
           <View style={styles.backButton} />
         )}
-        <Text style={[styles.headerTitle, styles.grow]}>{title}</Text>
+        <Text style={[styles.headerTitle, styles.grow, text.primary]}>
+          {title}
+        </Text>
         {options.saveVisible ? (
           saveButton
         ) : (
@@ -54,9 +59,7 @@ export default function ScreenModalHeader({
 const styles = StyleSheet.create({
   header: {
     height: 70,
-    backgroundColor: 'white',
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
     justifyContent: 'center',
   },
   container: {
