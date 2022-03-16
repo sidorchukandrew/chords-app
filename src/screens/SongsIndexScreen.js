@@ -17,6 +17,7 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SongsIndexScreen({navigation}) {
   const [songs, setSongs] = useState([]);
@@ -25,6 +26,7 @@ export default function SongsIndexScreen({navigation}) {
   const [refreshing, setRefreshing] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
   const {isConnected} = useNetInfo();
+  const {surface, text} = useTheme();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -63,7 +65,7 @@ export default function SongsIndexScreen({navigation}) {
         <TouchableOpacity
           style={styles.row}
           onPress={() => handleNavigateTo(song)}>
-          <Text style={styles.name}>{song.name}</Text>
+          <Text style={[styles.name, text.primary]}>{song.name}</Text>
           {hasAnyKeysSet(song) && (
             <KeyBadge style={styles.keyBadge}>
               {song.transposed_key || song.original_key}
@@ -92,7 +94,7 @@ export default function SongsIndexScreen({navigation}) {
   if (loading) return <LoadingIndicator />;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, surface.primary]}>
       <Container size="lg">
         <FlatList
           onRefresh={handleRefresh}
@@ -135,7 +137,6 @@ export default function SongsIndexScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: 'white',
   },
   name: {
     fontSize: 17,

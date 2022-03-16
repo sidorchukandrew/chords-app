@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RectButton from './RectButton';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
+import {useTheme} from '../hooks/useTheme';
 
 export default function BinderOptionsBottomSheet({
   visible,
@@ -17,6 +18,7 @@ export default function BinderOptionsBottomSheet({
 }) {
   const sheetRef = useRef();
   const currentMember = useSelector(selectCurrentMember);
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -49,10 +51,14 @@ export default function BinderOptionsBottomSheet({
             <Icon
               name="pencil"
               size={20}
-              color={isConnected ? '#505050' : '#d0d0d0'}
+              color={isConnected ? text.secondary.color : text.disabled.color}
             />
             <Text
-              style={[styles.buttonText, !isConnected && styles.disabledColor]}>
+              style={[
+                styles.buttonText,
+                text.secondary,
+                !isConnected && text.disabled,
+              ]}>
               Edit
             </Text>
           </RectButton>
@@ -65,13 +71,13 @@ export default function BinderOptionsBottomSheet({
             <Icon
               name="delete"
               size={20}
-              color={isConnected ? '#ef4444' : '#d0d0d0'}
+              color={isConnected ? '#ef4444' : text.disabled.color}
             />
             <Text
               style={[
                 styles.buttonText,
                 styles.deleteColor,
-                !isConnected && styles.disabledColor,
+                !isConnected && text.disabled,
               ]}>
               Delete
             </Text>
@@ -85,7 +91,6 @@ export default function BinderOptionsBottomSheet({
 const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
     flex: 1,
   },
   button: {
@@ -93,15 +98,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#505050',
     fontWeight: '600',
     marginLeft: 10,
     fontSize: 16,
   },
   deleteColor: {
     color: '#ef4444',
-  },
-  disabledColor: {
-    color: '#d0d0d0',
   },
 });

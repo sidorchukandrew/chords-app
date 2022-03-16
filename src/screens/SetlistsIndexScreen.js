@@ -15,6 +15,7 @@ import {reportError} from '../utils/error';
 import {useFocusEffect} from '@react-navigation/native';
 import Container from '../components/Container';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SetlistsIndexScreen({navigation, route}) {
   const [setType, setSetType] = useState('Upcoming');
@@ -24,6 +25,7 @@ export default function SetlistsIndexScreen({navigation, route}) {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const {isConnected} = useNetInfo();
+  const {surface, text} = useTheme();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -83,19 +85,29 @@ export default function SetlistsIndexScreen({navigation, route}) {
         <TouchableOpacity
           style={styles.row}
           onPress={() => handleNavigateTo(set)}>
-          <Text style={styles.name}>{set.name}</Text>
+          <Text style={[styles.name, text.primary]}>{set.name}</Text>
           <View style={styles.detailsContainer}>
             <View style={styles.detail}>
-              <Icon name="calendar-blank" size={18} color="#505050" />
-              <Text style={styles.detailText}>
+              <Icon
+                name="calendar-blank"
+                size={18}
+                color={text.secondary.color}
+              />
+              <Text style={[styles.detailText, text.secondary]}>
                 {set.scheduled_date
                   ? format(set.scheduled_date, 'ddd MMM D')
                   : 'Not scheduled'}
               </Text>
             </View>
             <View style={styles.detail}>
-              <IonIcon color="#505050" size={18} name="musical-notes" />
-              <Text style={styles.detailText}>{set.songs?.length}</Text>
+              <IonIcon
+                color={text.secondary.color}
+                size={18}
+                name="musical-notes"
+              />
+              <Text style={[styles.detailText, text.secondary]}>
+                {set.songs?.length}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -124,7 +136,7 @@ export default function SetlistsIndexScreen({navigation, route}) {
   if (loading) return <LoadingIndicator />;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, surface.primary]}>
       <Container size="lg">
         <FlatList
           ListHeaderComponent={
@@ -172,7 +184,6 @@ export default function SetlistsIndexScreen({navigation, route}) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: 'white',
     paddingBottom: 10,
   },
   name: {

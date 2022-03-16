@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 export default function CircleButton({
   onPress,
@@ -7,9 +8,15 @@ export default function CircleButton({
   style: providedStyles,
   disabled,
 }) {
+  const {blue, text} = useTheme();
   return (
     <TouchableOpacity
-      style={[styles.button, disabled && styles.disabledColor, providedStyles]}
+      style={[
+        styles.button,
+        blue.background,
+        disabled && text.disabled,
+        providedStyles,
+      ]}
       onPress={onPress}
       disabled={disabled}>
       {children}
@@ -20,10 +27,6 @@ export default function CircleButton({
 const styles = StyleSheet.create({
   button: {
     borderRadius: 50,
-    backgroundColor: '#2464eb',
     padding: 5,
-  },
-  disabledColor: {
-    backgroundColor: '#d0d0d0',
   },
 });

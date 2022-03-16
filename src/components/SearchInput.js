@@ -1,16 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from '../hooks/useTheme';
 export default function SearchInput({placeholder = 'Search', value, onChange}) {
+  const {text, icon} = useTheme();
   return (
     <View style={styles.container}>
-      <Icon name="magnify" size={30} color="black" />
+      <Icon name="magnify" size={30} color={icon.secondary} />
       <TextInput
         placeholder={placeholder}
         value={value}
         onChangeText={onChange}
-        style={styles.input}
-        placeholderTextColor="#404040"
+        style={[styles.input, text.primary]}
+        placeholderTextColor={text.secondary.color}
       />
     </View>
   );

@@ -13,9 +13,12 @@ import Divider from '../components/Divider';
 import Container from '../components/Container';
 import React from 'react';
 import ToggleField from '../components/ToggleField';
+import {useTheme} from '../hooks/useTheme';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default function AppearanceScreen() {
   const currentTheme = useSelector(selectCurrentTheme);
+  const {surface, border} = useTheme();
   const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
   const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const dispatch = useDispatch();
@@ -41,7 +44,7 @@ export default function AppearanceScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <ScrollView style={[styles.screen, surface.primary]}>
       <Container size="md">
         <ToggleField
           label="Dark theme"
@@ -54,7 +57,7 @@ export default function AppearanceScreen() {
           value={showSetlistNavigation}
           label="Show setlist bottom navigation"
           onChange={handleToggleShowSetlistNavigation}
-          style={[styles.field, styles.underline]}
+          style={[styles.field, styles.underline, border.primary]}
         />
 
         <ToggleField
@@ -65,13 +68,12 @@ export default function AppearanceScreen() {
           disabled={!showSetlistNavigation}
         />
       </Container>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: 'white',
     paddingVertical: 10,
     flex: 1,
   },
@@ -89,7 +91,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   underline: {
-    borderBottomColor: '#eaeaea',
     borderBottomWidth: 1,
   },
 });

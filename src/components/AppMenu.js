@@ -13,6 +13,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import {useSelector} from 'react-redux';
 import {selectCurrentTeam} from '../redux/slices/authSlice';
 import ProfilePicture from './ProfilePicture';
+import {useTheme} from '../hooks/useTheme';
 
 export default function AppMenu({visible, onClose, onNavigateTo}) {
   const sheetRef = useRef();
@@ -20,6 +21,7 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
   const currentTeam = useSelector(selectCurrentTeam);
   const window = useWindowDimensions();
   const {isConnected} = useNetInfo();
+  const {surface, text, isDark} = useTheme();
 
   useEffect(() => {
     // if (windowWidth > window.width || windowWidth === 0) {
@@ -53,6 +55,7 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
       detached
       bottomInset={146}
       style={[styles.container, getHorizontalMargins()]}
+      backgroundStyle={isDark ? surface.tertiary : surface.primary}
       contentHeight={200}
       backdropComponent={props => (
         <BottomSheetBackdrop
@@ -65,40 +68,62 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
         style={{paddingTop: 12, paddingBottom: 12, paddingHorizontal: 16}}>
         <View style={styles.teamDetailsContainer}>
           <ProfilePicture url={currentTeam.image_url} size="md" />
-          <Text style={styles.teamNameText}>{currentTeam.name}</Text>
+          <Text style={[styles.teamNameText, text.primary]}>
+            {currentTeam.name}
+          </Text>
         </View>
         <RectButton
           styles={styles.button}
           onPress={() => handleNavigateTo('Dashboard')}>
-          <Icon name="view-dashboard" size={20} style={styles.icon} />
-          <Text style={styles.text}>Dashboard</Text>
+          <Icon
+            name="view-dashboard"
+            size={20}
+            style={[styles.icon, text.secondary]}
+          />
+          <Text style={[styles.text, text.secondary]}>Dashboard</Text>
         </RectButton>
 
         <RectButton
           styles={styles.button}
           onPress={() => handleNavigateTo('Binders')}>
-          <Icon name="folder-music" size={20} style={styles.icon} />
-          <Text style={styles.text}>Binders</Text>
+          <Icon
+            name="folder-music"
+            size={20}
+            style={[styles.icon, text.secondary]}
+          />
+          <Text style={[styles.text, text.secondary]}>Binders</Text>
         </RectButton>
 
         <RectButton
           styles={styles.button}
           onPress={() => handleNavigateTo('Songs')}>
-          <IonIcon name="musical-notes" size={20} style={styles.icon} />
-          <Text style={styles.text}>Songs</Text>
+          <IonIcon
+            name="musical-notes"
+            size={20}
+            style={[styles.icon, text.secondary]}
+          />
+          <Text style={[styles.text, text.secondary]}>Songs</Text>
         </RectButton>
 
         <RectButton
           styles={styles.button}
           onPress={() => handleNavigateTo('Sets')}>
-          <Icon name="playlist-music" size={20} style={styles.icon} />
-          <Text style={styles.text}>Sets</Text>
+          <Icon
+            name="playlist-music"
+            size={20}
+            style={[styles.icon, text.secondary]}
+          />
+          <Text style={[styles.text, text.secondary]}>Sets</Text>
         </RectButton>
         <RectButton
           styles={styles.button}
           onPress={() => handleNavigateTo('Members')}>
-          <Icon name="account-group" size={20} style={styles.icon} />
-          <Text style={styles.text}>Team members</Text>
+          <Icon
+            name="account-group"
+            size={20}
+            style={[styles.icon, text.secondary]}
+          />
+          <Text style={[styles.text, text.secondary]}>Team members</Text>
         </RectButton>
 
         <RectButton
@@ -108,10 +133,14 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
           <Icon
             name="swap-horizontal"
             size={20}
-            style={styles.icon}
-            color={isConnected ? '#374251' : '#d0d0d0'}
+            style={[styles.icon, text.secondary, !isConnected && text.disabled]}
           />
-          <Text style={[styles.text, !isConnected && styles.disabledColor]}>
+          <Text
+            style={[
+              styles.text,
+              text.secondary,
+              !isConnected && text.disabled,
+            ]}>
             Switch teams
           </Text>
         </RectButton>
@@ -123,7 +152,6 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
-    backgroundColor: 'white',
     padding: 10,
   },
   button: {
@@ -135,7 +163,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 17,
-    color: '#374251',
     fontWeight: '600',
   },
   disabledColor: {

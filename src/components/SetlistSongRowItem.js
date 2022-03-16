@@ -6,6 +6,7 @@ import React from 'react';
 import SwipeListDeleteButton from './SwipeListDeleteButton';
 import SwipeableItem from 'react-native-swipeable-item';
 import {hasAnyKeysSet} from '../utils/song';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SetlistSongRowItem({
   item: song,
@@ -17,6 +18,8 @@ export default function SetlistSongRowItem({
   editable,
   isConnected,
 }) {
+  const {surface, text} = useTheme();
+
   return (
     <OpacityDecorator>
       <SwipeableItem
@@ -38,13 +41,13 @@ export default function SetlistSongRowItem({
         )}
         snapPointsLeft={[75]}>
         <TouchableHighlight
-          style={styles.row}
+          style={[styles.row, surface.primary]}
           onPress={() => onNavigateToSong(song)}
-          underlayColor="white"
+          underlayColor={surface.primary.color}
           onLongPress={editable && isConnected ? drag : null}
           disabled={isActive}>
           <>
-            <Text style={styles.songName} numberOfLines={1}>
+            <Text style={[styles.songName, text.primary]} numberOfLines={1}>
               {song.name}
             </Text>
             {hasAnyKeysSet(song) && (
@@ -69,7 +72,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 11,
     paddingHorizontal: 10,
-    backgroundColor: 'white',
   },
   keyBadge: {
     marginLeft: 10,

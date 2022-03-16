@@ -16,6 +16,7 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
 
 export default function BindersIndexScreen({navigation}) {
   const [query, setQuery] = useState('');
@@ -24,6 +25,7 @@ export default function BindersIndexScreen({navigation}) {
   const [refreshing, setRefreshing] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
   const {isConnected} = useNetInfo();
+  const {surface, text} = useTheme();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -54,7 +56,7 @@ export default function BindersIndexScreen({navigation}) {
         onPress={() => handleNavigateTo(binder)}>
         <BinderColorSwatch color={binder.color} style={styles.colorSwatch} />
         <View style={{width: '100%'}}>
-          <Text style={styles.name}>{binder.name}</Text>
+          <Text style={[styles.name, text.primary]}>{binder.name}</Text>
           {/* <View style={styles.binderDetailsContainer}>
             <View style={styles.detailContainer}>
             <IonIcon name="musical-notes" size={18} color="#505050" />
@@ -92,7 +94,7 @@ export default function BindersIndexScreen({navigation}) {
   if (loading) return <LoadingIndicator />;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, surface.primary]}>
       <Container size="lg">
         <FlatList
           refreshing={refreshing}
@@ -135,7 +137,6 @@ export default function BindersIndexScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: 'white',
   },
   searchInput: {
     marginTop: 20,
@@ -144,7 +145,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 17,
     fontWeight: '600',
-    color: 'black',
     paddingLeft: 10,
   },
   row: {

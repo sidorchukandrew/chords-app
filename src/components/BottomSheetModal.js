@@ -4,13 +4,15 @@ import {
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 
 import {BottomSheetModal as LibBottomSheetModal} from '@gorhom/bottom-sheet';
+import {useTheme} from '../hooks/useTheme';
 
 const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
   const [windowWidth, setWindowWidth] = useState(0);
   const window = useWindowDimensions();
+  const {surface, isDark} = useTheme();
 
   const {
     animatedHandleHeight,
@@ -41,6 +43,7 @@ const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
       contentHeight={animatedContentHeight}
       handleHeight={animatedHandleHeight}
       bottomInset={40}
+      backgroundStyle={isDark ? surface.secondary : surface.primary}
       style={[styles.container, getHorizontalMargins()]}
       backdropComponent={props => (
         <BottomSheetBackdrop
@@ -61,7 +64,6 @@ const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
-    backgroundColor: 'white',
     padding: 10,
   },
   contentContainer: {

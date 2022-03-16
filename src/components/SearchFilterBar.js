@@ -1,11 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import SearchInput from './SearchInput';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from '../hooks/useTheme';
 export default function SearchFilterBar({query, onQueryChange, placeholder}) {
+  const {border} = useTheme();
   return (
     <View style={styles.centered}>
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, border.primary]}>
         <SearchInput
           value={query}
           onChange={onQueryChange}
@@ -19,10 +21,8 @@ export default function SearchFilterBar({query, onQueryChange, placeholder}) {
 const styles = StyleSheet.create({
   searchContainer: {
     borderBottomWidth: 1,
-    borderColor: '#e0e0e0',
     maxWidth: 650,
     width: '100%',
-    // marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

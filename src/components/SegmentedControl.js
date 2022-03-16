@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SegmentedControl({
   options = [],
@@ -7,6 +8,7 @@ export default function SegmentedControl({
   onPress,
   style: providedStyles,
 }) {
+  const {text} = useTheme();
   return (
     <View style={[styles.container, providedStyles]}>
       {options.map(option =>
@@ -15,7 +17,7 @@ export default function SegmentedControl({
             key={option}
             onPress={() => onPress(option)}
             style={[styles.option, selected === option && styles.selected]}>
-            <Text style={styles.optionText}>{option}</Text>
+            <Text style={[styles.optionText, text.primary]}>{option}</Text>
           </TouchableOpacity>
         ) : null,
       )}
@@ -34,7 +36,6 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontWeight: '600',
-    color: 'black',
   },
   selected: {
     borderBottomColor: '#2464eb',

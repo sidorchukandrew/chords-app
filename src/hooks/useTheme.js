@@ -31,7 +31,7 @@ const LIGHT = {
     background: {backgroundColor: '#ddf4ff'},
   },
   blue: {
-    // background: {backgroundColor: }
+    background: {backgroundColor: '#2464eb'},
     text: {
       color: '#2464eb',
     },
@@ -53,6 +53,9 @@ const DARK = {
     primary: {
       borderColor: '#30363d',
     },
+    secondary: {
+      borderColor: '#161b22',
+    },
   },
   theme: 'dark',
   isDark: true,
@@ -66,7 +69,7 @@ const DARK = {
     text: {color: '#58a6ff'},
   },
   blue: {
-    background: {backgroundColor: '#58a6ff'},
+    background: {backgroundColor: '#3b82f6'},
     text: {
       color: '#3b82f6',
     },

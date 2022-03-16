@@ -13,7 +13,7 @@ export default function ScreenModalHeader({
   options = {saveVisible: false, backVisible: false},
   saving = false,
 }) {
-  const {border, surface, text, icon} = useTheme();
+  const {border, surface, text, icon, blue} = useTheme();
 
   const saveButton = saving ? (
     <View style={styles.saveButtonContainer}>
@@ -25,7 +25,14 @@ export default function ScreenModalHeader({
         style={styles.saveButton}
         onPress={onSavePress}
         disabled={saveDisabled}>
-        <Text style={styles.saveButtonText}>Save</Text>
+        <Text
+          style={[
+            styles.saveButtonText,
+            blue.text,
+            saveDisabled && text.disabled,
+          ]}>
+          Save
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -76,6 +83,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     width: 30,
+    padding: 5,
   },
   backButtonContainer: {
     flex: 1,
@@ -89,7 +97,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   saveButtonText: {
-    color: '#2464eb',
     fontWeight: '600',
     fontSize: 17,
   },

@@ -5,6 +5,7 @@ import {Calendar} from 'react-native-calendars';
 import {StyleSheet} from 'react-native';
 import dayjs from 'dayjs';
 import {format} from '../utils/date';
+import {useTheme} from '../hooks/useTheme';
 
 export default function CalendarModal({
   visible,
@@ -13,6 +14,7 @@ export default function CalendarModal({
   onChange,
 }) {
   const sheetRef = useRef();
+  const {blue, surface, isDark, text} = useTheme();
 
   const [calendarFormattedDate, setCalendarFormattedDate] = useState(
     format(scheduledDate, 'YYYY-MM-DD'),
@@ -37,7 +39,14 @@ export default function CalendarModal({
     <BottomSheetModal visible={visible} onDismiss={onClose} ref={sheetRef}>
       <Calendar
         enableSwipeMonths={true}
-        theme={{arrowColor: '#2464eb', todayTextColor: '#2464eb'}}
+        theme={{
+          arrowColor: blue.text.color,
+          todayTextColor: blue.text.color,
+          monthTextColor: text.primary.color,
+          calendarBackground: isDark
+            ? surface.secondary.backgroundColor
+            : surface.primary.backgroundColor,
+        }}
         onDayPress={handleDayPress}
         markedDates={{
           [calendarFormattedDate]: {selected: true, selectedColor: '#2464eb'},

@@ -73,7 +73,7 @@ export default function Routes() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const intervalRef = useRef();
   const {isConnected} = useNetInfo();
-  const {surface} = useTheme();
+  const {surface, text} = useTheme();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -223,6 +223,8 @@ export default function Routes() {
                       headerShadowVisible: false,
                       headerTitleAlign: 'center',
                       headerBackTitle: '',
+                      headerStyle: surface.primary,
+                      headerTitleStyle: text.primary,
                     })}
                   />
                   <Stack.Screen
@@ -233,6 +235,8 @@ export default function Routes() {
                       headerShadowVisible: false,
                       headerTitleAlign: 'center',
                       headerBackTitle: '',
+                      headerTitleStyle: text.primary,
+                      headerStyle: surface.primary,
                     })}
                   />
                   <Stack.Screen
@@ -410,7 +414,7 @@ export default function Routes() {
 }
 
 function HomeTabs() {
-  const {surface} = useTheme();
+  const {surface, text} = useTheme();
   return (
     <Tab.Navigator
       tabBar={props => <TabBar {...props} />}
@@ -418,6 +422,7 @@ function HomeTabs() {
         headerShadowVisible: false,
         headerTitleAlign: 'center',
         headerStyle: surface.primary,
+        headerTitleStyle: text.primary,
       }}>
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen
