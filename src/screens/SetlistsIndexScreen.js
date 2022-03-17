@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  RefreshControl,
+} from 'react-native';
 import React, {useState} from 'react';
 import {format, isPast, sortDates} from '../utils/date';
 
@@ -169,6 +176,14 @@ export default function SetlistsIndexScreen({navigation, route}) {
           ListEmptyComponent={<NoDataMessage message={'No sets to show'} />}
           ItemSeparatorComponent={ItemSeparator}
           style={{height: '100%'}}
+          refreshControl={
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
+          }
         />
       </Container>
       <CircleButton

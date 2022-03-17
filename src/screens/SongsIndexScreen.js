@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  RefreshControl,
+} from 'react-native';
 import React, {useState} from 'react';
 
 import {ADD_SONGS} from '../utils/auth';
@@ -120,6 +127,14 @@ export default function SongsIndexScreen({navigation}) {
             />
           }
           style={{height: '100%'}}
+          refreshControl={
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
+          }
         />
       </Container>
       {currentMember.can(ADD_SONGS) && (

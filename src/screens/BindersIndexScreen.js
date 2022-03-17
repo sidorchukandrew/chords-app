@@ -1,5 +1,12 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  RefreshControl,
+} from 'react-native';
+import React, {useState} from 'react';
 
 import {ADD_BINDERS} from '../utils/auth';
 import BinderColorSwatch from '../components/BinderColorSwatch';
@@ -99,6 +106,14 @@ export default function BindersIndexScreen({navigation}) {
         <FlatList
           refreshing={refreshing}
           onRefresh={handleRefresh}
+          refreshControl={
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
+          }
           ListHeaderComponent={
             <SearchFilterBar
               query={query}

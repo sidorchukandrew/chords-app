@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, RefreshControl} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   selectCurrentMember,
@@ -152,6 +152,14 @@ export default function MembersIndexScreen() {
           }
           refreshing={refreshing}
           onRefresh={handleRefresh}
+          refreshControl={
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
+          }
           ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={<NoDataMessage message="No members to show" />}
           ListHeaderComponentStyle={styles.headerContainer}

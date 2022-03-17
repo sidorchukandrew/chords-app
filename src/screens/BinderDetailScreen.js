@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   RefreshControl,
   StyleSheet,
@@ -202,7 +202,12 @@ export default function BinderDetailScreen({navigation, route}) {
       <Container size="lg">
         <SwipeListView
           refreshControl={
-            <RefreshControl onRefresh={handleRefresh} refreshing={refreshing} />
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
           }
           data={filteredSongs()}
           renderItem={renderRow}

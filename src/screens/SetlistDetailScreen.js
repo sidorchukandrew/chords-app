@@ -202,7 +202,12 @@ export default function SetlistDetailScreen({route, navigation}) {
           ListEmptyComponent={renderNoData()}
           ItemSeparatorComponent={ItemSeparator}
           refreshControl={
-            <RefreshControl onRefresh={handleRefresh} refreshing={refreshing} />
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
           }
           onDragEnd={handleReorder}
           style={{height: '100%'}}
