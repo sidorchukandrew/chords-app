@@ -25,6 +25,7 @@ import {
   setShowSetlistNavigation,
 } from '../redux/slices/appearanceSlice';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
@@ -34,6 +35,7 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
   const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
   const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const [creatingNote, setCreatingNote] = useState(false);
+  const {surface, text, isDark, blue} = useTheme();
 
   function handleUpdateField(field, value) {
     dispatch(updateSongOnScreen({[field]: value}));
@@ -82,7 +84,8 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
   }
 
   return (
-    <BottomSheetScrollView style={styles.container}>
+    <BottomSheetScrollView
+      style={[styles.container, isDark ? surface.secondary : surface.primary]}>
       <ToggleField
         label="Show chords"
         value={!song.format?.chords_hidden}
@@ -126,8 +129,8 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
             styles={[styles.field, styles.actionButton]}
             onPress={handleCreateNote}>
             <View style={styles.actionButtonLeftContainer}>
-              <Icon name="note-plus" size={22} color="#2464eb" />
-              <Text style={styles.label}>Add note</Text>
+              <Icon name="note-plus" size={22} color={blue.text.color} />
+              <Text style={[styles.label, text.primary]}>Add note</Text>
             </View>
             {creatingNote && <LoadingIndicator style={{flexGrow: 0}} />}
           </RectButton>
@@ -153,8 +156,6 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    backgroundColor: 'white',
     paddingBottom: 20,
     height: '100%',
   },

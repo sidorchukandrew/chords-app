@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 import Detail from './Detail';
 import Divider from './Divider';
@@ -17,6 +11,7 @@ import Tag from './Tag';
 import ThemeOptionsBottomSheet from './ThemeOptionsBottomSheet';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SongDetailsTab({
   song,
@@ -30,6 +25,7 @@ export default function SongDetailsTab({
   const [themeOptionsVisible, setThemeOptionsVisible] = useState(false);
   const [themeBeingViewed, setThemeBeingViewed] = useState();
   const currentMember = useSelector(selectCurrentMember);
+  const {text, blue} = useTheme();
 
   function handleOpenGenreOptionsSheet(genre) {
     if (currentMember.can(EDIT_SONGS)) {
@@ -65,12 +61,14 @@ export default function SongDetailsTab({
         title="Details"
         button={
           <TouchableOpacity
+            style={{padding: 5}}
             onPress={() => onNavigateTo('Edit Song Details')}
             disabled={!isConnected}>
             <Text
               style={[
                 styles.editButtonText,
-                !isConnected && styles.disabledColor,
+                blue.text,
+                !isConnected && text.disabled,
               ]}>
               Edit
             </Text>
@@ -89,10 +87,11 @@ export default function SongDetailsTab({
         showButton={currentMember.can(EDIT_SONGS)}
         button={
           <TouchableOpacity
+            style={styles.plusButton}
             onPress={() => onNavigateTo('Add Theme')}
             disabled={!isConnected}>
             <Icon
-              color={isConnected ? '#0969da' : '#d0d0d0'}
+              color={isConnected ? blue.text.color : text.disabled}
               size={20}
               name="plus"
             />
@@ -114,10 +113,11 @@ export default function SongDetailsTab({
         title="Genres"
         button={
           <TouchableOpacity
+            style={styles.plusButton}
             onPress={() => onNavigateTo('Add Genre')}
             disabled={!isConnected}>
             <Icon
-              color={isConnected ? '#0969da' : '#d0d0d0'}
+              color={isConnected ? blue.text.color : '#d0d0d0'}
               size={20}
               name="plus"
             />
@@ -184,11 +184,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   editButtonText: {
-    color: '#0969da',
     fontWeight: '600',
   },
-  addIcon: {},
-  disabledColor: {
-    color: '#d0d0d0',
+  plusButton: {
+    padding: 5,
   },
 });

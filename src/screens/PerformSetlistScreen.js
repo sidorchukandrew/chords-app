@@ -25,6 +25,7 @@ import Roadmap from '../components/Roadmap';
 import Note from '../components/Note';
 import SetlistNavigation from '../components/SetlistNavigation';
 import {useFocusEffect} from '@react-navigation/native';
+import {useTheme} from '../hooks/useTheme';
 import SetlistAdjustmentsBottomSheet from '../components/SetlistAdjustmentsBottomSheet';
 import {
   selectDisableSwipeInSetlist,
@@ -50,6 +51,7 @@ export default function PerformSetlistScreen({navigation, route}) {
   const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const dispatch = useDispatch();
   const carouselRef = useRef();
+  const {surface, text, blue} = useTheme();
 
   useEffect(() => {
     dispatch(setSongOnScreen(songs[0]));
@@ -71,6 +73,8 @@ export default function PerformSetlistScreen({navigation, route}) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerTitleStyle: text.primary,
+      headerStyle: surface.primary,
       title: songs[songIndex]?.name,
       headerRight: () => (
         <View style={styles.headerButtonsContainer}>
@@ -88,12 +92,12 @@ export default function PerformSetlistScreen({navigation, route}) {
           <TouchableOpacity
             style={{padding: 3}}
             onPress={() => setAdjustmentsSheetVisible(true)}>
-            <Icon name="tune-vertical" size={22} color="#2464eb" />
+            <Icon name="tune-vertical" size={22} color={blue.text.color} />
           </TouchableOpacity>
         </View>
       ),
     });
-  }, [navigation, songIndex, songs]);
+  }, [navigation, songIndex, songs, surface, text, blue]);
 
   function renderSlide({item: song, index}) {
     if (!song) {
@@ -104,7 +108,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
-            style={styles.slideContainer}
+            style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
             maximumZoomScale={4}
             minimumZoomScale={0.5}>
@@ -130,7 +134,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
-            style={styles.slideContainer}
+            style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
             maximumZoomScale={4}
             minimumZoomScale={0.5}>
@@ -179,7 +183,7 @@ export default function PerformSetlistScreen({navigation, route}) {
   }
 
   return (
-    <View style={styles.screenContainer}>
+    <View style={[styles.screenContainer, surface.primary]}>
       <Carousel
         layout="default"
         data={songs}
@@ -224,7 +228,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
-  screenContainer: {flex: 1, backgroundColor: 'white', height: '100%'},
+  screenContainer: {flex: 1, height: '100%'},
   keyButton: {
     marginRight: 15,
     height: 35,

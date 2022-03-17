@@ -19,6 +19,7 @@ import {reportError} from '../utils/error';
 import LoadingIndicator from './LoadingIndicator';
 import {addNoteToSong} from '../services/notesService';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useTheme} from '../hooks/useTheme';
 
 export default function AdjustmentsBottomSheetScreen({navigation}) {
   const song = useSelector(selectSongOnScreen);
@@ -26,6 +27,7 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
   const currentMember = useSelector(selectCurrentMember);
   const currentSubscription = useSelector(selectCurrentSubscription);
   const [creatingNote, setCreatingNote] = useState(false);
+  const {surface, text, isDark, blue} = useTheme();
 
   function handleUpdateField(field, value) {
     dispatch(updateSongOnScreen({[field]: value}));
@@ -63,8 +65,11 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
 
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
-      style={styles.container}>
+      contentContainerStyle={[
+        styles.container,
+        isDark ? surface.secondary : surface.primary,
+      ]}
+      style={[styles.container, isDark ? surface.secondary : surface.primary]}>
       <ToggleField
         label="Show chords"
         value={!song.format?.chords_hidden}
@@ -108,8 +113,8 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
             styles={[styles.field, styles.actionButton]}
             onPress={handleCreateNote}>
             <View style={styles.actionButtonLeftContainer}>
-              <Icon name="note-plus" size={22} color="#2464eb" />
-              <Text style={styles.label}>Add note</Text>
+              <Icon name="note-plus" size={22} color={blue.text.color} />
+              <Text style={[styles.label, text.primary]}>Add note</Text>
             </View>
             {creatingNote && <LoadingIndicator style={{flexGrow: 0}} />}
           </RectButton>
@@ -122,7 +127,6 @@ export default function AdjustmentsBottomSheetScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   field: {
     paddingHorizontal: 10,

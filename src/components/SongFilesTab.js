@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {reportError} from '../utils/error';
 import {
@@ -19,6 +19,7 @@ import Container from './Container';
 import ItemSeparator from './ItemSeparator';
 import FileOptionsBottomSheet from './FileOptionsBottomSheet';
 import RenameFileBottomSheet from './RenameFileBottomSheet';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SongFilesTab({
   song,
@@ -31,6 +32,7 @@ export default function SongFilesTab({
   const [fileOptionsSheetVisible, setFileOptionsSheetVisible] = useState(false);
   const [fileForOptionsSheet, setFileForOptionsSheet] = useState();
   const [renameFileSheetVisible, setRenameFileSheetVisible] = useState(false);
+  const {surface} = useTheme();
 
   const currentMember = useSelector(selectCurrentMember);
 
@@ -72,7 +74,7 @@ export default function SongFilesTab({
 
       uploadFiles(selectedFiles);
     } catch (error) {
-      reportError(error);
+      reportError(error, {showError: false});
     }
   }
 
@@ -128,12 +130,11 @@ export default function SongFilesTab({
   }
 
   return (
-    <View style={styles.container}>
-      <Container size="lg">
+    <View style={[styles.container, surface.primary]}>
+      <Container size="lg" style={{flex: 1}} innerStyle={{flex: 1}}>
         <FlatList
           data={files}
           renderItem={renderFileRow}
-          style={{height: '100%'}}
           ItemSeparatorComponent={ItemSeparator}
           refreshing={refreshing}
           onRefresh={handleRefresh}
@@ -169,7 +170,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     position: 'relative',
     flexGrow: 1,
-    backgroundColor: 'white',
   },
   addButton: {
     position: 'absolute',

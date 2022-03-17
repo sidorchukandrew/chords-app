@@ -167,7 +167,6 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 17,
-    color: 'black',
     fontWeight: '500',
   },
   row: {

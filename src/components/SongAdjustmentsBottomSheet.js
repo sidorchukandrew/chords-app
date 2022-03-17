@@ -6,10 +6,12 @@ import FontBottomSheetScreen from '../screens/FontBottomSheetScreen';
 import FontSizeBottomSheetScreen from '../screens/FontSizeBottomSheetScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useTheme} from '../hooks/useTheme';
 
 const Stack = createNativeStackNavigator();
 export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
   const sheetRef = useRef();
+  const {isDark, surface, text} = useTheme();
   useEffect(() => {
     if (visible) sheetRef.current?.present();
   }, [visible, sheetRef]);
@@ -26,8 +28,7 @@ export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
             name="SongAdjusments Menu"
             component={AdjustmentsBottomSheetScreen}
             options={() => ({
-              title: '',
-              headerShadowVisible: false,
+              headerShown: false,
             })}
           />
           <Stack.Screen
@@ -37,6 +38,8 @@ export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
               title: 'Font',
               headerShadowVisible: false,
               headerTitleAlign: 'left',
+              headerStyle: isDark ? surface.secondary : surface.primary,
+              headerTitleStyle: text.primary,
             })}
           />
 
@@ -46,6 +49,8 @@ export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
             options={() => ({
               title: 'Size',
               headerShadowVisible: false,
+              headerStyle: isDark ? surface.secondary : surface.primary,
+              headerTitleStyle: text.primary,
             })}
           />
         </Stack.Navigator>

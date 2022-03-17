@@ -7,6 +7,7 @@ import Container from './Container';
 import FormField from './FormField';
 import {createTheme} from '../services/themesService';
 import {reportError} from '../utils/error';
+import {useTheme} from '../hooks/useTheme';
 
 export default function CreateThemeBottomSheet({
   visible,
@@ -16,6 +17,7 @@ export default function CreateThemeBottomSheet({
   const sheetRef = useRef();
   const [name, setName] = useState('');
   const [creating, setCreating] = useState(false);
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -47,7 +49,7 @@ export default function CreateThemeBottomSheet({
       snapPoints={['CONTENT_HEIGHT']}
       dynamicHeight>
       <Container>
-        <Text style={styles.title}>New theme</Text>
+        <Text style={[styles.title, text.primary]}>New theme</Text>
         <FormField label="Theme" value={name} onChange={setName} />
         <Button
           disabled={!name}
@@ -64,7 +66,6 @@ export default function CreateThemeBottomSheet({
 const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
-    color: 'black',
     fontSize: 15,
     fontWeight: '500',
     marginVertical: 10,

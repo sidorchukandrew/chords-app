@@ -26,8 +26,7 @@ export default function SetlistAdjustmentsBottomSheet({visible, onDismiss}) {
             name="SetlistAdjusments Menu"
             component={SetlistAdjustmentsBottomSheetScreen}
             options={() => ({
-              title: '',
-              headerShadowVisible: false,
+              headerShown: false,
             })}
           />
           <Stack.Screen

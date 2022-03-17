@@ -320,7 +320,7 @@ export default function Routes() {
                   component={AddGenreModal}
                   options={{
                     headerShown: false,
-                    presentation: 'fullScreenModal',
+                    presentation: 'containedModal',
                   }}
                 />
                 <Stack.Screen

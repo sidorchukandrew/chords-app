@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ItemSeparator from '../components/ItemSeparator';
 import RectButton from '../components/RectButton';
 import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useTheme} from '../hooks/useTheme';
 
 const FONT_SIZES = [14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 26, 28, 30];
 
@@ -19,6 +20,7 @@ export default function FontSizeBottomSheetScreen() {
   const song = useSelector(selectSongOnScreen);
   const currentMember = useSelector(selectCurrentMember);
   const dispatch = useDispatch();
+  const {surface, text, isDark} = useTheme();
 
   const checkmarkIcon = useRef(
     <Icon name="check" size={22} color="#10b981" />,
@@ -44,7 +46,7 @@ export default function FontSizeBottomSheetScreen() {
   function handleRenderRow({item: size}) {
     return (
       <RectButton onPress={() => handleSizeChange(size)} styles={styles.button}>
-        <Text style={styles.fontSize}>{size}</Text>
+        <Text style={[styles.fontSize, text.primary]}>{size}</Text>
         {song.format?.font_size === size && checkmarkIcon}
       </RectButton>
     );
@@ -54,27 +56,24 @@ export default function FontSizeBottomSheetScreen() {
     <FlatList
       data={FONT_SIZES}
       keyExtractor={item => item}
-      style={styles.container}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={handleRenderRow}
+      style={[styles.container, isDark ? surface.secondary : surface.primary]}
     />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     paddingHorizontal: 10,
   },
   fontSize: {
-    color: 'black',
     fontSize: 16,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottomColor: '#eaeaea',
     borderBottomWidth: 1,
   },
 });

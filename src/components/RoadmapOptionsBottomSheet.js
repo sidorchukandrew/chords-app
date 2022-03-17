@@ -3,6 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import BottomSheet from './BottomSheet';
 import RectButton from './RectButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from '../hooks/useTheme';
 
 export default function RoadmapOptionsBottomSheet({
   visible,
@@ -12,6 +13,7 @@ export default function RoadmapOptionsBottomSheet({
   onRearrangeSections,
 }) {
   const sheetRef = useRef();
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -43,13 +45,13 @@ export default function RoadmapOptionsBottomSheet({
       ref={sheetRef}>
       <View style={styles.sheet}>
         <RectButton styles={styles.button} onPress={handleRearrangeSections}>
-          <Icon size={22} color="#505050" name="swap-horizontal" />
-          <Text style={styles.buttonText}>Rearrange</Text>
+          <Icon size={22} color={text.secondary.color} name="swap-horizontal" />
+          <Text style={[styles.buttonText, text.secondary]}>Rearrange</Text>
         </RectButton>
 
         <RectButton styles={styles.button} onPress={handleEdit}>
-          <Icon size={20} color="#505050" name="pencil" />
-          <Text style={styles.buttonText}>Edit</Text>
+          <Icon size={20} color={text.secondary.color} name="pencil" />
+          <Text style={[styles.buttonText, text.secondary]}>Edit</Text>
         </RectButton>
 
         <RectButton styles={styles.button} onPress={handleDelete}>
@@ -64,7 +66,6 @@ export default function RoadmapOptionsBottomSheet({
 const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
     flex: 1,
   },
   button: {
@@ -72,7 +73,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#505050',
     fontWeight: '600',
     marginLeft: 10,
     fontSize: 16,

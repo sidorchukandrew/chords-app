@@ -5,8 +5,10 @@ import Container from './Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import SongContent from '../components/SongContent';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SongContentTab({song, onPerform, onEdit}) {
+  const {blue} = useTheme();
   return (
     <ScrollView>
       <Container>
@@ -20,7 +22,7 @@ export default function SongContentTab({song, onPerform, onEdit}) {
                 name="pencil"
                 size={20}
                 style={styles.shortcutIcon}
-                color="#2464eb"
+                color={blue.text.color}
               />
             }>
             Edit lyrics
@@ -33,7 +35,7 @@ export default function SongContentTab({song, onPerform, onEdit}) {
               <Icon
                 name="play-circle"
                 size={20}
-                color="#2464eb"
+                color={blue.text.color}
                 style={styles.shortcutIcon}
               />
             }>
@@ -71,6 +73,5 @@ const styles = StyleSheet.create({
   },
   content: {
     marginVertical: 10,
-    color: 'black',
   },
 });

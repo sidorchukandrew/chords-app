@@ -23,6 +23,7 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {VIEW_FILES} from '../utils/auth';
 import SongFilesTab from '../components/SongFilesTab';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SongDetailScreen({navigation, route}) {
   const [tab, setTab] = useState('Song');
@@ -36,6 +37,7 @@ export default function SongDetailScreen({navigation, route}) {
   const currentMember = useSelector(selectCurrentMember);
   const dispatch = useDispatch();
   const {isConnected} = useNetInfo();
+  const {surface, text, blue} = useTheme();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -58,15 +60,17 @@ export default function SongDetailScreen({navigation, route}) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: surface.primary,
+      headerTitleStyle: text.primary,
       headerRight: () => (
         <TouchableOpacity
-          style={{backgroundColor: '#eaeaea', padding: 3, borderRadius: 50}}
+          style={[{padding: 3, borderRadius: 50}, surface.tertiary]}
           onPress={() => setOptionsSheetVisible(true)}>
           <Icon name="dots-horizontal" size={22} color="#2464eb" />
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, text, surface, blue]);
 
   function handlePerformSong() {
     dispatch(setSongOnScreen(song));
@@ -141,7 +145,7 @@ export default function SongDetailScreen({navigation, route}) {
 
   return (
     <>
-      <Container size="lg" style={{flexGrow: 0, backgroundColor: 'white'}}>
+      <Container size="lg" style={[{flexGrow: 0}, surface.primary]}>
         <SegmentedControl
           options={['Song', 'Details', canViewFiles() && 'Files']}
           selected={tab}
@@ -149,7 +153,7 @@ export default function SongDetailScreen({navigation, route}) {
           style={styles.tabContainer}
         />
       </Container>
-      <View style={styles.container}>
+      <View style={[styles.container, surface.primary]}>
         {loading ? <LoadingIndicator /> : renderTab()}
       </View>
       <SongOptionsBottomSheet
@@ -173,7 +177,6 @@ export default function SongDetailScreen({navigation, route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   tabContainer: {
     marginBottom: 10,

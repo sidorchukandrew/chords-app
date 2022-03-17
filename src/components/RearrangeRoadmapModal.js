@@ -6,6 +6,7 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ItemSeparator from './ItemSeparator';
+import {useTheme} from '../hooks/useTheme';
 
 export default function RearrangeRoadmapModal({
   roadmap = [],
@@ -14,6 +15,8 @@ export default function RearrangeRoadmapModal({
   onDismiss,
 }) {
   const sheetRef = useRef();
+  const {surface, text, blue, isDark} = useTheme();
+
   const [localRoadmap, setLocalRoadmap] = useState(
     () => roadmap?.map((section, index) => ({section, id: index})) || [],
   );
@@ -48,8 +51,8 @@ export default function RearrangeRoadmapModal({
           onLongPress={drag}
           disabled={isActive}
           style={styles.sectionRow}>
-          <Text style={styles.sectionText}>{item.section}</Text>
-          <Icon name="drag" size={18} color="#505050" />
+          <Text style={[styles.sectionText, text.primary]}>{item.section}</Text>
+          <Icon name="drag" size={18} color={text.secondary.color} />
         </TouchableOpacity>
       </ScaleDecorator>
     );
@@ -60,11 +63,11 @@ export default function RearrangeRoadmapModal({
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={handleDismiss}>
-            <Text style={styles.headerButtonText}>Cancel</Text>
+            <Text style={[styles.headerButtonText, blue.text]}>Cancel</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleConfirm}>
-            <Text style={styles.headerButtonText}>Confirm</Text>
+            <Text style={[styles.headerButtonText, blue.text]}>Confirm</Text>
           </TouchableOpacity>
         </View>
         <DraggableFlatList
@@ -83,7 +86,6 @@ export default function RearrangeRoadmapModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     paddingHorizontal: 20,
   },
   list: {
@@ -108,6 +110,5 @@ const styles = StyleSheet.create({
   },
   headerButtonText: {
     fontWeight: '500',
-    color: '#2464eb',
   },
 });

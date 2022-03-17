@@ -5,9 +5,11 @@ import {reportError} from '../utils/error';
 import RNFS from 'react-native-fs';
 import FileViewer from 'react-native-file-viewer';
 import LoadingIndicator from './LoadingIndicator';
+import {useTheme} from '../hooks/useTheme';
 
 export default function FileRow({file, onOptionsPress}) {
   const [downloading, setDownloading] = useState(false);
+  const {text} = useTheme();
 
   async function handleDownloadAndView() {
     try {
@@ -29,11 +31,11 @@ export default function FileRow({file, onOptionsPress}) {
       <TouchableOpacity
         style={styles.nameButton}
         onPress={handleDownloadAndView}>
-        <Text style={styles.nameText}>{file.name}</Text>
+        <Text style={[styles.nameText, text.primary]}>{file.name}</Text>
         {downloading && <LoadingIndicator style={styles.loadingIndicator} />}
       </TouchableOpacity>
       <TouchableOpacity style={styles.optionsButton} onPress={onOptionsPress}>
-        <Icon size={18} color="#404040" name="dots-horizontal" />
+        <Icon size={18} color={text.secondary.color} name="dots-horizontal" />
       </TouchableOpacity>
     </View>
   );

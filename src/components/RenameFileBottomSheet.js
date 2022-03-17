@@ -5,6 +5,7 @@ import FormField from './FormField';
 import {reportError} from '../utils/error';
 import {updateFileForSong} from '../services/filesService';
 import LoadingIndicator from './LoadingIndicator';
+import {useTheme} from '../hooks/useTheme';
 
 export default function RenameFileBottomSheet({
   visible,
@@ -16,6 +17,7 @@ export default function RenameFileBottomSheet({
   const [localName, setLocalName] = useState(getFileNameWithoutExtension());
   const [saving, setSaving] = useState(false);
   const sheetRef = useRef();
+  const {blue} = useTheme();
 
   useEffect(() => {
     setLocalName(getFileNameWithoutExtension());
@@ -63,13 +65,13 @@ export default function RenameFileBottomSheet({
       <View style={styles.sheet}>
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={handleDismiss}>
-            <Text style={styles.headerButtonText}>Cancel</Text>
+            <Text style={[styles.headerButtonText, blue.text]}>Cancel</Text>
           </TouchableOpacity>
           {saving ? (
             <LoadingIndicator style={{flex: 0}} />
           ) : (
             <TouchableOpacity onPress={handleConfirmRename}>
-              <Text style={styles.headerButtonText}>Confirm</Text>
+              <Text style={[styles.headerButtonText, blue.text]}>Confirm</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -82,7 +84,6 @@ export default function RenameFileBottomSheet({
 const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
     flex: 1,
   },
   headerContainer: {
@@ -93,6 +94,5 @@ const styles = StyleSheet.create({
   },
   headerButtonText: {
     fontWeight: '500',
-    color: '#2464eb',
   },
 });

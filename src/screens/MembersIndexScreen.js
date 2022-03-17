@@ -25,6 +25,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import InvitationsApi from '../api/invitationsApi';
 import AddMembersBottomSheet from '../components/AddMembersBottomSheet';
 import InviteByEmailBottomSheet from '../components/InviteByEmailBottomSheet';
+import {useTheme} from '../hooks/useTheme';
 
 export default function MembersIndexScreen() {
   const currentTeam = useSelector(selectCurrentTeam);
@@ -38,6 +39,7 @@ export default function MembersIndexScreen() {
   const [addMembersSheetVisible, setAddMembersSheetVisible] = useState(false);
   const [inviteByEmailSheetVisible, setInviteByEmailSheetVisible] =
     useState(false);
+  const {surface} = useTheme();
 
   useEffect(() => {
     if (currentTeam?.members) setMembers(currentTeam.members);
@@ -140,7 +142,7 @@ export default function MembersIndexScreen() {
 
   return (
     <>
-      <Container size="lg" style={styles.container}>
+      <Container size="lg" style={surface.primary}>
         <FlatList
           renderItem={renderRow}
           data={
@@ -205,9 +207,6 @@ export default function MembersIndexScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-  },
   headerContainer: {
     marginBottom: 15,
   },

@@ -1,8 +1,7 @@
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {addGenresToSong, addThemesToSong} from '../services/songsService';
-
-import AddThemeHeader from '../components/AddThemeHeader';
+import {addThemesToSong} from '../services/songsService';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Checkbox from '../components/Checkbox';
 import Container from '../components/Container';
 import CreateThemeBottomSheet from '../components/CreateThemeBottomSheet';
@@ -11,6 +10,8 @@ import ScreenModal from './ScreenModal';
 import ScreenModalHeader from '../components/ScreenModalHeader';
 import {getAllThemes} from '../services/themesService';
 import {reportError} from '../utils/error';
+import {useTheme} from '../hooks/useTheme';
+import CircleButton from '../components/CircleButton';
 
 export default function AddThemeModal({navigation, route}) {
   const [themes, setThemes] = useState([]);
@@ -18,6 +19,7 @@ export default function AddThemeModal({navigation, route}) {
   const [selectedThemeIds, setSelectedThemeIds] = useState([]);
   const [saving, setSaving] = useState(false);
   const [createThemeSheetVisible, setCreateThemeSheetVisible] = useState(false);
+  const {text} = useTheme();
 
   useEffect(() => {
     async function fetchData() {
@@ -51,10 +53,14 @@ export default function AddThemeModal({navigation, route}) {
   function renderRow({item: theme}) {
     return (
       <Checkbox
-        text={theme.name}
         checked={selectedThemeIds.includes(theme.id)}
-        style={styles.row}
+        style={styles.checkbox}
         onPress={checked => handleToggle(checked, theme)}
+        text={
+          <View style={styles.row}>
+            <Text style={[styles.name, text.primary]}>{theme.name}</Text>
+          </View>
+        }
       />
     );
   }
@@ -84,18 +90,19 @@ export default function AddThemeModal({navigation, route}) {
         saveDisabled={selectedThemeIds.length === 0}
         saving={saving}
       />
-      <Container>
+      <Container style={{flex: 1}} innerStyle={{flex: 1}}>
         <FlatList
           data={themes}
           ItemSeparatorComponent={ItemSeparator}
           renderItem={renderRow}
-          ListHeaderComponent={
-            <AddThemeHeader
-              onCreatePress={() => setCreateThemeSheetVisible(true)}
-            />
-          }
+          style={styles.list}
         />
       </Container>
+      <CircleButton
+        style={styles.addButton}
+        onPress={() => setCreateThemeSheetVisible(true)}>
+        <Icon name="plus" size={35} color="white" />
+      </CircleButton>
       <CreateThemeBottomSheet
         visible={createThemeSheetVisible}
         onDismiss={() => setCreateThemeSheetVisible(false)}
@@ -111,8 +118,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  checkbox: {
+    marginLeft: 4,
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+  },
   row: {
-    paddingVertical: 12,
-    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 17,
+  },
+  list: {
+    flexGrow: 1,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  name: {
+    fontSize: 17,
+    fontWeight: '500',
   },
 });

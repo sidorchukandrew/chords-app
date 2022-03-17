@@ -6,10 +6,17 @@ export default function Container({
   size = 'md',
   style: providedStyles,
   padded = true,
+  innerStyle,
 }) {
   return (
     <View style={[styles.spacing, providedStyles]}>
-      <View style={[styles.container, widths[size], padded && styles.padding]}>
+      <View
+        style={[
+          styles.container,
+          widths[size],
+          padded && styles.padding,
+          innerStyle,
+        ]}>
         {children}
       </View>
     </View>

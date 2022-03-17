@@ -13,7 +13,7 @@ export default function ScreenModalHeader({
   options = {saveVisible: false, backVisible: false},
   saving = false,
 }) {
-  const {border, surface, text, icon, blue} = useTheme();
+  const {border, surface, text, icon, blue, isDark} = useTheme();
 
   const saveButton = saving ? (
     <View style={styles.saveButtonContainer}>
@@ -37,7 +37,12 @@ export default function ScreenModalHeader({
     </View>
   );
   return (
-    <View style={[styles.header, surface.primary, border.primary]}>
+    <View
+      style={[
+        styles.header,
+        isDark ? surface.secondary : surface.primary,
+        border.primary,
+      ]}>
       <View style={styles.container}>
         {options.backVisible ? (
           <View style={styles.backButtonContainer}>
@@ -77,7 +82,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    color: 'black',
     fontWeight: '500',
     fontSize: 17,
   },

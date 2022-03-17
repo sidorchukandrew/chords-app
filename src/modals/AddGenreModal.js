@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 
 import Checkbox from '../components/Checkbox';
@@ -9,12 +9,14 @@ import ScreenModalHeader from '../components/ScreenModalHeader';
 import {addGenresToSong} from '../services/songsService';
 import {getAllGenres} from '../services/genresService';
 import {reportError} from '../utils/error';
+import {useTheme} from '../hooks/useTheme';
 
 export default function AddGenreModal({navigation, route}) {
   const [genres, setGenres] = useState([]);
   const [song] = useState(route.params);
   const [selectedGenreIds, setSelectedGenreIds] = useState([]);
   const [saving, setSaving] = useState(false);
+  const {text} = useTheme();
 
   useEffect(() => {
     async function fetchData() {
@@ -48,10 +50,14 @@ export default function AddGenreModal({navigation, route}) {
   function renderRow({item: genre}) {
     return (
       <Checkbox
-        text={genre.name}
         checked={selectedGenreIds.includes(genre.id)}
-        style={styles.row}
+        style={styles.checkbox}
         onPress={checked => handleToggle(checked, genre)}
+        text={
+          <View style={styles.row}>
+            <Text style={[styles.name, text.primary]}>{genre.name}</Text>
+          </View>
+        }
       />
     );
   }
@@ -77,12 +83,12 @@ export default function AddGenreModal({navigation, route}) {
         saveDisabled={selectedGenreIds.length === 0}
         saving={saving}
       />
-      <Container style={styles.container}>
+      <Container style={styles.container} innerStyle={styles.container}>
         <FlatList
           data={genres}
           ItemSeparatorComponent={ItemSeparator}
           renderItem={renderRow}
-          style={styles.list}
+          contentContainerStyle={styles.list}
         />
       </Container>
     </ScreenModal>
@@ -96,10 +102,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   row: {
-    paddingVertical: 12,
-    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 17,
   },
   list: {
-    marginBottom: 20,
+    paddingBottom: 20,
+    flexGrow: 1,
+  },
+  name: {
+    fontSize: 17,
+    fontWeight: '500',
+  },
+  container: {flex: 1},
+  checkbox: {
+    marginLeft: 4,
   },
 });

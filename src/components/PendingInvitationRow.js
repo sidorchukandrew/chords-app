@@ -6,6 +6,7 @@ import InvitationOptionsBottomSheet from './InvitationOptionsBottomSheet';
 import {useSelector} from 'react-redux';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {ADD_MEMBERS} from '../utils/auth';
+import {useTheme} from '../hooks/useTheme';
 
 export default function PendingInvitationRow({
   invitation,
@@ -14,6 +15,7 @@ export default function PendingInvitationRow({
 }) {
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
+  const {text} = useTheme();
 
   return (
     <>
@@ -22,10 +24,14 @@ export default function PendingInvitationRow({
         disabled={!currentMember.can(ADD_MEMBERS)}
         onPress={() => setOptionsSheetVisible(true)}>
         <View>
-          <Text style={styles.emailText}>{invitation.email}</Text>
-          <Text>Sent {format(invitation.updated_at, 'ddd MMM D')}</Text>
+          <Text style={[styles.emailText, text.primary]}>
+            {invitation.email}
+          </Text>
+          <Text style={text.primary}>
+            Sent {format(invitation.updated_at, 'ddd MMM D')}
+          </Text>
         </View>
-        <Icon name="dots-horizontal" size={18} color="#505050" />
+        <Icon name="dots-horizontal" size={18} color={text.secondary.color} />
       </TouchableOpacity>
       <InvitationOptionsBottomSheet
         visible={optionsSheetVisible}
@@ -48,7 +54,6 @@ const styles = StyleSheet.create({
   emailText: {
     fontWeight: '500',
     fontSize: 16,
-    color: 'black',
     marginBottom: 5,
   },
 });

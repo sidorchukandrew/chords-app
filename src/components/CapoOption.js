@@ -2,8 +2,11 @@ import {StyleSheet, Text, View} from 'react-native';
 
 import KeyOptionButton from './KeyOptionButton';
 import React from 'react';
+import {useTheme} from '../hooks/useTheme';
 
 export default function CapoOption({capo, onPress, selected}) {
+  const {text} = useTheme();
+
   return (
     <View style={styles.container}>
       <KeyOptionButton
@@ -12,7 +15,7 @@ export default function CapoOption({capo, onPress, selected}) {
         style={{marginRight: 0}}>
         {capo.capoKey}
       </KeyOptionButton>
-      <Text style={styles.capoNumber}>{capo.capoNumber}</Text>
+      <Text style={[styles.capoNumber, text.primary]}>{capo.capoNumber}</Text>
     </View>
   );
 }
@@ -20,7 +23,6 @@ export default function CapoOption({capo, onPress, selected}) {
 const styles = StyleSheet.create({
   capoNumber: {
     marginTop: 7,
-    color: 'black',
     fontSize: 16,
     fontWeight: '500',
     textAlign: 'center',

@@ -55,7 +55,7 @@ const BottomSheet = React.forwardRef(
         contentHeight={animatedContentHeight}
         handleHeight={animatedHandleHeight}
         bottomInset={detached ? 40 : 0}
-        backgroundStyle={isDark ? surface.tertiary : surface.primary}
+        backgroundStyle={isDark ? surface.secondary : surface.primary}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
