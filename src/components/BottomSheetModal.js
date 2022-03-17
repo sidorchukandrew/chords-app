@@ -12,7 +12,7 @@ import {useTheme} from '../hooks/useTheme';
 const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
   const [windowWidth, setWindowWidth] = useState(0);
   const window = useWindowDimensions();
-  const {surface, isDark} = useTheme();
+  const {surface, isDark, border} = useTheme();
 
   const {
     animatedHandleHeight,
@@ -45,6 +45,7 @@ const BottomSheetModal = React.forwardRef(({children, onDismiss}, ref) => {
       bottomInset={40}
       backgroundStyle={isDark ? surface.secondary : surface.primary}
       style={[styles.container, getHorizontalMargins()]}
+      handleIndicatorStyle={{backgroundColor: border.primary.borderColor}}
       backdropComponent={props => (
         <BottomSheetBackdrop
           disappearsOnIndex={-1}

@@ -22,7 +22,7 @@ const BottomSheet = React.forwardRef(
   ) => {
     const [windowWidth, setWindowWidth] = useState(0);
     const window = useWindowDimensions();
-    const {surface, isDark} = useTheme();
+    const {surface, border, isDark} = useTheme();
 
     const {
       animatedHandleHeight,
@@ -56,6 +56,7 @@ const BottomSheet = React.forwardRef(
         handleHeight={animatedHandleHeight}
         bottomInset={detached ? 40 : 0}
         backgroundStyle={isDark ? surface.secondary : surface.primary}
+        handleIndicatorStyle={{backgroundColor: border.primary.borderColor}}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
@@ -78,6 +79,7 @@ const BottomSheet = React.forwardRef(
         snapPoints={snapPoints}
         detached={detached}
         bottomInset={detached ? 40 : 0}
+        handleIndicatorStyle={{backgroundColor: border.primary.borderColor}}
         backgroundStyle={isDark ? surface.secondary : surface.primary}
         backdropComponent={props => (
           <BottomSheetBackdrop
