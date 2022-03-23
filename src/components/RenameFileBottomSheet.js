@@ -6,6 +6,7 @@ import {reportError} from '../utils/error';
 import {updateFileForSong} from '../services/filesService';
 import LoadingIndicator from './LoadingIndicator';
 import {useTheme} from '../hooks/useTheme';
+import {AvoidSoftInput} from 'react-native-avoid-softinput';
 
 export default function RenameFileBottomSheet({
   visible,
@@ -22,6 +23,18 @@ export default function RenameFileBottomSheet({
   useEffect(() => {
     setLocalName(getFileNameWithoutExtension());
   }, [file]);
+
+  useEffect(() => {
+    AvoidSoftInput.setAdjustNothing();
+    AvoidSoftInput.setEnabled(true);
+    AvoidSoftInput.setAvoidOffset(35);
+    AvoidSoftInput.setHideAnimationDelay(100);
+    return () => {
+      AvoidSoftInput.setEnabled(false);
+      AvoidSoftInput.setDefaultAppSoftInputMode();
+      AvoidSoftInput.setAvoidOffset(0); // Default value
+    };
+  });
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();

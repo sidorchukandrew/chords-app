@@ -10,7 +10,7 @@ export default function OrDivider() {
     <View style={styles.container}>
       <View style={[styles.line, surface.tertiary]} />
       <Text style={[styles.text, text.secondary]}>OR</Text>
-      <View style={styles.line} />
+      <View style={[styles.line, surface.tertiary]} />
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -31,6 +31,7 @@ import {
   selectDisableSwipeInSetlist,
   selectShowSetlistNavigation,
 } from '../redux/slices/appearanceSlice';
+import {AvoidSoftInput} from 'react-native-avoid-softinput';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const {width} = useWindowDimensions();
@@ -52,6 +53,20 @@ export default function PerformSetlistScreen({navigation, route}) {
   const dispatch = useDispatch();
   const carouselRef = useRef();
   const {surface, text, blue} = useTheme();
+
+  const onFocusEffect = useCallback(() => {
+    AvoidSoftInput.setAdjustNothing();
+    AvoidSoftInput.setEnabled(true);
+    AvoidSoftInput.setAvoidOffset(100);
+    AvoidSoftInput.setHideAnimationDelay(100);
+    return () => {
+      AvoidSoftInput.setEnabled(false);
+      AvoidSoftInput.setDefaultAppSoftInputMode();
+      AvoidSoftInput.setAvoidOffset(0); // Default value
+    };
+  }, []);
+
+  useFocusEffect(onFocusEffect);
 
   useEffect(() => {
     dispatch(setSongOnScreen(songs[0]));

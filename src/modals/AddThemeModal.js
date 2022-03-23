@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet, View, Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {addThemesToSong} from '../services/songsService';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Checkbox from '../components/Checkbox';
@@ -12,6 +12,8 @@ import {getAllThemes} from '../services/themesService';
 import {reportError} from '../utils/error';
 import {useTheme} from '../hooks/useTheme';
 import CircleButton from '../components/CircleButton';
+import {AvoidSoftInput} from 'react-native-avoid-softinput';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function AddThemeModal({navigation, route}) {
   const [themes, setThemes] = useState([]);
@@ -39,6 +41,20 @@ export default function AddThemeModal({navigation, route}) {
 
     fetchData();
   }, []);
+
+  const onFocusEffect = useCallback(() => {
+    AvoidSoftInput.setAdjustNothing();
+    AvoidSoftInput.setEnabled(true);
+    AvoidSoftInput.setAvoidOffset(100);
+    AvoidSoftInput.setHideAnimationDelay(100);
+    return () => {
+      AvoidSoftInput.setEnabled(false);
+      AvoidSoftInput.setDefaultAppSoftInputMode();
+      AvoidSoftInput.setAvoidOffset(0); // Default value
+    };
+  }, []);
+
+  useFocusEffect(onFocusEffect);
 
   function handleToggle(checked, theme) {
     if (checked) {
