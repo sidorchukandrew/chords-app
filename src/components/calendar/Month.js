@@ -37,5 +37,8 @@ const styles = StyleSheet.create({
 export default React.memo(Month, areEqual);
 
 function areEqual(prevProps, nextProps) {
-  return prevProps.height === nextProps.height;
+  return (
+    prevProps.height === nextProps.height &&
+    prevProps.events?.length === nextProps.events?.length
+  );
 }

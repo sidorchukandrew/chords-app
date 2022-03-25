@@ -4,7 +4,6 @@ import {useTheme} from '../../hooks/useTheme';
 import Tag from '../Tag';
 
 function CalendarHeader({month, onTodayPress}) {
-  console.log(month, ' header rerendered');
   const {text, border} = useTheme();
 
   function getMonthName() {
@@ -14,6 +13,7 @@ function CalendarHeader({month, onTodayPress}) {
   function getYear() {
     return month?.split(' ')?.[1];
   }
+
   return (
     <View style={[border.primary, styles.headerContainer]}>
       <View style={styles.headerFirstRow}>

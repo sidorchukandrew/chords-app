@@ -10,7 +10,6 @@ import {ADD_EVENTS} from '../utils/auth';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {getAllEvents} from '../services/eventsService';
 import {reportError} from '../utils/error';
-import {CalendarList} from 'react-native-calendars';
 
 export default function CalendarScreen() {
   const {surface} = useTheme();
@@ -18,22 +17,21 @@ export default function CalendarScreen() {
   const {isConnected} = useNetInfo();
   const [events, setEvents] = useState([]);
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       let {data} = await getAllEvents();
-  //       setEvents(data);
-  //     } catch (error) {
-  //       reportError(error);
-  //     }
-  //   }
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        let {data} = await getAllEvents();
+        setEvents(data);
+      } catch (error) {
+        reportError(error);
+      }
+    }
 
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
   return (
     <View style={[styles.screen, surface.primary]}>
-      {/* <CalendarList /> */}
       <Calendar events={events} />
       {currentMember.can(ADD_EVENTS) && (
         <CircleButton style={styles.addButton} disabled={!isConnected}>

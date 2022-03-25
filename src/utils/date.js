@@ -18,3 +18,13 @@ export function isToday(date) {
 export function sortDates(dateA, dateB) {
   return dayjs(dateA).isAfter(dayjs(dateB)) ? 1 : -1;
 }
+
+export function getTimeFromDate(date) {
+  if (!date) return '';
+  date = dayjs(date);
+  if (date.hour() !== 0 || date.minute() !== 0) {
+    return date.format('h:mma');
+  } else {
+    return null;
+  }
+}

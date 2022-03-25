@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useTheme} from '../../hooks/useTheme';
+import CalendarEvent from './CalendarEvent';
 
 export default function Day({border = true, date, surfaceColor, events}) {
   const {border: borderColor, text, blue, isDark} = useTheme();
@@ -27,9 +28,7 @@ export default function Day({border = true, date, surfaceColor, events}) {
 
       <View>
         {events?.map(event => (
-          <Text key={event.id} style={text.primary}>
-            {event.description}
-          </Text>
+          <CalendarEvent event={event} key={event.id} />
         ))}
       </View>
     </View>
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     alignItems: 'flex-end',
+    height: 35,
   },
   dateText: {
     textAlign: 'right',
