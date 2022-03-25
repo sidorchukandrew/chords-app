@@ -1,20 +1,49 @@
 import {StyleSheet, FlatList, View} from 'react-native';
 import React, {useRef, useState} from 'react';
-import {getEightYearsOfMonths} from '../../utils/calendar';
+import {
+  getFourYearsOfMonths,
+  getEventsForMonth,
+  isMonthIndexNearby,
+} from '../../utils/calendar';
 import Month from './Month';
 import CalendarHeader from './CalendarHeader';
+import MonthPlaceholder from './MonthPlaceholder';
 
-export default function Calendar() {
-  const [currentMonthIndex, setCurrentMonthIndex] = useState(48);
+const TODAYS_MONTH = 24;
+export default function Calendar({events}) {
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(TODAYS_MONTH);
   const [monthItemHeight, setMonthItemHeight] = useState(0);
-  const [months] = useState(() => getEightYearsOfMonths());
+  const [monthRows, setMonthRows] = useState(() => getFourYearsOfMonths());
   const listRef = useRef();
-  const onViewableItemsChanged = useRef(({viewableItems}) =>
-    setCurrentMonthIndex(viewableItems[0]?.index),
-  );
+  const onViewableItemsChanged = useRef(({viewableItems}) => {
+    const newMonths = [];
 
-  function renderMonthItem({item: month}) {
-    return <Month height={monthItemHeight} month={month} />;
+    for (let i = 0; i < monthRows.length; ++i) {
+      newMonths.push({
+        month: monthRows[i].month,
+        shouldRender: isMonthIndexNearby(i, viewableItems[0]?.index),
+      });
+    }
+
+    setMonthRows(newMonths);
+    setCurrentMonthIndex(viewableItems[0]?.index);
+  });
+
+  function renderMonthItem({item: monthRow}) {
+    if (monthRow.shouldRender) {
+      let eventsForMonth = getEventsForMonth(monthRow.month, events);
+      return (
+        <Month
+          height={monthItemHeight}
+          month={monthRow.month}
+          events={eventsForMonth}
+        />
+      );
+    } else {
+      return (
+        <MonthPlaceholder month={monthRow.month} height={monthItemHeight} />
+      );
+    }
   }
 
   function getItemLayout(data, index) {
@@ -22,26 +51,31 @@ export default function Calendar() {
   }
 
   function handleTodayPress() {
-    listRef.current.scrollToIndex({index: 48, animated: true});
+    setCurrentMonthIndex(TODAYS_MONTH);
+    listRef.current.scrollToIndex({index: TODAYS_MONTH, animated: true});
   }
 
   return (
     <View style={styles.container}>
       <CalendarHeader
-        month={months[currentMonthIndex]}
+        month={monthRows[currentMonthIndex]?.month}
         onTodayPress={handleTodayPress}
       />
       <FlatList
         ref={listRef}
-        initialScrollIndex={48}
-        data={months}
+        initialScrollIndex={TODAYS_MONTH}
+        data={monthRows}
         renderItem={renderMonthItem}
         onLayout={e => setMonthItemHeight(e.nativeEvent.layout.height)}
         getItemLayout={getItemLayout}
+        initialNumToRender={1}
         onViewableItemsChanged={onViewableItemsChanged.current}
         viewabilityConfig={{
           itemVisiblePercentThreshold: 20,
         }}
+        keyExtractor={monthRow => monthRow.month}
+        removeClippedSubviews
+        maxToRenderPerBatch={1}
       />
     </View>
   );

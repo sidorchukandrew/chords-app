@@ -1,10 +1,5 @@
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useRef} from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -15,21 +10,14 @@ import {selectCurrentTeam} from '../redux/slices/authSlice';
 import ProfilePicture from './ProfilePicture';
 import {useTheme} from '../hooks/useTheme';
 import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
+import BottomSheetModal from '../components/BottomSheetModal';
 
 export default function AppMenu({visible, onClose, onNavigateTo}) {
   const sheetRef = useRef();
-  const [windowWidth, setWindowWidth] = useState(0);
   const currentTeam = useSelector(selectCurrentTeam);
-  const window = useWindowDimensions();
   const currentSubscription = useSelector(selectCurrentSubscription);
   const {isConnected} = useNetInfo();
-  const {surface, text, isDark} = useTheme();
-
-  useEffect(() => {
-    // if (windowWidth > window.width || windowWidth === 0) {
-    setWindowWidth(window.width);
-    // }
-  }, [window]);
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present?.();
@@ -40,34 +28,9 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
     sheetRef.current?.dismiss();
   }
 
-  function getHorizontalMargins() {
-    let calculatedMargin = (windowWidth - 375) / 2;
-    let minMargin = 10;
-
-    let actualMargin = calculatedMargin < 1 ? minMargin : calculatedMargin;
-
-    return {marginHorizontal: actualMargin};
-  }
-
   return (
-    <BottomSheetModal
-      snapPoints={['50%']}
-      onDismiss={onClose}
-      ref={sheetRef}
-      detached
-      bottomInset={146}
-      style={[styles.container, getHorizontalMargins()]}
-      backgroundStyle={isDark ? surface.tertiary : surface.primary}
-      contentHeight={200}
-      backdropComponent={props => (
-        <BottomSheetBackdrop
-          disappearsOnIndex={-1}
-          appearsOnIndex={0}
-          {...props}
-        />
-      )}>
-      <BottomSheetView
-        style={{paddingTop: 12, paddingBottom: 12, paddingHorizontal: 16}}>
+    <BottomSheetModal visible={visible} onDismiss={onClose} ref={sheetRef}>
+      <View style={{paddingTop: 12, paddingBottom: 12, paddingHorizontal: 16}}>
         <View style={styles.teamDetailsContainer}>
           <ProfilePicture url={currentTeam.image_url} size="md" />
           <Text style={[styles.teamNameText, text.primary]}>
@@ -159,7 +122,7 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
             Switch teams
           </Text>
         </RectButton>
-      </BottomSheetView>
+      </View>
     </BottomSheetModal>
   );
 }

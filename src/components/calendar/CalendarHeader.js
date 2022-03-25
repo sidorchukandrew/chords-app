@@ -3,7 +3,8 @@ import React from 'react';
 import {useTheme} from '../../hooks/useTheme';
 import Tag from '../Tag';
 
-export default function CalendarHeader({month, onTodayPress}) {
+function CalendarHeader({month, onTodayPress}) {
+  console.log(month, ' header rerendered');
   const {text, border} = useTheme();
 
   function getMonthName() {
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginVertical: 20,
     paddingHorizontal: 20,
   },
   headerTextContainer: {
@@ -70,3 +71,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
+
+export default React.memo(
+  CalendarHeader,
+  (prevProps, nextProps) => prevProps.month === nextProps.month,
+);

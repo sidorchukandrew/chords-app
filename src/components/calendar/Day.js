@@ -2,9 +2,8 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useTheme} from '../../hooks/useTheme';
 
-export default function Day({border = true, date, surfaceColor}) {
+export default function Day({border = true, date, surfaceColor, events}) {
   const {border: borderColor, text, blue, isDark} = useTheme();
-
   return (
     <View
       style={[
@@ -24,6 +23,14 @@ export default function Day({border = true, date, surfaceColor}) {
             {date?.dateNumber}
           </Text>
         </View>
+      </View>
+
+      <View>
+        {events?.map(event => (
+          <Text key={event.id} style={text.primary}>
+            {event.description}
+          </Text>
+        ))}
       </View>
     </View>
   );

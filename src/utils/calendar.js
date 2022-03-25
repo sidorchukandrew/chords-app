@@ -1,27 +1,20 @@
 import dayjs from 'dayjs';
 
-export function getEightYearsOfMonths() {
-  let fortyEightMonthsAgo = dayjs().subtract(48, 'month');
-  let numberOfMonthsOnCalendar = 96;
+export function getFourYearsOfMonths() {
+  let fortyEightMonthsAgo = dayjs().subtract(24, 'month');
+  let numberOfMonthsOnCalendar = 48;
   let months = [];
 
   for (let i = 0; i < numberOfMonthsOnCalendar; ++i) {
     let nextMonth = fortyEightMonthsAgo.add(i, 'month');
-    months.push(nextMonth.format('MMMM YYYY'));
+    months.push({
+      month: nextMonth.format('MMMM YYYY'),
+      shouldRender: isMonthIndexNearby(i, 24),
+    });
   }
 
   return months;
 }
-
-export function getWeekOne(monthYear) {}
-
-export function getWeekTwo(monthYear) {}
-
-export function getWeekThree(monthYear) {}
-
-export function getWeekFour(monthYear) {}
-
-export function getWeekFive(monthYear) {}
 
 export function getCalendarDates(
   month = dayjs().month(),
@@ -95,3 +88,39 @@ export const MONTH_NUMBERS = {
   November: 10,
   December: 11,
 };
+
+export function getEventsForMonth(monthYear, events) {
+  let month = monthYear?.split(' ')?.[0];
+  let year = monthYear?.split(' ')?.[1];
+  let monthDate = dayjs().set('year', year).set('month', MONTH_NUMBERS[month]);
+
+  return events?.filter(event =>
+    dayjs(event.start_time).isSame(monthDate, 'month'),
+  );
+}
+
+export function getEventsForWeek(weekDates, events) {
+  let slottedEvents = [[], [], [], [], [], [], []];
+
+  events.forEach(event => {
+    let eventDate = dayjs(event.start_time);
+
+    for (let dayIndex = 0; dayIndex < weekDates.length; ++dayIndex) {
+      if (
+        weekDates[dayIndex] &&
+        eventDate.isSame(weekDates[dayIndex].fullDate, 'date')
+      ) {
+        slottedEvents[dayIndex].push(event);
+      }
+    }
+  });
+
+  return slottedEvents;
+}
+
+export function isMonthIndexNearby(indexInQuestion, focalMonthIndex) {
+  return (
+    indexInQuestion >= focalMonthIndex - 1 &&
+    indexInQuestion <= focalMonthIndex + 1
+  );
+}
