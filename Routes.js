@@ -65,6 +65,7 @@ import {setSubscription} from './src/redux/slices/subscriptionSlice';
 import * as Sentry from '@sentry/react-native';
 import {useTheme} from './src/hooks/useTheme';
 import {SafeAreaView} from 'react-native';
+import CalendarScreen from './src/screens/CalendarScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -439,6 +440,11 @@ function HomeTabs() {
       <Tab.Screen name="Binders" component={BindersIndexScreen} />
       <Tab.Screen name="Sets" component={SetlistsIndexScreen} />
       <Tab.Screen name="Members" component={MembersIndexScreen} />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{headerShown: false}}
+      />
     </Tab.Navigator>
   );
 }

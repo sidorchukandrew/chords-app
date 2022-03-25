@@ -14,12 +14,14 @@ import {useSelector} from 'react-redux';
 import {selectCurrentTeam} from '../redux/slices/authSlice';
 import ProfilePicture from './ProfilePicture';
 import {useTheme} from '../hooks/useTheme';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
 
 export default function AppMenu({visible, onClose, onNavigateTo}) {
   const sheetRef = useRef();
   const [windowWidth, setWindowWidth] = useState(0);
   const currentTeam = useSelector(selectCurrentTeam);
   const window = useWindowDimensions();
+  const currentSubscription = useSelector(selectCurrentSubscription);
   const {isConnected} = useNetInfo();
   const {surface, text, isDark} = useTheme();
 
@@ -125,6 +127,19 @@ export default function AppMenu({visible, onClose, onNavigateTo}) {
           />
           <Text style={[styles.text, text.secondary]}>Team members</Text>
         </RectButton>
+
+        {currentSubscription.isPro && (
+          <RectButton
+            styles={styles.button}
+            onPress={() => handleNavigateTo('Calendar')}>
+            <Icon
+              name="calendar-month"
+              size={20}
+              style={[styles.icon, text.secondary]}
+            />
+            <Text style={[styles.text, text.secondary]}>Calendar</Text>
+          </RectButton>
+        )}
 
         <RectButton
           styles={styles.button}

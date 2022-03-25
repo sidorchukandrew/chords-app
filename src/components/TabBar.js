@@ -36,7 +36,7 @@ export default function TabBar({state, navigation}) {
         <Pressable style={styles.button} onPress={() => setMenuVisible(true)}>
           <Icon name="menu" size={20} style={text.secondary} />
           {shouldShowLabels && (
-            <Text style={[styles.gray, styles.buttonText]}>Menu</Text>
+            <Text style={[text.secondary, styles.buttonText]}>Menu</Text>
           )}
         </Pressable>
         <Pressable
