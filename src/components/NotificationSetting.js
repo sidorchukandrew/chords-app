@@ -35,7 +35,7 @@ export default function NotificationSetting({category, setting, onChange}) {
             }
           />
         </View>
-        <View style={[styles.type, {borderBottomWidth: 0}]}>
+        <View style={[styles.type, border.primary]}>
           <ToggleField
             style={styles.field}
             label="Text message"
@@ -43,13 +43,14 @@ export default function NotificationSetting({category, setting, onChange}) {
             onChange={newValue => handleUpdateSetting('sms_enabled', newValue)}
           />
         </View>
-        {/* <View style={[styles.type, {borderBottomWidth: 0}]}>
-          <Text style={styles.typeText}>Push</Text>
-          <Toggle
-            enabled={setting.app_enabled}
-            onChange={newValue => handleUpdateSetting('app_enabled', newValue)}
+        <View style={[styles.type, {borderBottomWidth: 0}]}>
+          <ToggleField
+            style={styles.field}
+            label="App (Push)"
+            value={setting.push_enabled}
+            onChange={newValue => handleUpdateSetting('push_enabled', newValue)}
           />
-        </View> */}
+        </View>
       </View>
     </View>
   );

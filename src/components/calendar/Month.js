@@ -4,7 +4,6 @@ import Week from './Week';
 import {getCalendarDates, MONTH_NUMBERS} from '../../utils/calendar';
 
 function Month({height, month, events}) {
-  console.log(month, ' rerendered');
   const [weeks] = useState(() => {
     const monthName = month?.split(' ')?.[0];
     const year = month?.split(' ')?.[1];

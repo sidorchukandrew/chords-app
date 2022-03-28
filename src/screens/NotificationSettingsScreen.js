@@ -44,17 +44,19 @@ export default function NotificationSettingsScreen() {
     });
   }
 
-  if (loading) return <LoadingIndicator />;
-
   return (
     <ScrollView style={[styles.screen, surface.primary]}>
-      <Container padded>
-        <NotificationSetting
-          category="Event reminders"
-          setting={getEventReminderSettings()}
-          onChange={handleChange}
-        />
-      </Container>
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
+        <Container padded>
+          <NotificationSetting
+            category="Event reminders"
+            setting={getEventReminderSettings()}
+            onChange={handleChange}
+          />
+        </Container>
+      )}
     </ScrollView>
   );
 }

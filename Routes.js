@@ -42,6 +42,7 @@ import {getAllSongs} from './src/services/songsService';
 import {reportError} from './src/utils/error';
 import {
   loginTeam,
+  selectCurrentUser,
   selectIsLoggedIn,
   setCurrentUser,
   setMembership,
@@ -66,12 +67,14 @@ import * as Sentry from '@sentry/react-native';
 import {useTheme} from './src/hooks/useTheme';
 import {SafeAreaView} from 'react-native';
 import CalendarScreen from './src/screens/CalendarScreen';
+import OneSignal from 'react-native-onesignal';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const currentUser = useSelector(selectCurrentUser);
   const intervalRef = useRef();
   const {isConnected} = useNetInfo();
   const {surface, text} = useTheme();
@@ -166,6 +169,20 @@ export default function Routes() {
 
     return () => clearTimeout(timeoutId);
   }, [isConnected, isLoggedIn]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      console.log('Registering with onesignal: ', currentUser.uid);
+      OneSignal.setExternalUserId(currentUser.uid, results => {
+        // The results will contain push and email success statuses
+        console.log('Results of setting external user id');
+        console.log(results);
+      });
+    } else {
+      console.log('Unregistering with onesignal');
+      OneSignal.removeExternalUserId();
+    }
+  }, [isLoggedIn, currentUser]);
 
   return (
     <SafeAreaView

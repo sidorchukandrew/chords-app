@@ -3827,7 +3827,7 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
-invariant@^2.2.4:
+invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -6128,6 +6128,13 @@ react-native-mmkv@^1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-1.6.2.tgz#2945203a3a8278f5c2cb935bf9bb789bbe5fa91e"
   integrity sha512-sNPzTQdVHuwQsjsF8rAUYYrZQHU733TOk7FT87tJqaPYbkm6jumat8THbnk+gIWkH03DZfEDD8xsBy6G0++kBQ==
+
+react-native-onesignal@^4.3.7:
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.3.7.tgz#488319cd1912958613feef81c83b2b720a38a88e"
+  integrity sha512-oBTja1n2puwF5XuYPbEaBpvaWGiV5lkVX+zWndQe/dRcIgtIEJzVZqeaqxZ3u30ImxFoyCXqUzup2BiuQFewFw==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-pdf@^6.4.0:
   version "6.4.0"
