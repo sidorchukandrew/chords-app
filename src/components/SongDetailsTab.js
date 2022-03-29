@@ -12,6 +12,7 @@ import ThemeOptionsBottomSheet from './ThemeOptionsBottomSheet';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 import {useTheme} from '../hooks/useTheme';
+import AddTracksBottomSheet from './AddTracksBottomSheet';
 
 export default function SongDetailsTab({
   song,
@@ -25,6 +26,7 @@ export default function SongDetailsTab({
   const [themeOptionsVisible, setThemeOptionsVisible] = useState(false);
   const [themeBeingViewed, setThemeBeingViewed] = useState();
   const currentMember = useSelector(selectCurrentMember);
+  const [addTracksVisible, setAddTracksVisible] = useState(false);
   const {text, blue} = useTheme();
 
   function handleOpenGenreOptionsSheet(genre) {
@@ -80,6 +82,24 @@ export default function SongDetailsTab({
         <Detail title="Artist" data={song.artist} border />
         <Detail title="BPM" data={song.bpm} border />
         <Detail title="Meter" data={song.meter} />
+      </Section>
+      <Divider size="lg" />
+      <Section
+        title="Tracks"
+        showButton={currentMember.can(EDIT_SONGS)}
+        button={
+          <TouchableOpacity
+            style={styles.plusButton}
+            onPress={() => setAddTracksVisible(true)}
+            disabled={!isConnected}>
+            <Icon
+              color={isConnected ? blue.text.color : text.disabled}
+              size={20}
+              name="plus"
+            />
+          </TouchableOpacity>
+        }>
+        <ScrollView horizontal />
       </Section>
       <Divider size="lg" />
       <Section
@@ -164,6 +184,10 @@ export default function SongDetailsTab({
         song={song}
         onThemeRemoved={handleThemeRemoved}
         isConnected={isConnected}
+      />
+      <AddTracksBottomSheet
+        visible={addTracksVisible}
+        onDismiss={() => setAddTracksVisible(false)}
       />
     </ScrollView>
   );
