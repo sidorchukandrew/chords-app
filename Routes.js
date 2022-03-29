@@ -172,14 +172,8 @@ export default function Routes() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log('Registering with onesignal: ', currentUser.uid);
-      OneSignal.setExternalUserId(currentUser.uid, results => {
-        // The results will contain push and email success statuses
-        console.log('Results of setting external user id');
-        console.log(results);
-      });
+      OneSignal.setExternalUserId(currentUser.uid, results => {});
     } else {
-      console.log('Unregistering with onesignal');
       OneSignal.removeExternalUserId();
     }
   }, [isLoggedIn, currentUser]);

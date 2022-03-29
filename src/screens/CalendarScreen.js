@@ -33,11 +33,11 @@ export default function CalendarScreen() {
   return (
     <View style={[styles.screen, surface.primary]}>
       <Calendar events={events} />
-      {currentMember.can(ADD_EVENTS) && (
+      {/* {currentMember.can(ADD_EVENTS) && (
         <CircleButton style={styles.addButton} disabled={!isConnected}>
           <Icon name="plus" size={35} color="white" />
         </CircleButton>
-      )}
+      )} */}
     </View>
   );
 }
