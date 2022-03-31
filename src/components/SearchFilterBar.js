@@ -1,9 +1,13 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import SearchInput from './SearchInput';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../hooks/useTheme';
-export default function SearchFilterBar({query, onQueryChange, placeholder}) {
+export default function SearchFilterBar({
+  query,
+  onQueryChange,
+  placeholder,
+  ...remainingProps
+}) {
   const {border} = useTheme();
   return (
     <View style={styles.centered}>
@@ -12,6 +16,7 @@ export default function SearchFilterBar({query, onQueryChange, placeholder}) {
           value={query}
           onChange={onQueryChange}
           placeholder={placeholder}
+          {...remainingProps}
         />
       </View>
     </View>

@@ -29,7 +29,7 @@ export default function AddTracksBottomSheetScreen({navigation}) {
 
       <RectButton
         styles={styles.sourceButton}
-        onPress={() => navigation.push('Add Apple Music Tracks')}>
+        onPress={() => navigation.push('Add Spotify Tracks')}>
         <View style={styles.iconTextContainer}>
           <Image
             style={styles.appleMusicIcon}
@@ -37,6 +37,21 @@ export default function AddTracksBottomSheetScreen({navigation}) {
           />
 
           <Text style={[styles.sourceButtonText, text.primary]}>Spotify</Text>
+        </View>
+
+        <Icon name="chevron-right" size={18} color={text.primary.color} />
+      </RectButton>
+
+      <RectButton
+        styles={styles.sourceButton}
+        onPress={() => navigation.push('Add YouTube Tracks')}>
+        <View style={styles.iconTextContainer}>
+          <Image
+            style={styles.youtubeIcon}
+            source={require('../img/youtube_icon.png')}
+          />
+
+          <Text style={[styles.sourceButtonText, text.primary]}>YouTube</Text>
         </View>
 
         <Icon name="chevron-right" size={18} color={text.primary.color} />
@@ -64,5 +79,9 @@ const styles = StyleSheet.create({
   iconTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  youtubeIcon: {
+    width: 25,
+    height: 18,
   },
 });

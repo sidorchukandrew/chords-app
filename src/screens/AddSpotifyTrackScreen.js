@@ -1,20 +1,20 @@
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import {StyleSheet, SafeAreaView, View} from 'react-native';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {FlatList} from 'react-native-gesture-handler';
 import {useTheme} from '../hooks/useTheme';
 import {reportError} from '../utils/error';
 import _ from 'lodash';
 import SearchTracksApi from '../api/searchTracksApi';
-import AppleMusicTrackResult from '../components/AppleMusicTrackResult';
 import ItemSeparator from '../components/ItemSeparator';
 import NoDataMessage from '../components/NoDataMessage';
+import SpotifyTrackResult from '../components/SpotifyTrackResult';
 import SearchFilterBar from '../components/SearchFilterBar';
-import LoadingIndicator from '../components/LoadingIndicator';
-import {pluralize} from '../utils/string';
 import Button from '../components/Button';
+import {pluralize} from '../utils/string';
+import LoadingIndicator from '../components/LoadingIndicator';
 import {CurrentSongContext} from '../components/AddTracksBottomSheet';
 
-export default function AddAppleMusicTrackScreen() {
+export default function AddSpotifyTrackScreen() {
   const song = useContext(CurrentSongContext);
   const {surface, isDark} = useTheme();
   const [searchResults, setSearchResults] = useState([]);
@@ -26,8 +26,8 @@ export default function AddAppleMusicTrackScreen() {
     async function fetchData() {
       try {
         setLoading(true);
-        let {data} = await SearchTracksApi.searchAppleMusic(song.name);
-        setSearchResults(data?.results?.songs?.data);
+        let {data} = await SearchTracksApi.searchSpotify(song.name);
+        setSearchResults(data?.tracks?.items);
       } catch (error) {
         reportError(error);
       } finally {
@@ -46,8 +46,8 @@ export default function AddAppleMusicTrackScreen() {
       async newQuery => {
         try {
           setLoading(true);
-          let {data} = await SearchTracksApi.searchAppleMusic(newQuery);
-          setSearchResults(data?.results?.songs?.data);
+          let {data} = await SearchTracksApi.searchSpotify(newQuery);
+          setSearchResults(data?.tracks?.items);
         } catch (error) {
           reportError(error);
         } finally {
@@ -71,11 +71,10 @@ export default function AddAppleMusicTrackScreen() {
     let selected = !!selectedTracks.find(
       selectedTrack => selectedTrack.id === track.id,
     );
-
     return (
-      <AppleMusicTrackResult
-        track={track}
+      <SpotifyTrackResult
         selected={selected}
+        track={track}
         onPress={handleToggleTrack}
       />
     );

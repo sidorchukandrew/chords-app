@@ -188,6 +188,7 @@ export default function SongDetailsTab({
       <AddTracksBottomSheet
         visible={addTracksVisible}
         onDismiss={() => setAddTracksVisible(false)}
+        song={song}
       />
     </ScrollView>
   );

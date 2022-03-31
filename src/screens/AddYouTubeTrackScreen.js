@@ -5,20 +5,22 @@ import {useTheme} from '../hooks/useTheme';
 import {reportError} from '../utils/error';
 import _ from 'lodash';
 import SearchTracksApi from '../api/searchTracksApi';
-import AppleMusicTrackResult from '../components/AppleMusicTrackResult';
 import ItemSeparator from '../components/ItemSeparator';
 import NoDataMessage from '../components/NoDataMessage';
 import SearchFilterBar from '../components/SearchFilterBar';
+import YouTubeTrackResult from '../components/YouTubeTrackResult';
 import LoadingIndicator from '../components/LoadingIndicator';
 import {pluralize} from '../utils/string';
 import Button from '../components/Button';
 import {CurrentSongContext} from '../components/AddTracksBottomSheet';
 
-export default function AddAppleMusicTrackScreen() {
+export default function YouTubeTrackScreen() {
   const song = useContext(CurrentSongContext);
   const {surface, isDark} = useTheme();
   const [searchResults, setSearchResults] = useState([]);
-  const [query, setQuery] = useState(song?.name || '');
+  const [query, setQuery] = useState(() => {
+    return song?.name ? `${song.name} ${song.artist || ''}` : '';
+  });
   const [loading, setLoading] = useState(false);
   const [selectedTracks, setSelectedTracks] = useState([]);
 
@@ -26,8 +28,10 @@ export default function AddAppleMusicTrackScreen() {
     async function fetchData() {
       try {
         setLoading(true);
-        let {data} = await SearchTracksApi.searchAppleMusic(song.name);
-        setSearchResults(data?.results?.songs?.data);
+        let {data} = await SearchTracksApi.searchYouTube(
+          `${song.name} ${song.artist || ''}`,
+        );
+        setSearchResults(data?.items);
       } catch (error) {
         reportError(error);
       } finally {
@@ -46,15 +50,15 @@ export default function AddAppleMusicTrackScreen() {
       async newQuery => {
         try {
           setLoading(true);
-          let {data} = await SearchTracksApi.searchAppleMusic(newQuery);
-          setSearchResults(data?.results?.songs?.data);
+          let {data} = await SearchTracksApi.searchYouTube(newQuery);
+          setSearchResults(data?.items);
         } catch (error) {
           reportError(error);
         } finally {
           setLoading(false);
         }
       },
-      [700],
+      [1000],
     ),
     [],
   );
@@ -69,11 +73,10 @@ export default function AddAppleMusicTrackScreen() {
 
   function renderSongRow({item: track}) {
     let selected = !!selectedTracks.find(
-      selectedTrack => selectedTrack.id === track.id,
+      selectedTrack => selectedTrack.id?.videoId === track.id?.videoId,
     );
-
     return (
-      <AppleMusicTrackResult
+      <YouTubeTrackResult
         track={track}
         selected={selected}
         onPress={handleToggleTrack}
@@ -86,7 +89,9 @@ export default function AddAppleMusicTrackScreen() {
       if (isSelected) {
         return currentTracks.concat(track);
       } else {
-        return currentTracks.filter(trackInList => trackInList.id !== track.id);
+        return currentTracks.filter(
+          trackInList => trackInList.id?.videoId !== track.id?.videoId,
+        );
       }
     });
   }
@@ -110,7 +115,8 @@ export default function AddAppleMusicTrackScreen() {
             data={searchResults}
             renderItem={renderSongRow}
             style={styles.flex}
-            ListEmptyComponent={<NoDataMessage message="No songs to show" />}
+            keyExtractor={item => item.id?.videoId}
+            ListEmptyComponent={<NoDataMessage message="No results to show" />}
           />
         )}
         <View style={styles.buttonContainer}>
