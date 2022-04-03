@@ -13,9 +13,10 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import {pluralize} from '../utils/string';
 import Button from '../components/Button';
 import {CurrentSongContext} from '../components/AddTracksBottomSheet';
+import {addTracksToSong} from '../services/tracksService';
 
 export default function YouTubeTrackScreen() {
-  const song = useContext(CurrentSongContext);
+  const {song, onTracksAdded} = useContext(CurrentSongContext);
   const {surface, isDark} = useTheme();
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState(() => {
@@ -23,6 +24,7 @@ export default function YouTubeTrackScreen() {
   });
   const [loading, setLoading] = useState(false);
   const [selectedTracks, setSelectedTracks] = useState([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -42,7 +44,7 @@ export default function YouTubeTrackScreen() {
     if (song) {
       fetchData();
     }
-  }, [song]);
+  }, [song.name, song.artist]);
 
   // eslint-disable-next-line
   const debounce = useCallback(
@@ -96,6 +98,28 @@ export default function YouTubeTrackScreen() {
     });
   }
 
+  async function handleSaveTracks() {
+    try {
+      let trackRequests = selectedTracks.map(selectedTrack => ({
+        source: 'YouTube',
+        external_id: selectedTrack.id?.videoId,
+        url: `https://www.youtube.com/watch/${selectedTrack.id?.videoId}`,
+        artwork_url:
+          selectedTrack?.snippet?.thumbnails?.standard?.url ||
+          selectedTrack?.snippet?.thumbnails?.default?.url,
+        name: selectedTrack.snippet?.title,
+      }));
+
+      let tracks = await addTracksToSong(song.id, trackRequests);
+      onTracksAdded(tracks);
+      setSelectedTracks([]);
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.flex}>
       <View
@@ -120,7 +144,9 @@ export default function YouTubeTrackScreen() {
           />
         )}
         <View style={styles.buttonContainer}>
-          <Button disabled={selectedTracks.length === 0}>
+          <Button
+            disabled={selectedTracks.length === 0 || saving}
+            onPress={handleSaveTracks}>
             Add {selectedTracks.length} {pluralize(selectedTracks, 'track')}
           </Button>
         </View>
@@ -130,7 +156,7 @@ export default function YouTubeTrackScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {paddingHorizontal: 15, flex: 1},
+  screen: {paddingHorizontal: 15, flex: 1, paddingBottom: 10},
   searchContainer: {
     marginBottom: 8,
   },

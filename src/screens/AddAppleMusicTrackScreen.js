@@ -13,14 +13,16 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import {pluralize} from '../utils/string';
 import Button from '../components/Button';
 import {CurrentSongContext} from '../components/AddTracksBottomSheet';
+import {addTracksToSong} from '../services/tracksService';
 
 export default function AddAppleMusicTrackScreen() {
-  const song = useContext(CurrentSongContext);
+  const {song, onTracksAdded} = useContext(CurrentSongContext);
   const {surface, isDark} = useTheme();
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState(song?.name || '');
   const [loading, setLoading] = useState(false);
   const [selectedTracks, setSelectedTracks] = useState([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -38,7 +40,7 @@ export default function AddAppleMusicTrackScreen() {
     if (song) {
       fetchData();
     }
-  }, [song]);
+  }, [song.name]);
 
   // eslint-disable-next-line
   const debounce = useCallback(
@@ -91,6 +93,33 @@ export default function AddAppleMusicTrackScreen() {
     });
   }
 
+  async function handleSaveTracks() {
+    try {
+      let trackRequests = selectedTracks.map(selectedTrack => {
+        let artworkUrl = selectedTrack?.attributes?.artwork?.url;
+
+        artworkUrl = artworkUrl.replace('{w}', 400);
+        artworkUrl = artworkUrl.replace('{h}', 400);
+
+        return {
+          source: 'Apple Music',
+          external_id: selectedTrack.id,
+          url: selectedTrack.attributes?.url,
+          artwork_url: artworkUrl,
+          name: selectedTrack.attributes?.name,
+        };
+      });
+
+      let tracks = await addTracksToSong(song.id, trackRequests);
+      onTracksAdded(tracks);
+      setSelectedTracks([]);
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.flex}>
       <View
@@ -114,7 +143,9 @@ export default function AddAppleMusicTrackScreen() {
           />
         )}
         <View style={styles.buttonContainer}>
-          <Button disabled={selectedTracks.length === 0}>
+          <Button
+            disabled={selectedTracks.length === 0 || saving}
+            onPress={handleSaveTracks}>
             Add {selectedTracks.length} {pluralize(selectedTracks, 'track')}
           </Button>
         </View>
@@ -124,7 +155,7 @@ export default function AddAppleMusicTrackScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {paddingHorizontal: 15, flex: 1},
+  screen: {paddingHorizontal: 15, flex: 1, paddingBottom: 10},
   searchContainer: {
     marginBottom: 8,
   },

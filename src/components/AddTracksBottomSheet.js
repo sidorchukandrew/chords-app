@@ -12,7 +12,12 @@ import AddYouTubeTrackScreen from '../screens/AddYouTubeTrackScreen';
 const Stack = createNativeStackNavigator();
 export const CurrentSongContext = React.createContext();
 
-export default function AddTracksBottomSheet({visible, onDismiss, song}) {
+export default function AddTracksBottomSheet({
+  visible,
+  onDismiss,
+  song,
+  onTracksAdded,
+}) {
   const sheetRef = useRef();
   const {isDark, surface, text} = useTheme();
 
@@ -26,7 +31,7 @@ export default function AddTracksBottomSheet({visible, onDismiss, song}) {
       onDismiss={onDismiss}
       ref={sheetRef}
       snapIndex={1}>
-      <CurrentSongContext.Provider value={song}>
+      <CurrentSongContext.Provider value={{song, onTracksAdded}}>
         <NavigationContainer
           independent
           theme={{

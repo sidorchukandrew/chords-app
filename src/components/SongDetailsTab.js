@@ -13,6 +13,7 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 import {useTheme} from '../hooks/useTheme';
 import AddTracksBottomSheet from './AddTracksBottomSheet';
+import Track from './Track';
 
 export default function SongDetailsTab({
   song,
@@ -57,6 +58,18 @@ export default function SongDetailsTab({
     onUpdateSong({themes: updatedThemes});
   }
 
+  function handleTrackRemoved(removedTrack) {
+    let updatedTracks = song.tracks?.filter(
+      track => track.id !== removedTrack.id,
+    );
+    onUpdateSong({tracks: updatedTracks});
+  }
+
+  function handleTracksAdded(addedTracks) {
+    let updatedTracks = song.tracks?.concat(addedTracks);
+    onUpdateSong({tracks: updatedTracks});
+  }
+
   return (
     <ScrollView>
       <Section
@@ -99,7 +112,16 @@ export default function SongDetailsTab({
             />
           </TouchableOpacity>
         }>
-        <ScrollView horizontal />
+        <ScrollView horizontal>
+          {song.tracks?.map(track => (
+            <Track
+              key={track.id}
+              song={song}
+              track={track}
+              onRemoved={handleTrackRemoved}
+            />
+          ))}
+        </ScrollView>
       </Section>
       <Divider size="lg" />
       <Section
@@ -189,6 +211,7 @@ export default function SongDetailsTab({
         visible={addTracksVisible}
         onDismiss={() => setAddTracksVisible(false)}
         song={song}
+        onTracksAdded={handleTracksAdded}
       />
     </ScrollView>
   );

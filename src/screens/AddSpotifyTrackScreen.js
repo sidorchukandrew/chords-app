@@ -13,20 +13,22 @@ import Button from '../components/Button';
 import {pluralize} from '../utils/string';
 import LoadingIndicator from '../components/LoadingIndicator';
 import {CurrentSongContext} from '../components/AddTracksBottomSheet';
+import {addTracksToSong} from '../services/tracksService';
 
 export default function AddSpotifyTrackScreen() {
-  const song = useContext(CurrentSongContext);
+  const {song, onTracksAdded} = useContext(CurrentSongContext);
   const {surface, isDark} = useTheme();
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState(song?.name || '');
   const [loading, setLoading] = useState(false);
   const [selectedTracks, setSelectedTracks] = useState([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
-        let {data} = await SearchTracksApi.searchSpotify(song.name);
+        let {data} = await SearchTracksApi.searchSpotify(song?.name);
         setSearchResults(data?.tracks?.items);
       } catch (error) {
         reportError(error);
@@ -38,7 +40,7 @@ export default function AddSpotifyTrackScreen() {
     if (song) {
       fetchData();
     }
-  }, [song]);
+  }, [song.name]);
 
   // eslint-disable-next-line
   const debounce = useCallback(
@@ -90,6 +92,26 @@ export default function AddSpotifyTrackScreen() {
     });
   }
 
+  async function handleSaveTracks() {
+    try {
+      let trackRequests = selectedTracks.map(selectedTrack => ({
+        source: 'Spotify',
+        external_id: selectedTrack.id,
+        url: selectedTrack.external_urls?.spotify,
+        artwork_url: selectedTrack.album?.images?.[0]?.url,
+        name: selectedTrack.name,
+      }));
+
+      let tracks = await addTracksToSong(song.id, trackRequests);
+      onTracksAdded(tracks);
+      setSelectedTracks([]);
+    } catch (error) {
+      reportError(error);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.flex}>
       <View
@@ -113,7 +135,9 @@ export default function AddSpotifyTrackScreen() {
           />
         )}
         <View style={styles.buttonContainer}>
-          <Button disabled={selectedTracks.length === 0}>
+          <Button
+            disabled={selectedTracks.length === 0 || saving}
+            onPress={handleSaveTracks}>
             Add {selectedTracks.length} {pluralize(selectedTracks, 'track')}
           </Button>
         </View>
@@ -123,7 +147,7 @@ export default function AddSpotifyTrackScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {paddingHorizontal: 15, flex: 1},
+  screen: {paddingHorizontal: 15, flex: 1, paddingBottom: 10},
   searchContainer: {
     marginBottom: 8,
   },
