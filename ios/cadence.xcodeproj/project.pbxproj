@@ -22,6 +22,12 @@
 		BAD320778A754DAAB40FB85F /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B4AFD299078440787BB2F23 /* OpenSans-Regular.ttf */; };
 		BD0BBB8D27F1351B00E4635F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0BBB8C27F1351B00E4635F /* NotificationService.swift */; };
 		BD0BBB9127F1351B00E4635F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BD0BBB8A27F1351B00E4635F /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BD47370C280A3B8D00997FBF /* MetronomeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = BD47370B280A3B8D00997FBF /* MetronomeModule.m */; };
+		BD47370D280A3B8D00997FBF /* MetronomeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = BD47370B280A3B8D00997FBF /* MetronomeModule.m */; };
+		BD47370F280A3BB400997FBF /* MetronomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD47370E280A3BB400997FBF /* MetronomeModule.swift */; };
+		BD473710280A3BB400997FBF /* MetronomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD47370E280A3BB400997FBF /* MetronomeModule.swift */; };
+		BD473712280A3E8C00997FBF /* low.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD473711280A3E8C00997FBF /* low.wav */; };
+		BD473713280A3E8C00997FBF /* low.wav in Resources */ = {isa = PBXBuildFile; fileRef = BD473711280A3E8C00997FBF /* low.wav */; };
 		C59621D67B874968BD0950E0 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 483ACC11830240C8903AE042 /* OpenSans-Bold.ttf */; };
 		EBDA884284A44254B430FE58 /* RobotoMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2600ABAEEBF94D9CB7F9C894 /* RobotoMono-BoldItalic.ttf */; };
 		FC9E87A170DDAB876C4B5F77 /* libPods-cadence-cadenceTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E3878DE97FEEBFF23AD281 /* libPods-cadence-cadenceTests.a */; };
@@ -97,6 +103,11 @@
 		BD0BBB8A27F1351B00E4635F /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD0BBB8C27F1351B00E4635F /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		BD0BBB8E27F1351B00E4635F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BD473703280A394E00997FBF /* cadence-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cadence-Bridging-Header.h"; sourceTree = "<group>"; };
+		BD473704280A394E00997FBF /* cadenceTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cadenceTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		BD47370B280A3B8D00997FBF /* MetronomeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetronomeModule.m; sourceTree = "<group>"; };
+		BD47370E280A3BB400997FBF /* MetronomeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeModule.swift; sourceTree = "<group>"; };
+		BD473711280A3E8C00997FBF /* low.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = low.wav; path = "../../chords-webapp/src/clicks/low.wav"; sourceTree = "<group>"; };
 		BDC254B827F1367900C7976A /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		C18A2F3E7BCDD24184252146 /* Pods-cadence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cadence.release.xcconfig"; path = "Target Support Files/Pods-cadence/Pods-cadence.release.xcconfig"; sourceTree = "<group>"; };
 		D32EE779D92C4DED8BD9FB38 /* OpenSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-BoldItalic.ttf"; path = "../assets/fonts/OpenSans-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -190,6 +201,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				BD473711280A3E8C00997FBF /* low.wav */,
+				BD47370E280A3BB400997FBF /* MetronomeModule.swift */,
+				BD47370B280A3B8D00997FBF /* MetronomeModule.m */,
 				13B07FAE1A68108700A75B9A /* cadence */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* cadenceTests */,
@@ -198,6 +212,8 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				CA881377AFD24CEFC4367F23 /* Pods */,
 				E8B29E2BD4024C1F971A382B /* Resources */,
+				BD473703280A394E00997FBF /* cadence-Bridging-Header.h */,
+				BD473704280A394E00997FBF /* cadenceTests-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -345,10 +361,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 1330;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1330;
 					};
 					BD0BBB8927F1351B00E4635F = {
 						CreatedOnToolsVersion = 13.3;
@@ -380,6 +397,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD473713280A3E8C00997FBF /* low.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +411,7 @@
 				EBDA884284A44254B430FE58 /* RobotoMono-BoldItalic.ttf in Resources */,
 				826CFBA519984B33A100DFDB /* RobotoMono-Italic.ttf in Resources */,
 				09F812C4E995401A8E2F0195 /* RobotoMono-Regular.ttf in Resources */,
+				BD473712280A3E8C00997FBF /* low.wav in Resources */,
 				C59621D67B874968BD0950E0 /* OpenSans-Bold.ttf in Resources */,
 				B4404E70A14E47CDBFA5F31D /* OpenSans-BoldItalic.ttf in Resources */,
 				B7EF3699E7D84D028C9203FF /* OpenSans-Italic.ttf in Resources */,
@@ -584,6 +603,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD473710280A3BB400997FBF /* MetronomeModule.swift in Sources */,
+				BD47370D280A3B8D00997FBF /* MetronomeModule.m in Sources */,
 				00E356F31AD99517003FC87E /* cadenceTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -592,8 +613,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD47370F280A3BB400997FBF /* MetronomeModule.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				BD47370C280A3B8D00997FBF /* MetronomeModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,7 +648,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FF3663D5FAAA17E767681712 /* Pods-cadence-cadenceTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 8RJQ79HLF3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -645,6 +670,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "cadenceTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/cadence.app/cadence";
 			};
 			name = Debug;
@@ -653,7 +681,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9415681A430E3658FD24F948 /* Pods-cadence-cadenceTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 8RJQ79HLF3;
 				INFOPLIST_FILE = cadenceTests/Info.plist;
@@ -670,6 +700,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "cadenceTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/cadence.app/cadence";
 			};
 			name = Release;
@@ -699,6 +731,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = cadence;
+				SWIFT_OBJC_BRIDGING_HEADER = "cadence-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -730,6 +763,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = cadence;
+				SWIFT_OBJC_BRIDGING_HEADER = "cadence-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
