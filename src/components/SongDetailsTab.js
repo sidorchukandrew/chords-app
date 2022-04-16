@@ -12,6 +12,9 @@ import ThemeOptionsBottomSheet from './ThemeOptionsBottomSheet';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
 import {useTheme} from '../hooks/useTheme';
+import AddTracksBottomSheet from './AddTracksBottomSheet';
+import Track from './Track';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
 
 export default function SongDetailsTab({
   song,
@@ -25,7 +28,9 @@ export default function SongDetailsTab({
   const [themeOptionsVisible, setThemeOptionsVisible] = useState(false);
   const [themeBeingViewed, setThemeBeingViewed] = useState();
   const currentMember = useSelector(selectCurrentMember);
+  const [addTracksVisible, setAddTracksVisible] = useState(false);
   const {text, blue} = useTheme();
+  const currentSubscription = useSelector(selectCurrentSubscription);
 
   function handleOpenGenreOptionsSheet(genre) {
     if (currentMember.can(EDIT_SONGS)) {
@@ -55,6 +60,18 @@ export default function SongDetailsTab({
     onUpdateSong({themes: updatedThemes});
   }
 
+  function handleTrackRemoved(removedTrack) {
+    let updatedTracks = song.tracks?.filter(
+      track => track.id !== removedTrack.id,
+    );
+    onUpdateSong({tracks: updatedTracks});
+  }
+
+  function handleTracksAdded(addedTracks) {
+    let updatedTracks = song.tracks?.concat(addedTracks);
+    onUpdateSong({tracks: updatedTracks});
+  }
+
   return (
     <ScrollView>
       <Section
@@ -81,6 +98,37 @@ export default function SongDetailsTab({
         <Detail title="BPM" data={song.bpm} border />
         <Detail title="Meter" data={song.meter} />
       </Section>
+      {currentSubscription.isPro && (
+        <>
+          <Divider size="lg" />
+          <Section
+            title="Tracks"
+            showButton={currentMember.can(EDIT_SONGS)}
+            button={
+              <TouchableOpacity
+                style={styles.plusButton}
+                onPress={() => setAddTracksVisible(true)}
+                disabled={!isConnected}>
+                <Icon
+                  color={isConnected ? blue.text.color : text.disabled}
+                  size={20}
+                  name="plus"
+                />
+              </TouchableOpacity>
+            }>
+            <ScrollView horizontal>
+              {song.tracks?.map(track => (
+                <Track
+                  key={track.id}
+                  song={song}
+                  track={track}
+                  onRemoved={handleTrackRemoved}
+                />
+              ))}
+            </ScrollView>
+          </Section>
+        </>
+      )}
       <Divider size="lg" />
       <Section
         title="Themes"
@@ -164,6 +212,12 @@ export default function SongDetailsTab({
         song={song}
         onThemeRemoved={handleThemeRemoved}
         isConnected={isConnected}
+      />
+      <AddTracksBottomSheet
+        visible={addTracksVisible}
+        onDismiss={() => setAddTracksVisible(false)}
+        song={song}
+        onTracksAdded={handleTracksAdded}
       />
     </ScrollView>
   );

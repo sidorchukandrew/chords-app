@@ -11,7 +11,7 @@ export function constructAuthHeaders() {
 }
 
 export function getTeamId() {
-  return store.getState()?.auth?.currentTeam.id;
+  return store.getState()?.auth?.currentTeam?.id;
 }
 
 export const ADD_SONGS = 'Add songs';

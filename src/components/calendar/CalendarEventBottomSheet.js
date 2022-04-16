@@ -21,7 +21,7 @@ export default function CalendarEventBottomSheet({visible, onDismiss, event}) {
   return (
     <BottomSheet ref={sheetRef} snapPoints={['85%']} onDismiss={onDismiss}>
       <View style={styles.sheetContainer}>
-        <View style={styles.actionsContainer}>
+        {/* <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.action}>
             <Icon
               name="pencil-outline"
@@ -33,7 +33,7 @@ export default function CalendarEventBottomSheet({visible, onDismiss, event}) {
           <TouchableOpacity style={styles.action}>
             <Icon name="delete" size={22} color={text.secondary.color} />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <ScrollView>
           <View style={[styles.headerContainer, styles.row]}>

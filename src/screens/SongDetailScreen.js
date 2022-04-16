@@ -62,6 +62,7 @@ export default function SongDetailScreen({navigation, route}) {
     navigation.setOptions({
       headerStyle: surface.primary,
       headerTitleStyle: text.primary,
+      title: song?.name,
       headerRight: () => (
         <TouchableOpacity
           style={[{padding: 3, borderRadius: 50}, surface.tertiary]}
@@ -70,7 +71,7 @@ export default function SongDetailScreen({navigation, route}) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, text, surface, blue]);
+  }, [navigation, text, surface, blue, song?.name]);
 
   function handlePerformSong() {
     dispatch(setSongOnScreen(song));
