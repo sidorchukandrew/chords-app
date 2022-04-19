@@ -10,12 +10,21 @@ export default function SongToolsBottomSheetScreen({navigation}) {
 
   return (
     <ScrollView contentContainerStyle={[styles.screen]}>
-      <RectButton
+      {/* <RectButton
         styles={styles.toolButton}
         onPress={() => navigation.push('Autoscroll')}>
         <View style={styles.toolLeftContainer}>
           <Icon name="mouse" size={22} color={blue.text.color} />
           <Text style={[styles.buttonText, text.primary]}>Autoscroll</Text>
+        </View>
+        <Icon name="chevron-right" size={18} color={text.primary.color} />
+      </RectButton> */}
+      <RectButton
+        styles={styles.toolButton}
+        onPress={() => navigation.push('Metronome')}>
+        <View style={styles.toolLeftContainer}>
+          <Icon name="metronome" size={22} color={blue.text.color} />
+          <Text style={[styles.buttonText, text.primary]}>Metronome</Text>
         </View>
         <Icon name="chevron-right" size={18} color={text.primary.color} />
       </RectButton>

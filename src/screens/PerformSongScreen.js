@@ -20,6 +20,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import PerformSongHeaderButtons from '../components/PerformSongHeaderButtons';
 import SongToolsBottomSheet from '../components/SongToolsBottomSheet';
 import {SPEEDS} from '../utils/autoscroll';
+import metronome from '../utils/metronome';
 
 export default function PerformSongScreen({navigation}) {
   const {width} = useWindowDimensions();
@@ -31,7 +32,7 @@ export default function PerformSongScreen({navigation}) {
   const [toolsSheetVisible, setToolsSheetVisible] = useState(false);
   const {surface, text} = useTheme();
   const scrollRef = useRef();
-  const [scrollPositionY, setScrollPositionY] = useState(0);
+  // const [scrollPositionY, setScrollPositionY] = useState(0);
   const [scrollHeight, setScrollHeight] = useState(0);
 
   const onFocusEffect = useCallback(() => {
@@ -57,19 +58,23 @@ export default function PerformSongScreen({navigation}) {
   }, [dispatch]);
 
   useEffect(() => {
-    let {distance, interval} = SPEEDS[song.scroll_speed];
-    let id;
-    if (song.is_scrolling && scrollPositionY + distance < scrollHeight) {
-      id = setInterval(() => {
-        scrollRef.current.scrollTo({
-          x: 0,
-          y: scrollPositionY + distance,
-        });
-      }, interval);
-    }
+    return () => metronome.stop();
+  }, []);
 
-    return () => clearInterval(id);
-  }, [song.is_scrolling, song.scroll_speed, scrollPositionY, scrollHeight]);
+  // useEffect(() => {
+  //   let {distance, interval} = SPEEDS[song.scroll_speed];
+  //   let id;
+  //   if (song.is_scrolling && scrollPositionY + distance < scrollHeight) {
+  //     id = setInterval(() => {
+  //       scrollRef.current.scrollTo({
+  //         x: 0,
+  //         y: scrollPositionY + distance,
+  //       });
+  //     }, interval);
+  //   }
+
+  //   return () => clearInterval(id);
+  // }, [song.is_scrolling, song.scroll_speed, scrollPositionY, scrollHeight]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -102,16 +107,16 @@ export default function PerformSongScreen({navigation}) {
     dispatch(updateSongOnScreen({notes: updatedNotes}));
   }
 
-  function handleScroll(e) {
-    console.log(e.nativeEvent.contentOffset.y);
-    setScrollPositionY(e.nativeEvent.contentOffset.y);
-  }
+  // function handleScroll(e) {
+  //   // console.log(e.nativeEvent.contentOffset.y);
+  //   setScrollPositionY(e.nativeEvent.contentOffset.y);
+  // }
 
   return (
     <View style={[surface.primary, {flex: 1}]}>
       <ScrollView
         ref={scrollRef}
-        onScroll={handleScroll}
+        // onScroll={handleScroll}
         style={[styles.container, surface.primary]}
         scrollEventThrottle={6}
         pinchGestureEnabled

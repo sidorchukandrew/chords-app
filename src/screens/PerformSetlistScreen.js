@@ -1,11 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {
   clearEdits,
   selectSongOnScreen,
@@ -13,14 +7,10 @@ import {
   updateSongOnScreen,
 } from '../redux/slices/performanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
-
-import Button from '../components/Button';
 import Carousel from 'react-native-snap-carousel';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
 import SaveChangesBottomBar from '../components/SaveChangesBottomBar';
 import SongContent from '../components/SongContent';
-import {hasAnyKeysSet} from '../utils/song';
 import Roadmap from '../components/Roadmap';
 import Note from '../components/Note';
 import SetlistNavigation from '../components/SetlistNavigation';
@@ -32,6 +22,9 @@ import {
   selectShowSetlistNavigation,
 } from '../redux/slices/appearanceSlice';
 import {AvoidSoftInput} from 'react-native-avoid-softinput';
+import PerformSongHeaderButtons from '../components/PerformSongHeaderButtons';
+import SongToolsBottomSheet from '../components/SongToolsBottomSheet';
+import metronome from '../utils/metronome';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const {width} = useWindowDimensions();
@@ -47,6 +40,7 @@ export default function PerformSetlistScreen({navigation, route}) {
   const [songIndex, setSongIndex] = useState(0);
   const [keyOptionsSheetVisible, setKeyOptionsSheetVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
+  const [toolsSheetVisible, setToolsSheetVisible] = useState(false);
   const songOnScreen = useSelector(selectSongOnScreen);
   const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
   const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
@@ -92,27 +86,19 @@ export default function PerformSetlistScreen({navigation, route}) {
       headerStyle: surface.primary,
       title: songs[songIndex]?.name,
       headerRight: () => (
-        <View style={styles.headerButtonsContainer}>
-          {hasAnyKeysSet(songs[songIndex]) && (
-            <Button
-              style={styles.keyButton}
-              onPress={() => setKeyOptionsSheetVisible(true)}>
-              {(songs[songIndex].show_capo &&
-                songs[songIndex].capo?.capo_key) ||
-                (songs[songIndex].show_transposed &&
-                  songs[songIndex].transposed_key) ||
-                songs[songIndex].original_key}
-            </Button>
-          )}
-          <TouchableOpacity
-            style={{padding: 3}}
-            onPress={() => setAdjustmentsSheetVisible(true)}>
-            <Icon name="tune-vertical" size={22} color={blue.text.color} />
-          </TouchableOpacity>
-        </View>
+        <PerformSongHeaderButtons
+          song={songs[songIndex]}
+          toggleKeyOptionsVisible={setKeyOptionsSheetVisible}
+          toggleAdjustmentsSheetVisible={setAdjustmentsSheetVisible}
+          toggleToolsSheetVisible={setToolsSheetVisible}
+        />
       ),
     });
   }, [navigation, songIndex, songs, surface, text, blue]);
+
+  useEffect(() => {
+    return () => metronome.stop();
+  }, []);
 
   function renderSlide({item: song, index}) {
     if (!song) {
@@ -175,6 +161,7 @@ export default function PerformSetlistScreen({navigation, route}) {
 
   function handleSwipedToSong(index) {
     setSongIndex(index);
+    metronome.stop();
     dispatch(setSongOnScreen(songs[index]));
     carouselRef.current.snapToItem(index, true);
   }
@@ -225,6 +212,10 @@ export default function PerformSetlistScreen({navigation, route}) {
       <SetlistAdjustmentsBottomSheet
         visible={adjustmentsSheetVisible}
         onDismiss={() => setAdjustmentsSheetVisible(false)}
+      />
+      <SongToolsBottomSheet
+        visible={toolsSheetVisible}
+        onDismiss={() => setToolsSheetVisible(false)}
       />
     </View>
   );

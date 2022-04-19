@@ -6,7 +6,6 @@ import {useTheme} from '../hooks/useTheme';
 
 function SongContent({song}) {
   const {text} = useTheme();
-  console.log('Content rerendered');
   return <View style={styles.content}>{buildContent(song, text.primary)}</View>;
 }
 
