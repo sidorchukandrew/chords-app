@@ -18,6 +18,9 @@ export default function ConfirmDeleteModal({
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
+    else {
+      sheetRef.current?.dismiss();
+    }
   }, [visible, sheetRef]);
 
   function handleCancel() {

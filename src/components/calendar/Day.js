@@ -3,7 +3,13 @@ import React from 'react';
 import {useTheme} from '../../hooks/useTheme';
 import CalendarEvent from './CalendarEvent';
 
-export default function Day({border = true, date, surfaceColor, events}) {
+export default function Day({
+  border = true,
+  date,
+  surfaceColor,
+  events,
+  onDeleted,
+}) {
   const {border: borderColor, text, blue, isDark} = useTheme();
   return (
     <View
@@ -28,7 +34,7 @@ export default function Day({border = true, date, surfaceColor, events}) {
 
       <View>
         {events?.map(event => (
-          <CalendarEvent event={event} key={event.id} />
+          <CalendarEvent event={event} key={event.id} onDeleted={onDeleted} />
         ))}
       </View>
     </View>
@@ -57,5 +63,9 @@ const styles = StyleSheet.create({
   },
   rounded: {
     borderRadius: 50,
+    width: 27,
+    height: 27,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -11,3 +11,7 @@ export function createTeam(team) {
 export function getAllTeams() {
   return TeamsApi.getAll();
 }
+
+export function getMembersOnCurrentTeam() {
+  return TeamsApi.getMemberships();
+}

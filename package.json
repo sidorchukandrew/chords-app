@@ -54,6 +54,7 @@
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-swipeable-item": "^2.0.2",
     "react-native-vector-icons": "^9.0.0",
+    "react-native-wheely": "^0.4.1",
     "react-redux": "^7.2.6",
     "rn-material-ui-textfield": "^1.0.5",
     "zxcvbn": "^4.4.2"

@@ -2,9 +2,26 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {getTimeFromDate} from '../../utils/date';
 import CalendarEventBottomSheet from './CalendarEventBottomSheet';
+import ConfirmDeleteModal from '../ConfirmDeleteModal';
+import {reportError} from '../../utils/error';
+import {deleteEventById} from '../../services/eventsService';
 
-export default function CalendarEvent({event, onPress}) {
+export default function CalendarEvent({event, onPress, onDeleted}) {
   const [isDetailsSheetVisible, setIsDetailsSheetVisible] = useState(false);
+  const [isConfirmDeleteVisible, setIsConfirmDeleteVisible] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  async function handleDelete() {
+    try {
+      setIsDeleting(true);
+      setIsDetailsSheetVisible(false);
+      await deleteEventById(event.id);
+      onDeleted(event);
+    } catch (error) {
+      reportError(error);
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <>
@@ -22,6 +39,14 @@ export default function CalendarEvent({event, onPress}) {
         event={event}
         onDismiss={() => setIsDetailsSheetVisible(false)}
         visible={isDetailsSheetVisible}
+        onDelete={() => setIsConfirmDeleteVisible(true)}
+      />
+      <ConfirmDeleteModal
+        visible={isConfirmDeleteVisible}
+        onDismiss={() => setIsConfirmDeleteVisible(false)}
+        onDelete={handleDelete}
+        deleting={isDeleting}
+        message="Are you sure you'd like to delete this event from the calendar?"
       />
     </>
   );
@@ -32,6 +57,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 3,
     borderRadius: 8,
+    marginBottom: 2,
   },
   eventTitleText: {
     color: 'white',
@@ -67,8 +93,5 @@ export const EVENT_COLORS = {
   },
   black: {
     backgroundColor: 'black',
-  },
-  white: {
-    backgroundColor: 'white',
   },
 };

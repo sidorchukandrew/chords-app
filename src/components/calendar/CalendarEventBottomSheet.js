@@ -7,12 +7,21 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {EVENT_COLORS} from './CalendarEvent';
 import {format, getTimeFromDate} from '../../utils/date';
 import {getNameOrEmail} from '../../utils/member';
+import {useSelector} from 'react-redux';
+import {selectCurrentMember} from '../../redux/slices/authSlice';
+import {EDIT_EVENTS} from '../../utils/auth';
 
-export default function CalendarEventBottomSheet({visible, onDismiss, event}) {
+export default function CalendarEventBottomSheet({
+  visible,
+  onDismiss,
+  event,
+  onDelete,
+}) {
   const [startTime] = useState(getTimeFromDate(event.start_time));
   const [endTime] = useState(getTimeFromDate(event.end_time));
   const sheetRef = useRef();
   const {text} = useTheme();
+  const currentMember = useSelector(selectCurrentMember);
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -21,21 +30,23 @@ export default function CalendarEventBottomSheet({visible, onDismiss, event}) {
   return (
     <BottomSheet ref={sheetRef} snapPoints={['85%']} onDismiss={onDismiss}>
       <View style={styles.sheetContainer}>
-        {/* <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.action}>
+        <View style={styles.actionsContainer}>
+          {/* <TouchableOpacity style={styles.action}>
             <Icon
               name="pencil-outline"
               size={22}
               color={text.secondary.color}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity style={styles.action}>
-            <Icon name="delete" size={22} color={text.secondary.color} />
-          </TouchableOpacity>
-        </View> */}
+          {currentMember.can(EDIT_EVENTS) && (
+            <TouchableOpacity style={styles.action} onPress={onDelete}>
+              <Icon name="delete" size={22} color={text.secondary.color} />
+            </TouchableOpacity>
+          )}
+        </View>
 
-        <ScrollView>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <View style={[styles.headerContainer, styles.row]}>
             <View style={styles.leftColumn}>
               <View
@@ -65,13 +76,19 @@ export default function CalendarEventBottomSheet({visible, onDismiss, event}) {
               />
             </View>
             <View style={styles.rightColumn}>
-              {event?.memberships?.map(membership => (
-                <Text
-                  style={[styles.memberText, text.primary]}
-                  key={membership.id}>
-                  {getNameOrEmail(membership.user)}
+              {event?.memberships?.length > 0 ? (
+                event?.memberships?.map(membership => (
+                  <Text
+                    style={[styles.memberText, text.primary]}
+                    key={membership.id}>
+                    {getNameOrEmail(membership.user)}
+                  </Text>
+                ))
+              ) : (
+                <Text style={[styles.memberText, text.secondary]}>
+                  No members
                 </Text>
-              )) || <Text style={text.secondary}>No members</Text>}
+              )}
             </View>
           </View>
 
@@ -118,6 +135,7 @@ export default function CalendarEventBottomSheet({visible, onDismiss, event}) {
 const styles = StyleSheet.create({
   sheetContainer: {
     padding: 15,
+    flex: 1,
   },
   actionsContainer: {
     flexDirection: 'row',
@@ -157,8 +175,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   memberText: {
-    fontSize: 17,
     marginBottom: 8,
+    fontSize: 17,
   },
   sectionText: {
     fontSize: 17,

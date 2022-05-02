@@ -5,7 +5,7 @@ import {useTheme} from '../../hooks/useTheme';
 import {getEventsForWeek} from '../../utils/calendar';
 
 const EMPTY_EVENTS_FOR_WEEK = [[], [], [], [], [], [], []];
-export default function Week({dates, events}) {
+export default function Week({dates, events, onDeleted}) {
   const {border, isDark} = useTheme();
   const [eventsForWeek, setEventsForWeek] = useState(EMPTY_EVENTS_FOR_WEEK);
 
@@ -27,12 +27,13 @@ export default function Week({dates, events}) {
         surfaceColor={
           isDark ? {backgroundColor: '#020202'} : {backgroundColor: '#f9fafb'}
         }
+        onDeleted={onDeleted}
       />
-      <Day date={dates[1]} events={eventsForWeek[1]} />
-      <Day date={dates[2]} events={eventsForWeek[2]} />
-      <Day date={dates[3]} events={eventsForWeek[3]} />
-      <Day date={dates[4]} events={eventsForWeek[4]} />
-      <Day date={dates[5]} events={eventsForWeek[5]} />
+      <Day date={dates[1]} events={eventsForWeek[1]} onDeleted={onDeleted} />
+      <Day date={dates[2]} events={eventsForWeek[2]} onDeleted={onDeleted} />
+      <Day date={dates[3]} events={eventsForWeek[3]} onDeleted={onDeleted} />
+      <Day date={dates[4]} events={eventsForWeek[4]} onDeleted={onDeleted} />
+      <Day date={dates[5]} events={eventsForWeek[5]} onDeleted={onDeleted} />
       <Day
         border={false}
         date={dates[6]}
@@ -40,6 +41,7 @@ export default function Week({dates, events}) {
         surfaceColor={
           isDark ? {backgroundColor: '#020202'} : {backgroundColor: '#f9fafb'}
         }
+        onDeleted={onDeleted}
       />
     </View>
   );

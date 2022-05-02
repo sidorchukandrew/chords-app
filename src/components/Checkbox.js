@@ -9,6 +9,7 @@ export default function Checkbox({
   text,
   onPress,
   style: providedStyles,
+  disableBuiltInState = false,
 }) {
   const {blue} = useTheme();
   return (
@@ -16,10 +17,13 @@ export default function Checkbox({
       size={size}
       text={text}
       isChecked={checked}
-      onPress={onPress}
+      onPress={checkedValue =>
+        disableBuiltInState ? onPress(!checked) : onPress(checkedValue)
+      }
       style={[styles.checkbox, providedStyles]}
       fillColor={blue.text.color}
       iconStyle={styles.icon}
+      disableBuiltInState={disableBuiltInState}
     />
   );
 }
