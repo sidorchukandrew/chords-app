@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import KeyBadge from './KeyBadge';
 import {OpacityDecorator} from 'react-native-draggable-flatlist';
@@ -18,7 +18,7 @@ export default function SetlistSongRowItem({
   editable,
   isConnected,
 }) {
-  const {surface, text} = useTheme();
+  const {text, surface} = useTheme();
 
   return (
     <OpacityDecorator>
@@ -40,10 +40,9 @@ export default function SetlistSongRowItem({
           </View>
         )}
         snapPointsLeft={[75]}>
-        <TouchableHighlight
+        <TouchableOpacity
           style={[styles.row, surface.primary]}
           onPress={() => onNavigateToSong(song)}
-          underlayColor={surface.primary.color}
           onLongPress={editable && isConnected ? drag : null}
           disabled={isActive}>
           <>
@@ -56,7 +55,7 @@ export default function SetlistSongRowItem({
               </KeyBadge>
             )}
           </>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </SwipeableItem>
     </OpacityDecorator>
   );
@@ -65,7 +64,6 @@ export default function SetlistSongRowItem({
 const styles = StyleSheet.create({
   songName: {
     fontSize: 17,
-    color: 'black',
   },
   row: {
     flexDirection: 'row',
