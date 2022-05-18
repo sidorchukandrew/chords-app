@@ -49,7 +49,6 @@ export default function SongsIndexScreen({navigation}) {
         }
       }
 
-      console.log('Fetching data');
       fetchData();
     }, []),
   );
@@ -102,41 +101,42 @@ export default function SongsIndexScreen({navigation}) {
 
   return (
     <View style={[styles.container, surface.primary]}>
-      <Container size="lg">
-        <FlatList
-          onRefresh={handleRefresh}
-          refreshing={refreshing}
-          ItemSeparatorComponent={ItemSeparator}
-          ListHeaderComponent={
-            <SearchFilterBar
-              query={query}
-              onQueryChange={setQuery}
-              placeholder={`Search ${songs?.length} songs`}
-            />
-          }
-          ListHeaderComponentStyle={styles.headerContainer}
-          data={filteredSongs()}
-          renderItem={renderSongRow}
-          ListEmptyComponent={
-            <NoDataMessage
-              message="You have no songs in your library yet"
-              showAddButton={currentMember.can(ADD_SONGS)}
-              buttonTitle="Add songs"
-              onButtonPress={handleCreateSong}
-              disabled={!isConnected}
-            />
-          }
-          style={{height: '100%'}}
-          refreshControl={
-            <RefreshControl
-              onRefresh={handleRefresh}
-              refreshing={refreshing}
-              colors={['gray']}
-              tintColor="gray"
-            />
-          }
-        />
-      </Container>
+      <FlatList
+        onRefresh={handleRefresh}
+        refreshing={refreshing}
+        ItemSeparatorComponent={ContainedItemSeparator}
+        ListHeaderComponent={
+          <SearchFilterBar
+            query={query}
+            onQueryChange={setQuery}
+            placeholder={`Search ${songs?.length} songs`}
+          />
+        }
+        ListHeaderComponentStyle={styles.headerContainer}
+        data={filteredSongs()}
+        renderItem={renderSongRow}
+        ListEmptyComponent={
+          <NoDataMessage
+            message={
+              query ? 'No songs found' : 'You have no songs in your library yet'
+            }
+            showAddButton={currentMember.can(ADD_SONGS) && !query}
+            buttonTitle="Add songs"
+            onButtonPress={handleCreateSong}
+            disabled={!isConnected}
+          />
+        }
+        style={{height: '100%'}}
+        refreshControl={
+          <RefreshControl
+            onRefresh={handleRefresh}
+            refreshing={refreshing}
+            colors={['gray']}
+            tintColor="gray"
+          />
+        }
+      />
+
       {currentMember.can(ADD_SONGS) && (
         <CircleButton
           style={styles.addButton}
@@ -176,3 +176,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 });
+
+function ContainedItemSeparator() {
+  return (
+    <Container size="lg">
+      <ItemSeparator />
+    </Container>
+  );
+}
