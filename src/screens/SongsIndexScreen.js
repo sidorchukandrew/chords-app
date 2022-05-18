@@ -12,7 +12,7 @@ import {ADD_SONGS} from '../utils/auth';
 import CircleButton from '../components/CircleButton';
 import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ItemSeparator from '../components/ItemSeparator';
+import ContainedItemSeparator from '../components/ContainedItemSeparator';
 import KeyBadge from '../components/KeyBadge';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
@@ -176,11 +176,3 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 });
-
-function ContainedItemSeparator() {
-  return (
-    <Container size="lg">
-      <ItemSeparator />
-    </Container>
-  );
-}
