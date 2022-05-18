@@ -12,7 +12,6 @@ import {format, isPast, sortDates} from '../utils/date';
 import CircleButton from '../components/CircleButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import ItemSeparator from '../components/ItemSeparator';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
 import SearchFilterBar from '../components/SearchFilterBar';
@@ -78,8 +77,16 @@ export default function SetlistsIndexScreen({navigation, route}) {
       sets?.forEach(set =>
         isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
       );
-      setUpcomingSets(upcoming);
-      setPastSets(past);
+      setUpcomingSets(
+        upcoming.sort((setA, setB) =>
+          sortDates(setA.scheduled_date, setB.scheduled_date),
+        ),
+      );
+      setPastSets(
+        past.sort((setA, setB) =>
+          sortDates(setB.scheduled_date, setA.scheduled_date),
+        ),
+      );
     } catch (error) {
       reportError(error);
     } finally {
