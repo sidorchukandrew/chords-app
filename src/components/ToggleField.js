@@ -19,7 +19,7 @@ export default function ToggleField({
       <Switch
         value={value}
         onValueChange={onChange}
-        trackColor={{true: '#2464eb', false: 'pink'}}
+        trackColor={{true: '#2464eb', false: '#eaeaea'}}
         disabled={disabled}
         ios_backgroundColor="#f0f0f0"
       />

@@ -208,13 +208,6 @@ export default function PerformSetlistScreen({navigation, route}) {
         onSnapToItem={handleSwipedToSong}
         ref={carouselRef}
       />
-      <SetlistNavigation
-        songs={songs}
-        songIndex={songIndex}
-        onNext={() => handleSwipedToSong(songIndex + 1)}
-        onBack={() => handleSwipedToSong(songIndex - 1)}
-        scrollEnabled={!disableSwipeInSetlist}
-      />
       {showSetlistNavigation && (
         <SetlistNavigation
           songs={songs}

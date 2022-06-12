@@ -3,7 +3,6 @@ import {getAppearanceStorage} from '../../services/appearanceService';
 
 const initialState = {
   theme: getAppearanceStorage().getString('theme'),
-  toolbars: JSON.parse(getAppearanceStorage().getString('toolbars')) || {},
   showSetlistNavigation: getAppearanceStorage().getBoolean(
     'showSetlistNavigation',
   ),
@@ -19,10 +18,6 @@ export const appearanceSlice = createSlice({
     setTheme: (state, {payload}) => {
       state.theme = payload;
       getAppearanceStorage().set('theme', payload);
-    },
-    setToolbars: (state, {payload}) => {
-      state.toolbars = {...state.toolbars, ...payload};
-      getAppearanceStorage().set('toolbars', state.toolbars);
     },
     setShowSetlistNavigation: (state, {payload}) => {
       state.showSetlistNavigation = payload;
@@ -41,7 +36,6 @@ export const appearanceSlice = createSlice({
 });
 
 export const {
-  setToolbars,
   setTheme,
   setShowSetlistNavigation,
   setDisableSwipeInSetlist,
@@ -51,7 +45,6 @@ export const {
 export default appearanceSlice.reducer;
 
 export const selectCurrentTheme = state => state.appearance.theme;
-export const selectToolbars = state => state.appearance.toolbars;
 export const selectShowSetlistNavigation = state =>
   state.appearance.showSetlistNavigation;
 

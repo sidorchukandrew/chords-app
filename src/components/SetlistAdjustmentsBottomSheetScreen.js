@@ -18,8 +18,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {reportError} from '../utils/error';
 import LoadingIndicator from './LoadingIndicator';
 import {addNoteToSong} from '../services/notesService';
-import {ScrollView} from 'react-native-gesture-handler';
-import {selectToolbars} from '../redux/slices/appearanceSlice';
 import {
   selectDisableSwipeInSetlist,
   selectShowSetlistNavigation,
@@ -34,7 +32,6 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
   const dispatch = useDispatch();
   const currentMember = useSelector(selectCurrentMember);
   const currentSubscription = useSelector(selectCurrentSubscription);
-  const toolbars = useSelector(selectToolbars);
   const [creatingNote, setCreatingNote] = useState(false);
   const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
   const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
