@@ -6,6 +6,7 @@ import BottomSheet from './BottomSheet';
 import {DELETE_FILES, EDIT_FILES} from '../utils/auth';
 import RectButton from './RectButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from '../hooks/useTheme';
 
 export default function FileOptionsBottomSheet({
   visible,
@@ -16,6 +17,7 @@ export default function FileOptionsBottomSheet({
 }) {
   const sheetRef = useRef();
   const currentMember = useSelector(selectCurrentMember);
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -42,8 +44,8 @@ export default function FileOptionsBottomSheet({
       <View style={styles.sheet}>
         {currentMember.can(EDIT_FILES) && (
           <RectButton styles={styles.button} onPress={handleRename}>
-            <Icon name="pencil" size={20} color="#505050" />
-            <Text style={styles.buttonText}>Rename</Text>
+            <Icon name="pencil" size={20} color={text.secondary.color} />
+            <Text style={[styles.buttonText, text.secondary]}>Rename</Text>
           </RectButton>
         )}
         {currentMember.can(DELETE_FILES) && (
@@ -60,7 +62,6 @@ export default function FileOptionsBottomSheet({
 const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
     flex: 1,
   },
   button: {
@@ -68,7 +69,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#505050',
     fontWeight: '600',
     marginLeft: 10,
     fontSize: 16,

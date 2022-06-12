@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RectButton from './RectButton';
 import {removeThemeFromSong} from '../services/songsService';
 import {reportError} from '../utils/error';
+import {useTheme} from '../hooks/useTheme';
 
 export default function ThemeOptionsBottomSheet({
   visible,
@@ -16,6 +17,7 @@ export default function ThemeOptionsBottomSheet({
   isConnected,
 }) {
   const sheetRef = useRef();
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -46,13 +48,13 @@ export default function ThemeOptionsBottomSheet({
           <Icon
             name="delete"
             size={20}
-            color={isConnected ? '#ef4444' : '#d0d0d0'}
+            color={isConnected ? '#ef4444' : text.disabled.color}
           />
           <Text
             style={[
               styles.buttonText,
               styles.deleteColor,
-              !isConnected && styles.disabledColor,
+              !isConnected && text.disabled,
             ]}>
             Remove
           </Text>
@@ -65,7 +67,6 @@ export default function ThemeOptionsBottomSheet({
 const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
     flex: 1,
   },
   button: {
@@ -73,15 +74,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#505050',
     fontWeight: '600',
     marginLeft: 10,
     fontSize: 16,
   },
   deleteColor: {
     color: '#ef4444',
-  },
-  disabledColor: {
-    color: '#d0d0d0',
   },
 });

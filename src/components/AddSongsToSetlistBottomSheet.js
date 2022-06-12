@@ -13,6 +13,7 @@ import {getAllSongs} from '../services/songsService';
 import {hasAnyKeysSet} from '../utils/song';
 import {pluralize} from '../utils/string';
 import {reportError} from '../utils/error';
+import {useTheme} from '../hooks/useTheme';
 
 export default function AddSongsToSetlistBottomSheet({
   visible,
@@ -20,6 +21,7 @@ export default function AddSongsToSetlistBottomSheet({
   setlistId,
   onSongsAdded,
 }) {
+  const {text, border} = useTheme();
   const sheetRef = useRef();
   const [allSongs, setAllSongs] = useState([]);
   const [songsToAdd, setSongsToAdd] = useState([]);
@@ -58,7 +60,7 @@ export default function AddSongsToSetlistBottomSheet({
           style={styles.checkbox}
           text={
             <View style={styles.row}>
-              <Text style={styles.name}>{song.name}</Text>
+              <Text style={[styles.name, text.primary]}>{song.name}</Text>
               {hasAnyKeysSet(song) && (
                 <KeyBadge style={styles.keyBadge}>
                   {song.transposed_key || song.original_key}
@@ -104,7 +106,7 @@ export default function AddSongsToSetlistBottomSheet({
   return (
     <BottomSheet ref={sheetRef} onDismiss={onDismiss} snapPoints={['90%']}>
       <View style={styles.container}>
-        <Text style={styles.title}>Songs in your library</Text>
+        <Text style={[styles.title, text.primary]}>Songs in your library</Text>
         <FlatList
           ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={
@@ -114,7 +116,7 @@ export default function AddSongsToSetlistBottomSheet({
             />
           }
           ListHeaderComponent={
-            <View style={styles.searchContainer}>
+            <View style={[styles.searchContainer, border.primary]}>
               <SearchInput
                 value={query}
                 onChange={setQuery}
@@ -149,7 +151,6 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     borderBottomWidth: 1,
-    borderColor: '#eaeaea',
     marginBottom: 15,
   },
   name: {

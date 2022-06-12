@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "iphone": "react-native run-ios --simulator=\"iPhone X\"",
-    "ipad": "react-native run-ios --simulator=\"iPad (9th generation)\"",
+    "ipad": "react-native run-ios --simulator=\"iPad Air\"",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
@@ -28,6 +28,7 @@
     "lodash": "^4.17.21",
     "react": "17.0.2",
     "react-native": "0.66.3",
+    "react-native-avoid-softinput": "^2.3.3",
     "react-native-blob-util": "^0.13.18",
     "react-native-bouncy-checkbox": "^2.1.8",
     "react-native-calendars": "^1.1271.0",
@@ -40,7 +41,9 @@
     "react-native-html-to-pdf": "^0.12.0",
     "react-native-image-picker": "^4.7.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-logs": "^4.0.1",
     "react-native-mmkv": "^1.6.2",
+    "react-native-onesignal": "^4.3.7",
     "react-native-pdf": "^6.4.0",
     "react-native-print": "^0.10.0",
     "react-native-reanimated": "^2.3.0",
@@ -52,6 +55,7 @@
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-swipeable-item": "^2.0.2",
     "react-native-vector-icons": "^9.0.0",
+    "react-native-wheely": "^0.4.1",
     "react-redux": "^7.2.6",
     "rn-material-ui-textfield": "^1.0.5",
     "zxcvbn": "^4.4.2"

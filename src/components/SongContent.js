@@ -2,10 +2,12 @@ import {StyleSheet, View} from 'react-native';
 
 import React from 'react';
 import {buildContent} from '../utils/song';
+import {useTheme} from '../hooks/useTheme';
 
 function SongContent({song}) {
+  const {text} = useTheme();
   console.log('Content rerendered');
-  return <View style={styles.content}>{buildContent(song)}</View>;
+  return <View style={styles.content}>{buildContent(song, text.primary)}</View>;
 }
 
 const styles = StyleSheet.create({

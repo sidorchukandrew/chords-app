@@ -16,12 +16,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import Tag from './Tag';
 import ItemSeparator from './ItemSeparator';
+import {useTheme} from '../hooks/useTheme';
 
 export default function UpcomingSetsWidget({
   navigation,
   style: providedStyles,
 }) {
   const [upcomingSets, setUpcomingSets] = useState([]);
+  const {text, icon} = useTheme();
+
   useFocusEffect(
     React.useCallback(() => {
       async function fetchUpcomingSets() {
@@ -57,19 +60,29 @@ export default function UpcomingSetsWidget({
                 style={styles.row}
                 onPress={() => navigation.navigate('Setlist Detail', set)}>
                 <View>
-                  <Text style={styles.name}>{set.name}</Text>
+                  <Text style={[styles.name, text.primary]}>{set.name}</Text>
                   <View style={styles.detailsContainer}>
                     <View style={styles.detail}>
-                      <Icon name="calendar-blank" size={16} color="#505050" />
-                      <Text style={styles.detailText}>
+                      <Icon
+                        name="calendar-blank"
+                        size={16}
+                        color={icon.secondary}
+                      />
+                      <Text style={[styles.detailText, text.secondary]}>
                         {set.scheduled_date
                           ? format(set.scheduled_date, 'ddd MMM D')
                           : 'Not scheduled'}
                       </Text>
                     </View>
                     <View style={styles.detail}>
-                      <IonIcon color="#505050" size={16} name="musical-notes" />
-                      <Text style={styles.detailText}>{set.songs?.length}</Text>
+                      <IonIcon
+                        color={icon.secondary}
+                        size={16}
+                        name="musical-notes"
+                      />
+                      <Text style={[styles.detailText, text.secondary]}>
+                        {set.songs?.length}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -95,7 +108,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: '500',
-    color: 'black',
   },
   detailsContainer: {
     flexDirection: 'row',
@@ -108,7 +120,6 @@ const styles = StyleSheet.create({
   },
   detailText: {
     marginLeft: 5,
-    color: '#505050',
     fontSize: 13,
   },
 });

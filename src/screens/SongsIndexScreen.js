@@ -1,11 +1,18 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  RefreshControl,
+} from 'react-native';
 import React, {useState} from 'react';
 
 import {ADD_SONGS} from '../utils/auth';
 import CircleButton from '../components/CircleButton';
 import Container from '../components/Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ItemSeparator from '../components/ItemSeparator';
+import ContainedItemSeparator from '../components/ContainedItemSeparator';
 import KeyBadge from '../components/KeyBadge';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
@@ -17,6 +24,7 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SongsIndexScreen({navigation}) {
   const [songs, setSongs] = useState([]);
@@ -25,6 +33,7 @@ export default function SongsIndexScreen({navigation}) {
   const [refreshing, setRefreshing] = useState(false);
   const currentMember = useSelector(selectCurrentMember);
   const {isConnected} = useNetInfo();
+  const {surface, text} = useTheme();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -40,7 +49,6 @@ export default function SongsIndexScreen({navigation}) {
         }
       }
 
-      console.log('Fetching data');
       fetchData();
     }, []),
   );
@@ -63,7 +71,7 @@ export default function SongsIndexScreen({navigation}) {
         <TouchableOpacity
           style={styles.row}
           onPress={() => handleNavigateTo(song)}>
-          <Text style={styles.name}>{song.name}</Text>
+          <Text style={[styles.name, text.primary]}>{song.name}</Text>
           {hasAnyKeysSet(song) && (
             <KeyBadge style={styles.keyBadge}>
               {song.transposed_key || song.original_key}
@@ -92,34 +100,43 @@ export default function SongsIndexScreen({navigation}) {
   if (loading) return <LoadingIndicator />;
 
   return (
-    <View style={styles.container}>
-      <Container size="lg">
-        <FlatList
-          onRefresh={handleRefresh}
-          refreshing={refreshing}
-          ItemSeparatorComponent={ItemSeparator}
-          ListHeaderComponent={
-            <SearchFilterBar
-              query={query}
-              onQueryChange={setQuery}
-              placeholder={`Search ${songs?.length} songs`}
-            />
-          }
-          ListHeaderComponentStyle={styles.headerContainer}
-          data={filteredSongs()}
-          renderItem={renderSongRow}
-          ListEmptyComponent={
-            <NoDataMessage
-              message="You have no songs in your library yet"
-              showAddButton={currentMember.can(ADD_SONGS)}
-              buttonTitle="Add songs"
-              onButtonPress={handleCreateSong}
-              disabled={!isConnected}
-            />
-          }
-          style={{height: '100%'}}
-        />
-      </Container>
+    <View style={[styles.container, surface.primary]}>
+      <FlatList
+        onRefresh={handleRefresh}
+        refreshing={refreshing}
+        ItemSeparatorComponent={ContainedItemSeparator}
+        ListHeaderComponent={
+          <SearchFilterBar
+            query={query}
+            onQueryChange={setQuery}
+            placeholder={`Search ${songs?.length} songs`}
+          />
+        }
+        ListHeaderComponentStyle={styles.headerContainer}
+        data={filteredSongs()}
+        renderItem={renderSongRow}
+        ListEmptyComponent={
+          <NoDataMessage
+            message={
+              query ? 'No songs found' : 'You have no songs in your library yet'
+            }
+            showAddButton={currentMember.can(ADD_SONGS) && !query}
+            buttonTitle="Add songs"
+            onButtonPress={handleCreateSong}
+            disabled={!isConnected}
+          />
+        }
+        style={{height: '100%'}}
+        refreshControl={
+          <RefreshControl
+            onRefresh={handleRefresh}
+            refreshing={refreshing}
+            colors={['gray']}
+            tintColor="gray"
+          />
+        }
+      />
+
       {currentMember.can(ADD_SONGS) && (
         <CircleButton
           style={styles.addButton}
@@ -135,7 +152,6 @@ export default function SongsIndexScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: 'white',
   },
   name: {
     fontSize: 17,

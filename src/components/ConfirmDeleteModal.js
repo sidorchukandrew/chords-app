@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 import AccentButton from './AccentButton';
 import BottomSheetModal from './BottomSheetModal';
@@ -13,9 +14,13 @@ export default function ConfirmDeleteModal({
   onDelete,
 }) {
   const sheetRef = useRef();
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
+    else {
+      sheetRef.current?.dismiss();
+    }
   }, [visible, sheetRef]);
 
   function handleCancel() {
@@ -25,7 +30,7 @@ export default function ConfirmDeleteModal({
 
   return (
     <BottomSheetModal onDismiss={onDismiss} ref={sheetRef}>
-      <Text style={styles.message}>{message}</Text>
+      <Text style={[styles.message, text.primary]}>{message}</Text>
       <View style={styles.buttonsContainer}>
         <AccentButton full style={styles.cancelButton} onPress={handleCancel}>
           Cancel
@@ -44,7 +49,6 @@ export default function ConfirmDeleteModal({
 
 const styles = StyleSheet.create({
   message: {
-    color: 'black',
     fontSize: 16,
   },
   buttonsContainer: {

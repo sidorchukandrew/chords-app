@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from '../hooks/useTheme';
 import AppMenu from './AppMenu';
 
-export default function TabBar({state, descriptors, navigation}) {
+export default function TabBar({state, navigation}) {
   const [menuVisible, setMenuVisible] = useState(false);
+  const {surface, border, text, blue} = useTheme();
   const shouldShowLabels = Dimensions.get('window').width > 500;
 
   function isFocused(routeIndex) {
@@ -17,12 +19,12 @@ export default function TabBar({state, descriptors, navigation}) {
     setMenuVisible(false);
   }
 
-  const searchColors = isFocused(1) ? styles.blue : styles.gray;
-  const accountColors = isFocused(2) ? styles.blue : styles.gray;
+  const searchColors = isFocused(1) ? blue.text : text.secondary;
+  const accountColors = isFocused(2) ? blue.text : text.secondary;
 
   return (
     <>
-      <View style={styles.bar}>
+      <View style={[styles.bar, surface.primary, border.primary]}>
         <Pressable
           style={styles.button}
           onPress={() => navigation.navigate('Search')}>
@@ -32,9 +34,9 @@ export default function TabBar({state, descriptors, navigation}) {
           )}
         </Pressable>
         <Pressable style={styles.button} onPress={() => setMenuVisible(true)}>
-          <Icon name="menu" size={20} style={styles.gray} />
+          <Icon name="menu" size={20} style={text.secondary} />
           {shouldShowLabels && (
-            <Text style={[styles.gray, styles.buttonText]}>Menu</Text>
+            <Text style={[text.secondary, styles.buttonText]}>Menu</Text>
           )}
         </Pressable>
         <Pressable
@@ -59,9 +61,7 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     paddingVertical: 4,
-    borderTopColor: '#e0e0e0',
     borderTopWidth: 1,
-    backgroundColor: 'white',
     height: 45,
   },
   button: {
@@ -74,9 +74,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginLeft: 5,
   },
-  gray: {
-    color: '#505050',
-  },
+
   blue: {
     color: '#1d4ed8',
   },

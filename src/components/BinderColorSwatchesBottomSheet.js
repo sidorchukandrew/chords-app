@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import {useEffect} from 'react';
 import {StyleSheet, Text, ScrollView, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 import BottomSheet from './BottomSheet';
 import ColorSwatchOption from './ColorSwatchOption';
 
@@ -10,6 +11,7 @@ export default function BinderColorSwatchesBottomSheet({
   color,
   onChange,
 }) {
+  const {text} = useTheme();
   const sheetRef = useRef();
   const colors = [
     'red',
@@ -33,7 +35,7 @@ export default function BinderColorSwatchesBottomSheet({
       ref={sheetRef}
       onDismiss={onDismiss}>
       <View style={styles.container}>
-        <Text style={styles.title}>Choose a color</Text>
+        <Text style={[styles.title, text.primary]}>Choose a color</Text>
         <View style={styles.swatchesContainer}>
           <ScrollView horizontal>
             <ColorSwatchOption

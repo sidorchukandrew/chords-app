@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -24,6 +24,9 @@ import SongContent from '../components/SongContent';
 import {useEffect} from 'react';
 import Roadmap from '../components/Roadmap';
 import Note from '../components/Note';
+import {useTheme} from '../hooks/useTheme';
+import {AvoidSoftInput} from 'react-native-avoid-softinput';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function PerformSongScreen({navigation}) {
   const {width} = useWindowDimensions();
@@ -32,6 +35,21 @@ export default function PerformSongScreen({navigation}) {
   const dispatch = useDispatch();
   const [keyOptionsVisible, setKeyOptionsVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
+  const {surface, text, blue} = useTheme();
+
+  const onFocusEffect = useCallback(() => {
+    AvoidSoftInput.setAdjustNothing();
+    AvoidSoftInput.setEnabled(true);
+    AvoidSoftInput.setAvoidOffset(100);
+    AvoidSoftInput.setHideAnimationDelay(100);
+    return () => {
+      AvoidSoftInput.setEnabled(false);
+      AvoidSoftInput.setDefaultAppSoftInputMode();
+      AvoidSoftInput.setAvoidOffset(0); // Default value
+    };
+  }, []);
+
+  useFocusEffect(onFocusEffect);
 
   useEffect(() => {
     dispatch(clearEdits());
@@ -43,6 +61,8 @@ export default function PerformSongScreen({navigation}) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: surface.primary,
+      headerTitleStyle: text.primary,
       headerRight: () => (
         <View style={styles.headerButtonsContainer}>
           {hasAnyKeysSet(song) && (
@@ -55,17 +75,12 @@ export default function PerformSongScreen({navigation}) {
           <TouchableOpacity
             style={styles.adjustmentsButton}
             onPress={() => setAdjustmentsSheetVisible(true)}>
-            <Icon name="tune-vertical" size={22} color="#2464eb" />
+            <Icon name="tune-vertical" size={22} color={blue.text.color} />
           </TouchableOpacity>
         </View>
       ),
-      headerTitle: props => (
-        <Text style={styles.titleText} numberOfLines={1}>
-          {props.children}
-        </Text>
-      ),
     });
-  }, [navigation, song]);
+  }, [navigation, song, surface, blue, text]);
 
   function handleNoteChanged(noteId, changes) {
     let updatedNote = song.notes?.find(note => note.id === noteId);
@@ -84,9 +99,9 @@ export default function PerformSongScreen({navigation}) {
   }
 
   return (
-    <>
+    <View style={[surface.primary, {flex: 1}]}>
       <ScrollView
-        style={styles.container}
+        style={[styles.container, surface.primary]}
         pinchGestureEnabled
         maximumZoomScale={4}
         minimumZoomScale={0.5}>
@@ -115,14 +130,13 @@ export default function PerformSongScreen({navigation}) {
         visible={adjustmentsSheetVisible}
         onDismiss={() => setAdjustmentsSheetVisible(false)}
       />
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     padding: 10,
   },
   headerButtonsContainer: {

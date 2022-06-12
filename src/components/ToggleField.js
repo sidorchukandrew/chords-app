@@ -1,21 +1,27 @@
 import {StyleSheet, Switch, Text, View} from 'react-native';
 
 import React from 'react';
+import {useTheme} from '../hooks/useTheme';
 
 export default function ToggleField({
   label,
-  enabled,
+  value,
   onChange,
   style: providedStyles,
+  disabled = false,
 }) {
+  const {text} = useTheme();
   return (
     <View style={[styles.field, providedStyles]}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, text.primary, disabled && text.disabled]}>
+        {label}
+      </Text>
       <Switch
-        value={enabled}
+        value={value}
         onValueChange={onChange}
-        trackColor={{true: '#2464eb', false: '#c0c0c0'}}
-        thumbColor="white"
+        trackColor={{true: '#2464eb', false: 'pink'}}
+        disabled={disabled}
+        ios_backgroundColor="#f0f0f0"
       />
     </View>
   );
@@ -29,7 +35,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: 'black',
     fontWeight: '500',
+    maxWidth: '80%',
+  },
+  disabledTextColor: {
+    color: '#d0d0d0',
   },
 });

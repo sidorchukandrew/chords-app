@@ -1,13 +1,25 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 export default function ItemSeparator() {
-  return <View style={styles.separator} />;
+  const {isDark, border} = useTheme();
+  return (
+    <View
+      style={[
+        styles.separator,
+        {
+          backgroundColor: isDark
+            ? border.secondary.borderColor
+            : border.primary.borderColor,
+        },
+      ]}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
   separator: {
-    backgroundColor: '#eaeaea',
     height: 1,
     width: '100%',
   },

@@ -6,6 +6,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 const BottomSheet = React.forwardRef(
   (
@@ -21,6 +22,7 @@ const BottomSheet = React.forwardRef(
   ) => {
     const [windowWidth, setWindowWidth] = useState(0);
     const window = useWindowDimensions();
+    const {surface, border, isDark} = useTheme();
 
     const {
       animatedHandleHeight,
@@ -53,6 +55,10 @@ const BottomSheet = React.forwardRef(
         contentHeight={animatedContentHeight}
         handleHeight={animatedHandleHeight}
         bottomInset={detached ? 40 : 0}
+        backgroundStyle={isDark ? surface.secondary : surface.primary}
+        handleIndicatorStyle={{
+          backgroundColor: isDark ? border.primary.borderColor : '#d0d0d0',
+        }}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}
@@ -75,6 +81,10 @@ const BottomSheet = React.forwardRef(
         snapPoints={snapPoints}
         detached={detached}
         bottomInset={detached ? 40 : 0}
+        handleIndicatorStyle={{
+          backgroundColor: isDark ? border.primary.borderColor : '#d0d0d0',
+        }}
+        backgroundStyle={isDark ? surface.secondary : surface.primary}
         backdropComponent={props => (
           <BottomSheetBackdrop
             {...props}

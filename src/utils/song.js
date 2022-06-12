@@ -23,7 +23,7 @@ export function getPreferredKey(song) {
   }
 }
 
-export function buildContent(song) {
+export function buildContent(song, textStyles) {
   console.log('Building');
   let content = song?.content;
   if (!content || !song?.format) return <Text />;
@@ -43,6 +43,7 @@ export function buildContent(song) {
     if (isNewLine(line))
       return (
         <Text
+          allowFontScaling={false}
           key={index}
           style={{
             height: song.format.font_size * 1.5,
@@ -54,13 +55,14 @@ export function buildContent(song) {
     } else {
       return (
         <Text
+          allowFontScaling={false}
           key={index}
           style={[
             getStyles(song.format, line),
             {
-              color: 'black',
               lineHeight: song.format.font_size * 1.5,
             },
+            textStyles,
           ]}>
           {line}
         </Text>

@@ -3,6 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import BottomSheet from './BottomSheet';
 import RectButton from './RectButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from '../hooks/useTheme';
 
 export default function NoteOptionsBottomSheet({
   visible,
@@ -12,6 +13,7 @@ export default function NoteOptionsBottomSheet({
   isConnected,
 }) {
   const sheetRef = useRef();
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -43,10 +45,14 @@ export default function NoteOptionsBottomSheet({
           <Icon
             name="palette"
             size={22}
-            color={isConnected ? '#505050' : '#d0d0d0'}
+            color={isConnected ? text.secondary.color : text.disabled.color}
           />
           <Text
-            style={[styles.buttonText, !isConnected && styles.disabledColor]}>
+            style={[
+              styles.buttonText,
+              text.secondary,
+              !isConnected && text.disabled,
+            ]}>
             Change color
           </Text>
         </RectButton>
@@ -58,7 +64,7 @@ export default function NoteOptionsBottomSheet({
           <Icon
             name="delete"
             size={20}
-            color={isConnected ? '#ef4444' : '#d0d0d0'}
+            color={isConnected ? '#ef4444' : text.disabled.color}
           />
           <Text
             style={[
@@ -77,7 +83,6 @@ export default function NoteOptionsBottomSheet({
 const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 20,
-    backgroundColor: 'white',
     flex: 1,
   },
   button: {
@@ -85,15 +90,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#505050',
     fontWeight: '600',
     marginLeft: 10,
     fontSize: 16,
   },
   deleteColor: {
     color: '#ef4444',
-  },
-  disabledColor: {
-    color: '#d0d0d0',
   },
 });

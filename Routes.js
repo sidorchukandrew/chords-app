@@ -42,6 +42,7 @@ import {getAllSongs} from './src/services/songsService';
 import {reportError} from './src/utils/error';
 import {
   loginTeam,
+  selectCurrentUser,
   selectIsLoggedIn,
   setCurrentUser,
   setMembership,
@@ -63,15 +64,29 @@ import {
 import TeamsApi from './src/api/teamsApi';
 import {setSubscription} from './src/redux/slices/subscriptionSlice';
 import * as Sentry from '@sentry/react-native';
+import {useTheme} from './src/hooks/useTheme';
+import {SafeAreaView, StatusBar} from 'react-native';
+import CalendarScreen from './src/screens/CalendarScreen';
+import OneSignal from 'react-native-onesignal';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const currentUser = useSelector(selectCurrentUser);
   const intervalRef = useRef();
   const {isConnected} = useNetInfo();
+  const {surface, text, isDark} = useTheme();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content', true);
+    } else {
+      StatusBar.setBarStyle('dark-content');
+    }
+  }, [isDark, isLoggedIn]);
 
   useEffect(() => {
     async function scheduleRefresh() {
@@ -146,7 +161,6 @@ export default function Routes() {
   useEffect(() => {
     let timeoutId;
     if (!isConnected && isLoggedIn) {
-      console.log("Detected that there's no internet");
       timeoutId = setTimeout(() => {
         Snackbar.show({
           text: "No internet connection. Some functionality will not be available until you've reconnected.",
@@ -163,243 +177,272 @@ export default function Routes() {
     return () => clearTimeout(timeoutId);
   }, [isConnected, isLoggedIn]);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      OneSignal.setExternalUserId(currentUser.uid, results => {});
+    } else {
+      OneSignal.removeExternalUserId();
+    }
+  }, [isLoggedIn, currentUser]);
+
   return (
-    <BottomSheetModalProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          {isLoggedIn ? (
-            <>
-              <Stack.Group>
+    <SafeAreaView
+      style={[
+        {
+          flex: 1,
+        },
+        surface.primary,
+      ]}>
+      <BottomSheetModalProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            {isLoggedIn ? (
+              <>
+                <Stack.Group>
+                  <Stack.Screen
+                    name="Tabbed"
+                    component={HomeTabs}
+                    options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="Song Detail"
+                    component={SongDetailScreen}
+                    options={({route}) => ({
+                      title: route.params.name,
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Binder Detail"
+                    component={BinderDetailScreen}
+                    options={({route}) => ({
+                      title: '',
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Setlist Detail"
+                    component={SetlistDetailScreen}
+                    options={({route}) => ({
+                      title: '',
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Appearance"
+                    component={AppearanceScreen}
+                    options={({route}) => ({
+                      title: 'Appearance',
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                      headerStyle: surface.primary,
+                      headerTitleStyle: text.primary,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Notification Settings"
+                    component={NotificationSettingsScreen}
+                    options={() => ({
+                      title: 'Notification Settings',
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                      headerTitleStyle: text.primary,
+                      headerStyle: surface.primary,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Edit Profile"
+                    component={EditProfileScreen}
+                    options={({route}) => ({
+                      title: 'Edit Profile',
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Perform Song"
+                    component={PerformSongScreen}
+                    options={({route}) => ({
+                      title: route.params.name,
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                    })}
+                  />
+
+                  <Stack.Screen
+                    name="Edit Song Content"
+                    component={EditSongContentScreen}
+                    options={({route}) => ({
+                      title: 'Edit',
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Perform Setlist"
+                    component={PerformSetlistScreen}
+                    options={({route}) => ({
+                      title: '',
+                      headerShadowVisible: false,
+                      headerTitleAlign: 'center',
+                      headerBackTitle: '',
+                    })}
+                  />
+                </Stack.Group>
+
                 <Stack.Screen
-                  name="Tabbed"
-                  component={HomeTabs}
-                  options={{headerShown: false}}
+                  name="Create Song"
+                  component={CreateSongModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                  }}
                 />
                 <Stack.Screen
-                  name="Song Detail"
-                  component={SongDetailScreen}
-                  options={({route}) => ({
-                    title: route.params.name,
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
+                  name="Create Binder"
+                  component={CreateBinderModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                  }}
                 />
                 <Stack.Screen
-                  name="Binder Detail"
-                  component={BinderDetailScreen}
-                  options={({route}) => ({
-                    title: '',
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
+                  name="Create Setlist"
+                  component={CreateSetlistModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                  }}
                 />
                 <Stack.Screen
-                  name="Setlist Detail"
-                  component={SetlistDetailScreen}
-                  options={({route}) => ({
-                    title: '',
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
-                />
-                <Stack.Screen
-                  name="Appearance"
-                  component={AppearanceScreen}
-                  options={({route}) => ({
-                    title: 'Appearance',
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
-                />
-                <Stack.Screen
-                  name="Notification Settings"
-                  component={NotificationSettingsScreen}
-                  options={() => ({
-                    title: 'Notification Settings',
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
-                />
-                <Stack.Screen
-                  name="Edit Profile"
-                  component={EditProfileScreen}
-                  options={({route}) => ({
-                    title: 'Edit Profile',
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
-                />
-                <Stack.Screen
-                  name="Perform Song"
-                  component={PerformSongScreen}
-                  options={({route}) => ({
-                    title: route.params.name,
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
+                  name="Add Theme"
+                  component={AddThemeModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                  }}
                 />
 
                 <Stack.Screen
-                  name="Edit Song Content"
-                  component={EditSongContentScreen}
-                  options={({route}) => ({
+                  name="Add Genre"
+                  component={AddGenreModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                  }}
+                />
+                <Stack.Screen
+                  name="Edit Song Details"
+                  component={EditSongDetailsModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                    title: 'Edit Song',
+                  }}
+                />
+
+                <Stack.Screen
+                  name="Edit Binder Details"
+                  component={EditBinderDetailsModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
                     title: 'Edit',
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
+                  }}
+                />
+
+                <Stack.Screen
+                  name="Edit Setlist Details"
+                  component={EditSetlistDetailsModal}
+                  options={{
+                    headerShown: false,
+                    presentation: 'containedModal',
+                    title: 'Edit',
+                  }}
                 />
                 <Stack.Screen
-                  name="Perform Setlist"
-                  component={PerformSetlistScreen}
-                  options={({route}) => ({
-                    title: '',
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                    headerBackTitle: '',
-                  })}
-                />
-              </Stack.Group>
-
-              <Stack.Screen
-                name="Create Song"
-                component={CreateSongModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                }}
-              />
-              <Stack.Screen
-                name="Create Binder"
-                component={CreateBinderModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                }}
-              />
-              <Stack.Screen
-                name="Create Setlist"
-                component={CreateSetlistModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                }}
-              />
-              <Stack.Screen
-                name="Add Theme"
-                component={AddThemeModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                }}
-              />
-
-              <Stack.Screen
-                name="Add Genre"
-                component={AddGenreModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'fullScreenModal',
-                }}
-              />
-              <Stack.Screen
-                name="Edit Song Details"
-                component={EditSongDetailsModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                  title: 'Edit Song',
-                }}
-              />
-
-              <Stack.Screen
-                name="Edit Binder Details"
-                component={EditBinderDetailsModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                  title: 'Edit',
-                }}
-              />
-
-              <Stack.Screen
-                name="Edit Setlist Details"
-                component={EditSetlistDetailsModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                  title: 'Edit',
-                }}
-              />
-              <Stack.Screen
-                name="Choose Team"
-                component={ChooseTeamModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                }}
-              />
-              <Stack.Screen
-                name="Print Song"
-                component={PrintSongModal}
-                options={{
-                  headerShown: false,
-                  presentation: 'containedModal',
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <Stack.Group
-                screenOptions={{
-                  headerShown: false,
-                }}>
-                <Stack.Screen name="Auth" component={AuthScreen} />
-                <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="Sign Up" component={SignUpScreen} />
-                <Stack.Screen
-                  name="Forgot Password"
-                  component={ForgotPasswordScreen}
-                />
-                <Stack.Screen name="Login Team" component={LoginTeamScreen} />
-                <Stack.Screen name="Create Team" component={CreateTeamScreen} />
-                <Stack.Screen
-                  name="Check Email"
-                  component={CheckEmailModal}
+                  name="Choose Team"
+                  component={ChooseTeamModal}
                   options={{
                     headerShown: false,
                     presentation: 'containedModal',
                   }}
                 />
                 <Stack.Screen
-                  name="Check Email For Password"
-                  component={CheckEmailForPasswordModal}
+                  name="Print Song"
+                  component={PrintSongModal}
                   options={{
                     headerShown: false,
                     presentation: 'containedModal',
                   }}
                 />
-              </Stack.Group>
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </BottomSheetModalProvider>
+              </>
+            ) : (
+              <>
+                <Stack.Group
+                  screenOptions={{
+                    headerShown: false,
+                  }}>
+                  <Stack.Screen name="Auth" component={AuthScreen} />
+                  <Stack.Screen name="Login" component={LoginScreen} />
+                  <Stack.Screen name="Sign Up" component={SignUpScreen} />
+                  <Stack.Screen
+                    name="Forgot Password"
+                    component={ForgotPasswordScreen}
+                  />
+                  <Stack.Screen name="Login Team" component={LoginTeamScreen} />
+                  <Stack.Screen
+                    name="Create Team"
+                    component={CreateTeamScreen}
+                  />
+                  <Stack.Screen
+                    name="Check Email"
+                    component={CheckEmailModal}
+                    options={{
+                      headerShown: false,
+                      presentation: 'containedModal',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="Check Email For Password"
+                    component={CheckEmailForPasswordModal}
+                    options={{
+                      headerShown: false,
+                      presentation: 'containedModal',
+                    }}
+                  />
+                </Stack.Group>
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </BottomSheetModalProvider>
+    </SafeAreaView>
   );
 }
 
 function HomeTabs() {
+  const {surface, text} = useTheme();
   return (
     <Tab.Navigator
       tabBar={props => <TabBar {...props} />}
-      screenOptions={{headerShadowVisible: false, headerTitleAlign: 'center'}}>
+      screenOptions={{
+        headerShadowVisible: false,
+        headerTitleAlign: 'center',
+        headerStyle: surface.primary,
+        headerTitleStyle: text.primary,
+      }}>
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen
         name="Search"
@@ -415,6 +458,11 @@ function HomeTabs() {
       <Tab.Screen name="Binders" component={BindersIndexScreen} />
       <Tab.Screen name="Sets" component={SetlistsIndexScreen} />
       <Tab.Screen name="Members" component={MembersIndexScreen} />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{headerShown: false}}
+      />
     </Tab.Navigator>
   );
 }

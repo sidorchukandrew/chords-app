@@ -1,11 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 import {MAJOR_KEYS_WITH_SPACES, MINOR_KEYS_WITH_SPACES} from '../utils/music';
-import AccentButton from './AccentButton';
 import BottomSheetModal from './BottomSheetModal';
-import Button from './Button';
 import ConfirmCancelButtons from './ConfirmCancelButtons';
-import Modal from './Modal';
 import SegmentedControl from './SegmentedControl';
 import SongKeyOption from './SongKeyOption';
 
@@ -14,6 +12,7 @@ export default function SongKeyModal({onClose, visible, songKey, onChange}) {
   const [quality, setQuality] = useState('Major');
   const [keyRows, setKeyRows] = useState(MAJOR_KEYS_WITH_SPACES);
   const sheetRef = useRef();
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -45,7 +44,7 @@ export default function SongKeyModal({onClose, visible, songKey, onChange}) {
       visible={visible}
       onDismiss={onClose}
       style={styles.modal}>
-      <Text style={styles.selectedKey}>{originalKey}</Text>
+      <Text style={[styles.selectedKey, text.primary]}>{originalKey}</Text>
       <View style={styles.qualityPickerContainer}>
         <SegmentedControl
           options={['Major', 'Minor']}

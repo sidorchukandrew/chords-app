@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import {View} from 'react-native';
 import {TextField} from 'rn-material-ui-textfield';
+import {useTheme} from '../hooks/useTheme';
 
 export default function FormField({
   label,
@@ -8,9 +9,11 @@ export default function FormField({
   onChange,
   keyboardType = 'default',
   onPress,
+  clearable,
   ...remainingProps
 }) {
   const inputRef = useRef();
+  const {icon} = useTheme();
 
   function handleFocus() {
     onPress?.();
@@ -23,11 +26,13 @@ export default function FormField({
         ref={inputRef}
         label={label}
         value={value}
+        baseColor={icon.secondary}
+        textColor={icon.primary}
         onChangeText={onChange}
         fontSize={16}
         keyboardType={keyboardType}
         keyboardAppearance="dark"
-        tintColor="#2464eb"
+        tintColor={icon.blue}
         onFocus={onPress && handleFocus}
         showSoftInputOnFocus={!onPress}
         {...remainingProps}

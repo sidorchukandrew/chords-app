@@ -1,12 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
 
-import Icon from 'react-native-vector-icons';
+import ToggleField from '../components/ToggleField';
 import React from 'react';
 import Toggle from './Toggle';
 import SettingsApi from '../api/settingsApi';
 import {reportError} from '../utils/error';
+import {useTheme} from '../hooks/useTheme';
 
 export default function NotificationSetting({category, setting, onChange}) {
+  const {border} = useTheme();
+
   async function handleUpdateSetting(type, enabled) {
     try {
       onChange({...setting, [type]: enabled});
@@ -22,29 +25,32 @@ export default function NotificationSetting({category, setting, onChange}) {
     <View>
       <Text style={styles.categoryText}>{category}</Text>
       <View style={styles.typesContainer}>
-        <View style={styles.type}>
-          <Text style={styles.typeText}>Email</Text>
-          <Toggle
-            enabled={setting.email_enabled}
+        <View style={[styles.type, border.primary]}>
+          <ToggleField
+            style={styles.field}
+            label="Email"
+            value={setting.email_enabled}
             onChange={newValue =>
               handleUpdateSetting('email_enabled', newValue)
             }
           />
         </View>
-        <View style={[styles.type, {borderBottomWidth: 0}]}>
-          <Text style={styles.typeText}>Text message</Text>
-          <Toggle
-            enabled={setting.sms_enabled}
+        <View style={[styles.type, border.primary]}>
+          <ToggleField
+            style={styles.field}
+            label="Text message"
+            value={setting.sms_enabled}
             onChange={newValue => handleUpdateSetting('sms_enabled', newValue)}
           />
         </View>
-        {/* <View style={[styles.type, {borderBottomWidth: 0}]}>
-          <Text style={styles.typeText}>Push</Text>
-          <Toggle
-            enabled={setting.app_enabled}
-            onChange={newValue => handleUpdateSetting('app_enabled', newValue)}
+        <View style={[styles.type, {borderBottomWidth: 0}]}>
+          <ToggleField
+            style={styles.field}
+            label="App (Push)"
+            value={setting.push_enabled}
+            onChange={newValue => handleUpdateSetting('push_enabled', newValue)}
           />
-        </View> */}
+        </View>
       </View>
     </View>
   );
@@ -64,11 +70,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
-    borderBottomColor: '#eaeaea',
     borderBottomWidth: 1,
   },
   typeText: {
     color: 'black',
     fontSize: 15,
+  },
+  field: {
+    width: '100%',
   },
 });

@@ -1,10 +1,4 @@
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import ScreenModal from './ScreenModal';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
@@ -17,11 +11,13 @@ import {selectSongOnScreen} from '../redux/slices/performanceSlice';
 import {buildPdfContent} from '../utils/pdf';
 import RNPrint from 'react-native-print';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import {useTheme} from '../hooks/useTheme';
 
 export default function PrintSongModal({navigation}) {
   const song = useSelector(selectSongOnScreen);
   const [uri, setUri] = useState();
   const [showAdjustmentsSheet, setShowAdjustmentsSheet] = useState(false);
+  const {text, blue} = useTheme();
   let regenerationCount = useRef(0);
 
   useEffect(() => {
@@ -63,14 +59,14 @@ export default function PrintSongModal({navigation}) {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{padding: 5}}>
-          <Icon name="close" size={22} color="#404040" />
+          <Icon name="close" size={22} color={text.secondary.color} />
         </TouchableOpacity>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={handleShowPrintDialog}>
-            <Icon name="printer" size={22} color="#2464eb" />
+            <Icon name="printer" size={22} color={blue.text.color} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setShowAdjustmentsSheet(true)}>
-            <Icon name="tune-vertical" size={22} color="#2464eb" />
+            <Icon name="tune-vertical" size={22} color={blue.text.color} />
           </TouchableOpacity>
         </View>
       </View>

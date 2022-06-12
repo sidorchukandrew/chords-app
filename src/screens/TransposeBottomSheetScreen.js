@@ -14,6 +14,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import Toggle from '../components/Toggle';
 import TransposeButtons from '../components/TransposeButtons';
 import {selectCurrentMember} from '../redux/slices/authSlice';
+import {useTheme} from '../hooks/useTheme';
 
 export default function TransposeBottomSheetScreen({route, navigation}) {
   const [song, setSong] = useState(route?.params);
@@ -22,14 +23,17 @@ export default function TransposeBottomSheetScreen({route, navigation}) {
   });
   const dispatch = useDispatch();
   const currentMember = useSelector(selectCurrentMember);
+  const {surface, text, isDark} = useTheme();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: isDark ? surface.secondary : surface.primary,
+      headerTitleStyle: text.primary,
       headerRight: () => (
         <Toggle enabled={song.show_transposed} onChange={handleToggle} />
       ),
     });
-  }, [navigation, song]);
+  }, [navigation, song, isDark, surface, text]);
 
   function handleChange(newKey) {
     setSong(currentSong => ({
@@ -54,7 +58,8 @@ export default function TransposeBottomSheetScreen({route, navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, isDark ? surface.secondary : surface.primary]}>
       <TransposeButtons
         transposedKey={song?.transposed_key || song?.original_key}
         onChange={handleChange}
@@ -70,7 +75,6 @@ export default function TransposeBottomSheetScreen({route, navigation}) {
           </KeyOptionButton>
         ))}
       </ScrollView>
-      <View style={styles.saveContainer}></View>
     </View>
   );
 }
@@ -78,7 +82,6 @@ export default function TransposeBottomSheetScreen({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     padding: 10,
   },
   keyOptions: {

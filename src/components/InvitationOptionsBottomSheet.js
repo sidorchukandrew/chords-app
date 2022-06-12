@@ -6,6 +6,7 @@ import RectButton from './RectButton';
 import {reportError} from '../utils/error';
 import InvitationsApi from '../api/invitationsApi';
 import Snackbar from 'react-native-snackbar';
+import {useTheme} from '../hooks/useTheme';
 
 export default function InvitationOptionsBottomSheet({
   invitation,
@@ -16,6 +17,7 @@ export default function InvitationOptionsBottomSheet({
 }) {
   const sheetRef = useRef();
   const {isConnected} = useNetInfo();
+  const {surface, text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -53,10 +55,14 @@ export default function InvitationOptionsBottomSheet({
       dynamicHeight
       snapPoints={['CONTENT_HEIGHT']}>
       <View style={styles.container}>
-        <Text style={styles.titleText}>{invitation.email}</Text>
+        <Text style={[styles.titleText, text.primary]}>{invitation.email}</Text>
         <RectButton disabled={!isConnected} onPress={handleResend}>
           <Text
-            style={[styles.buttonText, !isConnected && styles.disabledColor]}>
+            style={[
+              styles.buttonText,
+              text.secondary,
+              !isConnected && text.disabled,
+            ]}>
             Resend invitation
           </Text>
         </RectButton>
@@ -65,7 +71,7 @@ export default function InvitationOptionsBottomSheet({
             style={[
               styles.buttonText,
               styles.deleteColor,
-              !isConnected && styles.disabledColor,
+              !isConnected && text.disabled,
             ]}>
             Delete
           </Text>
@@ -77,27 +83,21 @@ export default function InvitationOptionsBottomSheet({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     padding: 15,
     flex: 1,
   },
   titleText: {
-    color: '#505050',
     fontWeight: '600',
     fontSize: 18,
     paddingBottom: 15,
     textAlign: 'center',
   },
   buttonText: {
-    color: '#505050',
     fontWeight: '600',
     marginLeft: 10,
     fontSize: 16,
   },
   deleteColor: {
     color: '#ef4444',
-  },
-  disabledColor: {
-    color: '#d0d0d0',
   },
 });

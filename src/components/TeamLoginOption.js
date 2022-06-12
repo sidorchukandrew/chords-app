@@ -4,14 +4,17 @@ import ProfilePicture from './ProfilePicture';
 import React from 'react';
 import Tag from './Tag';
 import {TouchableOpacity} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 export default function TeamLoginOption({team, bordered, onPress, selected}) {
+  const {border, text} = useTheme();
+
   return (
-    <View style={bordered && styles.border}>
+    <View style={bordered && [border.primary, styles.border]}>
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <View style={styles.buttonLeftContainer}>
           <ProfilePicture url={team.image_url} size="md" />
-          <Text style={styles.buttonText}>{team.name}</Text>
+          <Text style={[styles.buttonText, text.primary]}>{team.name}</Text>
         </View>
 
         {selected && <Tag tag="Current" />}
@@ -34,7 +37,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   border: {
-    borderBottomColor: '#eaeaea',
     borderBottomWidth: 1,
   },
   buttonLeftContainer: {

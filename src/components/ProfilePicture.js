@@ -3,6 +3,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import {getAvatarInitials} from '../utils/member';
+import {useTheme} from '../hooks/useTheme';
 
 export default function ProfilePicture({
   url,
@@ -10,6 +11,8 @@ export default function ProfilePicture({
   size = 'sm',
   member,
 }) {
+  const {icon} = useTheme();
+
   function determineInitialsBackgroundColor() {
     let initials = getAvatarInitials(member);
     let sumOfLetters = initials
@@ -45,7 +48,7 @@ export default function ProfilePicture({
     return (
       <Icon
         name="account-circle-outline"
-        color="#505050"
+        color={icon.secondary}
         size={sizes[size].width}
         style={[providedStyles]}
       />

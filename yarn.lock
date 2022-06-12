@@ -3827,7 +3827,7 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
-invariant@^2.2.4:
+invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -6018,6 +6018,11 @@ react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-native-avoid-softinput@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/react-native-avoid-softinput/-/react-native-avoid-softinput-2.3.3.tgz#1394f723d3f185429255db252c047d5a5ac4fb9c"
+  integrity sha512-wrdMJEvjfMw9/JQolP5SF/L9BEQEE5NDIw1+2h/01ZZ+bMKUFC2vDsocd/joIakiogxubjfiW35eTlAhskctRg==
+
 react-native-blob-util@^0.13.18:
   version "0.13.18"
   resolved "https://registry.yarnpkg.com/react-native-blob-util/-/react-native-blob-util-0.13.18.tgz#7b924d55607bda380d6e9862b621ed1ac0c007ec"
@@ -6119,10 +6124,22 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
+react-native-logs@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-4.0.1.tgz#96178ff899a462bc936582fac69b96fc31ff4e4d"
+  integrity sha512-SplLnxAbBOgzjVoIRcLIv7QO/wnmGhPwaGWUYu5FVg2LI9ZsBO3f3xjYH7Go2wZRhPG3BIkSgB/woBicBjwmLg==
+
 react-native-mmkv@^1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-1.6.2.tgz#2945203a3a8278f5c2cb935bf9bb789bbe5fa91e"
   integrity sha512-sNPzTQdVHuwQsjsF8rAUYYrZQHU733TOk7FT87tJqaPYbkm6jumat8THbnk+gIWkH03DZfEDD8xsBy6G0++kBQ==
+
+react-native-onesignal@^4.3.7:
+  version "4.3.7"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.3.7.tgz#488319cd1912958613feef81c83b2b720a38a88e"
+  integrity sha512-oBTja1n2puwF5XuYPbEaBpvaWGiV5lkVX+zWndQe/dRcIgtIEJzVZqeaqxZ3u30ImxFoyCXqUzup2BiuQFewFw==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-pdf@^6.4.0:
   version "6.4.0"
@@ -6220,6 +6237,11 @@ react-native-vector-icons@^9.0.0:
     lodash.template "^4.5.0"
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-wheely@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-wheely/-/react-native-wheely-0.4.1.tgz#f9dffcc73965825074c48bb69cb54b7d1850188a"
+  integrity sha512-fr4BTRy3YnnxmZeSHKGms4MPcvLC5rnGqfqes9lKDEYRmZTLwuCVOy5Lad/VH4MUI5VE+FM40AQ/JZldB2PFQw==
 
 react-native@0.66.3:
   version "0.66.3"

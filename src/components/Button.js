@@ -5,6 +5,7 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 export default function Button({
   children,
@@ -14,12 +15,14 @@ export default function Button({
   disabled,
   loading,
 }) {
+  const {surface} = useTheme();
+
   return (
     <TouchableOpacity
       style={[
         styles.button,
         full && styles.full,
-        disabled && styles.disabled,
+        disabled && surface.tertiary,
         providedStyles,
       ]}
       disabled={disabled || loading}
@@ -50,9 +53,6 @@ const styles = StyleSheet.create({
   },
   full: {
     flex: 1,
-  },
-  disabled: {
-    backgroundColor: '#eaeaea',
   },
   disabledText: {
     color: '#a0a0a0',

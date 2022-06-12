@@ -3,14 +3,17 @@ import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import RectButton from './RectButton';
+import {useTheme} from '../hooks/useTheme';
 
 export default function FormatDetailButton({label, detail, onPress}) {
+  const {text} = useTheme();
+
   return (
     <RectButton styles={styles.button} onPress={onPress}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, text.primary]}>{label}</Text>
       <View style={styles.detailSection}>
-        <Text style={styles.detail}>{detail}</Text>
-        <Icon name="chevron-right" size={18} />
+        <Text style={[styles.detail, text.primary]}>{detail}</Text>
+        <Icon name="chevron-right" size={18} color={text.primary.color} />
       </View>
     </RectButton>
   );
@@ -25,7 +28,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: 'black',
     fontWeight: '500',
   },
   detail: {

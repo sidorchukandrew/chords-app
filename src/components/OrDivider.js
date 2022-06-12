@@ -1,13 +1,16 @@
 import {StyleSheet, Text, View} from 'react-native';
 
 import React from 'react';
+import {useTheme} from '../hooks/useTheme';
 
 export default function OrDivider() {
+  const {surface, text} = useTheme();
+
   return (
     <View style={styles.container}>
-      <View style={styles.line} />
-      <Text style={styles.text}>OR</Text>
-      <View style={styles.line} />
+      <View style={[styles.line, surface.tertiary]} />
+      <Text style={[styles.text, text.secondary]}>OR</Text>
+      <View style={[styles.line, surface.tertiary]} />
     </View>
   );
 }
@@ -25,7 +28,6 @@ const styles = StyleSheet.create({
 
   line: {
     height: 1,
-    backgroundColor: '#eaeaea',
     flexGrow: 1,
   },
 });

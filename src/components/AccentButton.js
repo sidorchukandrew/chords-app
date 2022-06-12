@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 import React from 'react';
+import {useTheme} from '../hooks/useTheme';
 
 export default function AccentButton({
   children,
@@ -10,19 +11,24 @@ export default function AccentButton({
   icon,
   textStyle,
 }) {
+  const {surface, blue} = useTheme();
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.button, full && styles.full, providedStyles]}>
+      style={[
+        styles.button,
+        full && styles.full,
+        surface.tertiary,
+        providedStyles,
+      ]}>
       {icon}
-      <Text style={[styles.buttonText, textStyle]}>{children}</Text>
+      <Text style={[styles.buttonText, blue.text, textStyle]}>{children}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#eaeaea',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -30,7 +36,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonText: {
-    color: '#2464eb',
     fontWeight: '700',
     fontSize: 15,
   },

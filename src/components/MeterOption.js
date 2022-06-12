@@ -1,20 +1,21 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 export default function MeterOption({meter, onPress}) {
+  const {surface, text} = useTheme();
   return (
     <TouchableOpacity
       onPress={() => onPress(meter.combined)}
-      style={styles.button}>
-      <Text style={styles.buttonText}>{meter.top}</Text>
-      <Text style={styles.buttonText}>{meter.bottom}</Text>
+      style={[styles.button, surface.tertiary]}>
+      <Text style={[styles.buttonText, text.primary]}>{meter.top}</Text>
+      <Text style={[styles.buttonText, text.primary]}>{meter.bottom}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#eaeaea',
     padding: 4,
     borderRadius: 6,
     width: 35,

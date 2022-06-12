@@ -1,37 +1,79 @@
-import {StyleSheet, Text, View} from 'react-native';
-import {selectCurrentTheme, setTheme} from '../redux/slices/appearanceSlice';
+import {StyleSheet, View} from 'react-native';
+import {
+  selectCurrentTheme,
+  selectDisableSwipeInSetlist,
+  selectShowSetlistNavigation,
+  setDisableSwipeInSetlist,
+  setShowSetlistNavigation,
+  setTheme,
+} from '../redux/slices/appearanceSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import Divider from '../components/Divider';
 
 import Container from '../components/Container';
 import React from 'react';
-import Toggle from '../components/Toggle';
+import ToggleField from '../components/ToggleField';
+import {useTheme} from '../hooks/useTheme';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default function AppearanceScreen() {
   const currentTheme = useSelector(selectCurrentTheme);
+  const {surface, border} = useTheme();
+  const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
+  const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const dispatch = useDispatch();
 
   function handleToggleTheme(isDarkTheme) {
     dispatch(setTheme(isDarkTheme ? 'dark' : 'light'));
   }
 
+  function handleToggleShowSetlistNavigation(shouldShow) {
+    if (!shouldShow) {
+      dispatch(setDisableSwipeInSetlist(false));
+    }
+
+    dispatch(setShowSetlistNavigation(shouldShow));
+  }
+
+  function handleToggleDisableSwipeInSetlist(canSwipe) {
+    dispatch(setDisableSwipeInSetlist(canSwipe));
+  }
+
+  function isDark() {
+    return currentTheme === 'dark';
+  }
+
   return (
-    <View style={styles.screen}>
+    <ScrollView style={[styles.screen, surface.primary]}>
       <Container size="md">
-        <View style={styles.row}>
-          <Text style={styles.label}>Dark theme</Text>
-          <Toggle
-            enabled={currentTheme === 'dark'}
-            onChange={handleToggleTheme}
-          />
-        </View>
+        <ToggleField
+          label="Dark theme"
+          style={styles.field}
+          value={isDark()}
+          onChange={handleToggleTheme}
+        />
+        <Divider />
+        <ToggleField
+          value={showSetlistNavigation}
+          label="Show setlist bottom navigation"
+          onChange={handleToggleShowSetlistNavigation}
+          style={[styles.field, styles.underline, border.primary]}
+        />
+
+        <ToggleField
+          value={disableSwipeInSetlist}
+          label="Disable swiping between songs when performing set"
+          onChange={handleToggleDisableSwipeInSetlist}
+          style={styles.field}
+          disabled={!showSetlistNavigation}
+        />
       </Container>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: 'white',
     paddingVertical: 10,
     flex: 1,
   },
@@ -44,5 +86,11 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: '500',
     fontSize: 16,
+  },
+  field: {
+    paddingVertical: 10,
+  },
+  underline: {
+    borderBottomWidth: 1,
   },
 });

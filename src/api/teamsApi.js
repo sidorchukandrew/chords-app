@@ -15,4 +15,10 @@ export default class TeamsApi {
   static createOne(team) {
     return api().post('/teams', team, {headers: constructAuthHeaders()});
   }
+
+  static getMemberships() {
+    return api().get(`/teams/${getTeamId()}/memberships`, {
+      headers: constructAuthHeaders(),
+    });
+  }
 }

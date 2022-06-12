@@ -4,15 +4,17 @@ import AccentButton from '../components/AccentButton';
 import Container from './Container';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {format} from '../utils/date';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SetlistDetailHeader({setlist, onNavigateTo}) {
+  const {text, blue} = useTheme();
   return (
     <View style={styles.container}>
       <View style={styles.dateTitleContainer}>
-        <Text style={styles.title}>{setlist?.name}</Text>
+        <Text style={[styles.title, text.primary]}>{setlist?.name}</Text>
         <View style={styles.dateContainer}>
-          <Icon name="calendar-blank" size={18} color="#505050" />
-          <Text style={styles.dateText}>
+          <Icon name="calendar-blank" size={18} color={text.secondary.color} />
+          <Text style={[styles.dateText, text.secondary]}>
             {setlist.scheduled_date
               ? format(setlist.scheduled_date, 'ddd MMM D')
               : 'Not scheduled'}
@@ -28,7 +30,7 @@ export default function SetlistDetailHeader({setlist, onNavigateTo}) {
               <Icon
                 name="play-circle"
                 size={18}
-                color="#2464eb"
+                color={blue.text.color}
                 style={styles.playIcon}
               />
             }>
@@ -65,7 +67,6 @@ const styles = StyleSheet.create({
   },
   dateText: {
     marginLeft: 5,
-    color: '#505050',
     fontSize: 13,
   },
   playIcon: {

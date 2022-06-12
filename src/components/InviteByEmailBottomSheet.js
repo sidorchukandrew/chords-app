@@ -6,6 +6,7 @@ import Button from './Button';
 import AlertBubble from './AlertBubble';
 import {reportError} from '../utils/error';
 import InvitationsApi from '../api/invitationsApi';
+import {useTheme} from '../hooks/useTheme';
 
 export default function InviteByEmailBottomSheet({
   pendingInvitations,
@@ -17,6 +18,7 @@ export default function InviteByEmailBottomSheet({
   const sheetRef = useRef();
   const [email, setEmail] = useState('');
   const [saving, setSaving] = useState(false);
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -89,7 +91,6 @@ export default function InviteByEmailBottomSheet({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     padding: 15,
   },
   inviteButton: {

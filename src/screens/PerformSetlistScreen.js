@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -25,7 +25,13 @@ import Roadmap from '../components/Roadmap';
 import Note from '../components/Note';
 import SetlistNavigation from '../components/SetlistNavigation';
 import {useFocusEffect} from '@react-navigation/native';
+import {useTheme} from '../hooks/useTheme';
 import SetlistAdjustmentsBottomSheet from '../components/SetlistAdjustmentsBottomSheet';
+import {
+  selectDisableSwipeInSetlist,
+  selectShowSetlistNavigation,
+} from '../redux/slices/appearanceSlice';
+import {AvoidSoftInput} from 'react-native-avoid-softinput';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const {width} = useWindowDimensions();
@@ -42,8 +48,25 @@ export default function PerformSetlistScreen({navigation, route}) {
   const [keyOptionsSheetVisible, setKeyOptionsSheetVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
   const songOnScreen = useSelector(selectSongOnScreen);
+  const showSetlistNavigation = useSelector(selectShowSetlistNavigation);
+  const disableSwipeInSetlist = useSelector(selectDisableSwipeInSetlist);
   const dispatch = useDispatch();
   const carouselRef = useRef();
+  const {surface, text, blue} = useTheme();
+
+  const onFocusEffect = useCallback(() => {
+    AvoidSoftInput.setAdjustNothing();
+    AvoidSoftInput.setEnabled(true);
+    AvoidSoftInput.setAvoidOffset(100);
+    AvoidSoftInput.setHideAnimationDelay(100);
+    return () => {
+      AvoidSoftInput.setEnabled(false);
+      AvoidSoftInput.setDefaultAppSoftInputMode();
+      AvoidSoftInput.setAvoidOffset(0); // Default value
+    };
+  }, []);
+
+  useFocusEffect(onFocusEffect);
 
   useEffect(() => {
     dispatch(setSongOnScreen(songs[0]));
@@ -65,6 +88,8 @@ export default function PerformSetlistScreen({navigation, route}) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerTitleStyle: text.primary,
+      headerStyle: surface.primary,
       title: songs[songIndex]?.name,
       headerRight: () => (
         <View style={styles.headerButtonsContainer}>
@@ -82,12 +107,12 @@ export default function PerformSetlistScreen({navigation, route}) {
           <TouchableOpacity
             style={{padding: 3}}
             onPress={() => setAdjustmentsSheetVisible(true)}>
-            <Icon name="tune-vertical" size={22} color="#2464eb" />
+            <Icon name="tune-vertical" size={22} color={blue.text.color} />
           </TouchableOpacity>
         </View>
       ),
     });
-  }, [navigation, songIndex, songs]);
+  }, [navigation, songIndex, songs, surface, text, blue]);
 
   function renderSlide({item: song, index}) {
     if (!song) {
@@ -98,7 +123,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
-            style={styles.slideContainer}
+            style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
             maximumZoomScale={4}
             minimumZoomScale={0.5}>
@@ -124,7 +149,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
-            style={styles.slideContainer}
+            style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
             maximumZoomScale={4}
             minimumZoomScale={0.5}>
@@ -173,7 +198,7 @@ export default function PerformSetlistScreen({navigation, route}) {
   }
 
   return (
-    <View style={styles.screenContainer}>
+    <View style={[styles.screenContainer, surface.primary]}>
       <Carousel
         layout="default"
         data={songs}
@@ -188,7 +213,16 @@ export default function PerformSetlistScreen({navigation, route}) {
         songIndex={songIndex}
         onNext={() => handleSwipedToSong(songIndex + 1)}
         onBack={() => handleSwipedToSong(songIndex - 1)}
+        scrollEnabled={!disableSwipeInSetlist}
       />
+      {showSetlistNavigation && (
+        <SetlistNavigation
+          songs={songs}
+          songIndex={songIndex}
+          onNext={() => handleSwipedToSong(songIndex + 1)}
+          onBack={() => handleSwipedToSong(songIndex - 1)}
+        />
+      )}
       <KeyOptionsBottomSheet
         visible={keyOptionsSheetVisible}
         onDismiss={() => setKeyOptionsSheetVisible(false)}
@@ -213,9 +247,9 @@ const styles = StyleSheet.create({
     width: '100%',
     flexGrow: 1,
     paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingBottom: 20,
   },
-  screenContainer: {flex: 1, backgroundColor: 'white', height: '100%'},
+  screenContainer: {flex: 1, height: '100%'},
   keyButton: {
     marginRight: 15,
     height: 35,

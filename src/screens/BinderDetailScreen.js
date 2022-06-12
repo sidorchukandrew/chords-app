@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   RefreshControl,
   StyleSheet,
@@ -32,6 +32,7 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
 
 export default function BinderDetailScreen({navigation, route}) {
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
@@ -43,7 +44,7 @@ export default function BinderDetailScreen({navigation, route}) {
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const {isConnected} = useNetInfo();
-
+  const {surface, text, blue} = useTheme();
   const currentMember = useSelector(selectCurrentMember);
 
   useFocusEffect(
@@ -66,38 +67,39 @@ export default function BinderDetailScreen({navigation, route}) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: surface.primary,
       headerRight: () => (
         <>
           {currentMember.can(EDIT_BINDERS) && (
             <TouchableOpacity
-              style={styles.headerButton}
+              style={[styles.headerButton, surface.tertiary]}
               onPress={() => setAddSongsSheetVisible(true)}
               disabled={!isConnected}>
               <Icon
                 name="plus"
                 size={22}
-                color={isConnected ? '#2464eb' : '#a0a0a0'}
+                color={isConnected ? blue.text.color : '#a0a0a0'}
               />
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            style={styles.headerButton}
+            style={[styles.headerButton, surface.tertiary]}
             onPress={() => setOptionsSheetVisible(true)}>
-            <Icon name="dots-horizontal" size={22} color="#2464eb" />
+            <Icon name="dots-horizontal" size={22} color={blue.text.color} />
           </TouchableOpacity>
         </>
       ),
     });
-  }, [navigation, currentMember, isConnected]);
+  }, [navigation, currentMember, isConnected, surface]);
 
   function renderRow({item: song}) {
     return (
       <TouchableHighlight
-        style={styles.row}
+        style={[styles.row, surface.primary]}
         onPress={() => handleNavigateToSong(song)}
-        underlayColor="white">
+        underlayColor={surface.primary.backgroundColor}>
         <>
-          <Text style={styles.songName}>{song.name}</Text>
+          <Text style={[styles.songName, text.primary]}>{song.name}</Text>
           {hasAnyKeysSet(song) && (
             <KeyBadge style={styles.keyBadge}>
               {song.transposed_key || song.original_key}
@@ -196,11 +198,16 @@ export default function BinderDetailScreen({navigation, route}) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, surface.primary]}>
       <Container size="lg">
         <SwipeListView
           refreshControl={
-            <RefreshControl onRefresh={handleRefresh} refreshing={refreshing} />
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
           }
           data={filteredSongs()}
           renderItem={renderRow}
@@ -250,17 +257,14 @@ export default function BinderDetailScreen({navigation, route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   headerButton: {
-    backgroundColor: '#eaeaea',
     padding: 3,
     borderRadius: 50,
     marginLeft: 15,
   },
   songName: {
     fontSize: 17,
-    color: 'black',
     fontWeight: '500',
   },
   row: {
@@ -268,7 +272,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 11,
     paddingHorizontal: 10,
-    backgroundColor: 'white',
   },
   keyBadge: {
     marginLeft: 10,

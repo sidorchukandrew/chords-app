@@ -1,10 +1,12 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 export default function KeyBadge({children, style: providedStyles}) {
+  const {surface, text} = useTheme();
   return (
-    <View style={[styles.badge, providedStyles]}>
-      <Text style={styles.text}>{children}</Text>
+    <View style={[styles.badge, surface.tertiary, providedStyles]}>
+      <Text style={[styles.text, text.secondary]}>{children}</Text>
     </View>
   );
 }

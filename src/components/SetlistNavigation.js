@@ -1,7 +1,10 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SetlistNavigation({onNext, onBack, songs, songIndex}) {
+  const {border, text} = useTheme();
+
   function hasPrevious() {
     return songIndex > 0;
   }
@@ -19,22 +22,35 @@ export default function SetlistNavigation({onNext, onBack, songs, songIndex}) {
   }
 
   return (
-    <View style={styles.buttonsContainer}>
+    <View style={[styles.buttonsContainer, border.primary]}>
       <TouchableOpacity
         style={styles.button}
         disabled={!hasPrevious()}
         onPress={onBack}>
         <Text
-          style={[styles.buttonText, !hasPrevious() && styles.disabledColor]}>
+          style={[
+            styles.buttonText,
+            text.primary,
+            !hasPrevious() && text.disabled,
+          ]}
+          ellipsizeMode="tail"
+          numberOfLines={2}>
           {getPreviousSongName()}
         </Text>
       </TouchableOpacity>
-      <View style={[styles.leftBorder, styles.button]}>
+      <View style={[styles.leftBorder, border.primary, styles.button]}>
         <TouchableOpacity
           onPress={onNext}
           disabled={!hasNext()}
           style={[styles.button, {width: '100%'}]}>
-          <Text style={[styles.buttonText, !hasNext() && styles.disabledColor]}>
+          <Text
+            style={[
+              styles.buttonText,
+              text.primary,
+              !hasNext() && text.disabled,
+            ]}
+            numberOfLines={2}
+            ellipsizeMode="tail">
             {getNextSongName()}
           </Text>
         </TouchableOpacity>
@@ -46,7 +62,6 @@ export default function SetlistNavigation({onNext, onBack, songs, songIndex}) {
 const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
-    borderTopColor: '#eaeaea',
     borderTopWidth: 1,
   },
   button: {
@@ -58,13 +73,8 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: '600',
     fontSize: 15,
-    color: 'black',
-  },
-  disabledColor: {
-    color: '#d0d0d0',
   },
   leftBorder: {
-    borderLeftColor: '#eaeaea',
     borderLeftWidth: 1,
   },
 });

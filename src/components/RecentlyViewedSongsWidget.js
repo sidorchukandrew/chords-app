@@ -11,10 +11,12 @@ import {useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {getRecentlyViewedSongs} from '../services/songsService';
 import NoDataMessage from './NoDataMessage';
-import ItemSeparator from './ItemSeparator';
+
+import {useTheme} from '../hooks/useTheme';
 
 export default function RecentlyViewedSongsWidget({navigation}) {
   const [songs, setSongs] = useState([]);
+  const {text, border} = useTheme();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -34,11 +36,15 @@ export default function RecentlyViewedSongsWidget({navigation}) {
           songs.map((song, index) => (
             <View key={song.id}>
               <TouchableOpacity
-                style={styles.row}
+                style={[
+                  styles.row,
+                  index < songs.length - 1 && styles.border,
+                  border.primary,
+                ]}
                 onPress={() => navigation.navigate('Song Detail', song)}>
-                <Text style={styles.songNameText}>{song.name}</Text>
+                <Text style={text.primary}>{song.name}</Text>
               </TouchableOpacity>
-              {index < songs.length - 1 && <ItemSeparator />}
+              {}
             </View>
           ))
         )}
@@ -52,7 +58,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 5,
   },
-  songNameText: {
-    color: 'black',
+  border: {
+    borderBottomWidth: 1,
   },
 });

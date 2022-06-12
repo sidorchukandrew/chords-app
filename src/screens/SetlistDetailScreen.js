@@ -30,8 +30,12 @@ import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
+import SessionsList from '../components/SessionsList';
 
 export default function SetlistDetailScreen({route, navigation}) {
+  const {surface, text, blue} = useTheme();
   const [setlist, setSetlist] = useState(route.params);
   const [addSongsSheetVisible, setAddSongsSheetVisible] = useState(false);
   const [optionsSheetVisible, setOptionsSheetVisible] = useState(false);
@@ -42,6 +46,7 @@ export default function SetlistDetailScreen({route, navigation}) {
   const itemRefs = useRef(new Map());
   const currentMember = useSelector(selectCurrentMember);
   const {isConnected} = useNetInfo();
+  const currentSubscription = useSelector(selectCurrentSubscription);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -83,23 +88,24 @@ export default function SetlistDetailScreen({route, navigation}) {
         <>
           <TouchableOpacity
             disabled={!isConnected}
-            style={styles.headerButton}
+            style={[styles.headerButton, surface.tertiary]}
             onPress={() => setAddSongsSheetVisible(true)}>
             <Icon
               name="plus"
               size={22}
-              color={isConnected ? '#2464eb' : '#a0a0a0'}
+              color={isConnected ? blue.text.color : text.disabled.color}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.headerButton}
+            style={[styles.headerButton, surface.tertiary]}
             onPress={() => setOptionsSheetVisible(true)}>
-            <Icon name="dots-horizontal" size={22} color="#2464eb" />
+            <Icon name="dots-horizontal" size={22} color={blue.text.color} />
           </TouchableOpacity>
         </>
       ),
+      headerStyle: surface.primary,
     });
-  }, [navigation, isConnected]);
+  }, [navigation, isConnected, surface, blue, text]);
 
   function renderSongRow(params) {
     return (
@@ -183,7 +189,7 @@ export default function SetlistDetailScreen({route, navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, surface.primary]}>
       <Container size="lg">
         <DraggableFlatList
           activationDistance={20}
@@ -199,12 +205,19 @@ export default function SetlistDetailScreen({route, navigation}) {
           ListEmptyComponent={renderNoData()}
           ItemSeparatorComponent={ItemSeparator}
           refreshControl={
-            <RefreshControl onRefresh={handleRefresh} refreshing={refreshing} />
+            <RefreshControl
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+              colors={['gray']}
+              tintColor="gray"
+            />
           }
           onDragEnd={handleReorder}
           style={{height: '100%'}}
+          ListFooterComponent={<SessionsList setlist={setlist} />}
         />
       </Container>
+
       <AddSongsToSetlistBottomSheet
         visible={addSongsSheetVisible}
         onDismiss={() => setAddSongsSheetVisible(false)}
@@ -232,11 +245,9 @@ export default function SetlistDetailScreen({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     paddingBottom: 10,
   },
   headerButton: {
-    backgroundColor: '#eaeaea',
     padding: 3,
     borderRadius: 50,
     marginLeft: 15,

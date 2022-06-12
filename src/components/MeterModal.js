@@ -1,5 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 import {COMMON_METERS} from '../utils/music';
 import BottomSheetModal from './BottomSheetModal';
 import ConfirmCancelButtons from './ConfirmCancelButtons';
@@ -8,6 +9,7 @@ import MeterOption from './MeterOption';
 export default function MeterModal({visible, onClose, meter, onChange}) {
   const [localMeter, setLocalMeter] = useState(meter || '4/4');
   const sheetRef = useRef();
+  const {text} = useTheme();
 
   useEffect(() => {
     setLocalMeter(meter || '4/4');
@@ -39,7 +41,7 @@ export default function MeterModal({visible, onClose, meter, onChange}) {
       visible={visible}
       onDismiss={onClose}
       ref={sheetRef}>
-      <Text style={styles.title}>Choose a meter</Text>
+      <Text style={[styles.title, text.primary]}>Choose a meter</Text>
       <View style={styles.commonMetersContainer}>
         {COMMON_METERS.map((commonMeter, index) => (
           <MeterOption
@@ -50,8 +52,12 @@ export default function MeterModal({visible, onClose, meter, onChange}) {
         ))}
       </View>
       <View style={styles.selectedMeterContainer}>
-        <Text style={styles.selectedMeterText}>{breakApartMeter().top}</Text>
-        <Text style={styles.selectedMeterText}>{breakApartMeter().bottom}</Text>
+        <Text style={[styles.selectedMeterText, text.primary]}>
+          {breakApartMeter().top}
+        </Text>
+        <Text style={[styles.selectedMeterText, text.primary]}>
+          {breakApartMeter().bottom}
+        </Text>
       </View>
       <ConfirmCancelButtons onCancel={handleCancel} onConfirm={handleConfirm} />
     </BottomSheetModal>
@@ -59,10 +65,6 @@ export default function MeterModal({visible, onClose, meter, onChange}) {
 }
 
 const styles = StyleSheet.create({
-  // modal: {
-  //   width: 500,
-  //   padding: 20,
-  // },
   title: {
     fontSize: 20,
     fontWeight: '600',

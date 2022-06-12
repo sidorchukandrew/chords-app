@@ -1,7 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {getCurrentSubscriptionFromStorage} from '../../services/authService';
 import Config from 'react-native-config';
-
 const initialState = {
   subscription: getCurrentSubscriptionFromStorage(),
 };

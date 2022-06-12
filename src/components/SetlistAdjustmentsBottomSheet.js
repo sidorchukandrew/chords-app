@@ -1,5 +1,4 @@
 import React, {useEffect, useRef} from 'react';
-
 import AdjustmentsBottomSheetScreen from './AdjustmentsBottomSheetScreen';
 import BottomSheet from './BottomSheet';
 import FontBottomSheetScreen from '../screens/FontBottomSheetScreen';
@@ -7,10 +6,12 @@ import FontSizeBottomSheetScreen from '../screens/FontSizeBottomSheetScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SetlistAdjustmentsBottomSheetScreen from './SetlistAdjustmentsBottomSheetScreen';
+import {useTheme} from '../hooks/useTheme';
 
 const Stack = createNativeStackNavigator();
 export default function SetlistAdjustmentsBottomSheet({visible, onDismiss}) {
   const sheetRef = useRef();
+  const {surface, text, isDark} = useTheme();
   useEffect(() => {
     if (visible) sheetRef.current?.present();
   }, [visible, sheetRef]);
@@ -22,7 +23,11 @@ export default function SetlistAdjustmentsBottomSheet({visible, onDismiss}) {
       ref={sheetRef}
       snapIndex={1}>
       <NavigationContainer independent>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: isDark ? surface.secondary : surface.primary,
+            headerTitleStyle: text.primary,
+          }}>
           <Stack.Screen
             name="SetlistAdjusments Menu"
             component={SetlistAdjustmentsBottomSheetScreen}

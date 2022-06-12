@@ -8,16 +8,17 @@ import {updateSong} from '../services/songsService';
 import {FONTS} from '../utils/song';
 import {useNetInfo} from '@react-native-community/netinfo';
 import CustomKeyboardAvoidingView from '../components/CustomKeyboardAvoidingView';
+import {useTheme} from '../hooks/useTheme';
 
 export default function EditSongContentScreen({navigation, route}) {
   const [localContent, setLocalContent] = useState(
     route?.params?.content || '',
   );
   const [song, setSong] = useState(route?.params);
-
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const {isConnected} = useNetInfo();
+  const {text, surface, blue} = useTheme();
 
   const handleGoBack = useCallback(() => {
     navigation.navigate('Song Detail', song);
@@ -25,6 +26,8 @@ export default function EditSongContentScreen({navigation, route}) {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: surface.primary,
+      headerTitleStyle: text.primary,
       headerRight: () => (
         <TouchableOpacity
           style={styles.saveButton}
@@ -36,7 +39,8 @@ export default function EditSongContentScreen({navigation, route}) {
             <Text
               style={[
                 styles.saveButtonText,
-                (!dirty || !isConnected) && styles.disabledText,
+                blue.text,
+                (!dirty || !isConnected) && text.disabled,
               ]}>
               Save
             </Text>
@@ -45,11 +49,21 @@ export default function EditSongContentScreen({navigation, route}) {
       ),
       headerLeft: props => (
         <TouchableOpacity {...props} onPress={handleGoBack}>
-          <Text style={styles.saveButtonText}>Done</Text>
+          <Text style={[styles.saveButtonText, blue.text]}>Done</Text>
         </TouchableOpacity>
       ),
     });
-  }, [navigation, dirty, saving, handleGoBack, localContent, isConnected]);
+  }, [
+    navigation,
+    dirty,
+    saving,
+    handleGoBack,
+    localContent,
+    isConnected,
+    surface,
+    text,
+    blue,
+  ]);
 
   function handleContentChange(newContent) {
     setDirty(true);
@@ -70,13 +84,17 @@ export default function EditSongContentScreen({navigation, route}) {
   }
 
   return (
-    <Container size="lg" style={styles.container}>
+    <Container size="lg" style={[styles.container, surface.primary]}>
       <CustomKeyboardAvoidingView>
         <TextInput
           value={localContent}
           onChangeText={handleContentChange}
           multiline
-          style={[styles.input, {fontFamily: FONTS[song.format?.font].regular}]}
+          style={[
+            styles.input,
+            text.primary,
+            {fontFamily: FONTS[song.format?.font].regular},
+          ]}
           placeholder="Start typing here"
         />
       </CustomKeyboardAvoidingView>
@@ -86,7 +104,6 @@ export default function EditSongContentScreen({navigation, route}) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     paddingBottom: 10,
   },
   input: {
@@ -100,7 +117,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   saveButtonText: {
-    color: '#2464eb',
     fontWeight: '600',
     fontSize: 17,
   },

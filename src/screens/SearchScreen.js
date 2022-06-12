@@ -16,8 +16,10 @@ import _ from 'lodash';
 import NoDataMessage from '../components/NoDataMessage';
 import {binderMatches, setlistMatches, songMatches} from '../utils/search';
 import ItemSeparator from '../components/ItemSeparator';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SearchScreen({navigation}) {
+  const {surface, text} = useTheme();
   const [query, setQuery] = useState('');
   const [songs, setSongs] = useState([]);
   const [setlists, setSetlists] = useState([]);
@@ -83,9 +85,9 @@ export default function SearchScreen({navigation}) {
   );
 
   return (
-    <ScrollView style={styles.screen}>
+    <ScrollView style={[styles.screen, surface.primary]}>
       <Container size="lg" style={styles.container}>
-        <Text style={styles.dashboardText}>Search</Text>
+        <Text style={[styles.dashboardText, text.primary]}>Search</Text>
         <SearchFilterBar
           placeholder="What are you looking for?"
           onQueryChange={handleQueryChange}
@@ -93,7 +95,7 @@ export default function SearchScreen({navigation}) {
         />
         <View style={styles.resultsContainer}>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitleText}>Songs</Text>
+            <Text style={[styles.sectionTitleText, text.primary]}>Songs</Text>
             {searchResults.songs?.length === 0 ? (
               <NoDataMessage message="No songs to show" />
             ) : (
@@ -102,7 +104,7 @@ export default function SearchScreen({navigation}) {
                   <TouchableOpacity
                     style={styles.row}
                     onPress={() => navigation.navigate('Song Detail', song)}>
-                    <Text>{song.name}</Text>
+                    <Text style={text.primary}>{song.name}</Text>
                   </TouchableOpacity>
                   {index < searchResults.songs.length - 1 && <ItemSeparator />}
                 </View>
@@ -111,7 +113,7 @@ export default function SearchScreen({navigation}) {
           </View>
 
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitleText}>Binders</Text>
+            <Text style={[styles.sectionTitleText, text.primary]}>Binders</Text>
             {searchResults.binders?.length === 0 ? (
               <NoDataMessage message="No binders to show" />
             ) : (
@@ -122,7 +124,7 @@ export default function SearchScreen({navigation}) {
                     onPress={() =>
                       navigation.navigate('Binder Detail', binder)
                     }>
-                    <Text>{binder.name}</Text>
+                    <Text style={text.primary}>{binder.name}</Text>
                   </TouchableOpacity>
                   {index < searchResults.binders.length - 1 && (
                     <ItemSeparator />
@@ -133,7 +135,7 @@ export default function SearchScreen({navigation}) {
           </View>
 
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitleText}>Sets</Text>
+            <Text style={[styles.sectionTitleText, text.primary]}>Sets</Text>
             {searchResults.setlists?.length === 0 ? (
               <NoDataMessage message="No sets to show" />
             ) : (
@@ -142,7 +144,7 @@ export default function SearchScreen({navigation}) {
                   <TouchableOpacity
                     style={styles.row}
                     onPress={() => navigation.navigate('Setlist Detail', set)}>
-                    <Text>{set.name}</Text>
+                    <Text style={text.primary}>{set.name}</Text>
                   </TouchableOpacity>
                   {index < searchResults.setlists.length - 1 && (
                     <ItemSeparator />
@@ -159,7 +161,6 @@ export default function SearchScreen({navigation}) {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: 'white',
     flex: 1,
   },
   container: {
@@ -174,7 +175,6 @@ const styles = StyleSheet.create({
   sectionTitleText: {
     fontWeight: '600',
     fontSize: 18,
-    color: 'black',
     marginBottom: 5,
   },
   row: {

@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 import Detail from './Detail';
 import Divider from './Divider';
@@ -17,6 +11,10 @@ import Tag from './Tag';
 import ThemeOptionsBottomSheet from './ThemeOptionsBottomSheet';
 import {selectCurrentMember} from '../redux/slices/authSlice';
 import {useSelector} from 'react-redux';
+import {useTheme} from '../hooks/useTheme';
+import AddTracksBottomSheet from './AddTracksBottomSheet';
+import Track from './Track';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
 
 export default function SongDetailsTab({
   song,
@@ -30,6 +28,9 @@ export default function SongDetailsTab({
   const [themeOptionsVisible, setThemeOptionsVisible] = useState(false);
   const [themeBeingViewed, setThemeBeingViewed] = useState();
   const currentMember = useSelector(selectCurrentMember);
+  const [addTracksVisible, setAddTracksVisible] = useState(false);
+  const {text, blue} = useTheme();
+  const currentSubscription = useSelector(selectCurrentSubscription);
 
   function handleOpenGenreOptionsSheet(genre) {
     if (currentMember.can(EDIT_SONGS)) {
@@ -59,18 +60,32 @@ export default function SongDetailsTab({
     onUpdateSong({themes: updatedThemes});
   }
 
+  function handleTrackRemoved(removedTrack) {
+    let updatedTracks = song.tracks?.filter(
+      track => track.id !== removedTrack.id,
+    );
+    onUpdateSong({tracks: updatedTracks});
+  }
+
+  function handleTracksAdded(addedTracks) {
+    let updatedTracks = song.tracks?.concat(addedTracks);
+    onUpdateSong({tracks: updatedTracks});
+  }
+
   return (
     <ScrollView>
       <Section
         title="Details"
         button={
           <TouchableOpacity
+            style={{padding: 5}}
             onPress={() => onNavigateTo('Edit Song Details')}
             disabled={!isConnected}>
             <Text
               style={[
                 styles.editButtonText,
-                !isConnected && styles.disabledColor,
+                blue.text,
+                !isConnected && text.disabled,
               ]}>
               Edit
             </Text>
@@ -83,16 +98,48 @@ export default function SongDetailsTab({
         <Detail title="BPM" data={song.bpm} border />
         <Detail title="Meter" data={song.meter} />
       </Section>
+      {currentSubscription.isPro && (
+        <>
+          <Divider size="lg" />
+          <Section
+            title="Tracks"
+            showButton={currentMember.can(EDIT_SONGS)}
+            button={
+              <TouchableOpacity
+                style={styles.plusButton}
+                onPress={() => setAddTracksVisible(true)}
+                disabled={!isConnected}>
+                <Icon
+                  color={isConnected ? blue.text.color : text.disabled.color}
+                  size={20}
+                  name="plus"
+                />
+              </TouchableOpacity>
+            }>
+            <ScrollView horizontal>
+              {song.tracks?.map(track => (
+                <Track
+                  key={track.id}
+                  song={song}
+                  track={track}
+                  onRemoved={handleTrackRemoved}
+                />
+              ))}
+            </ScrollView>
+          </Section>
+        </>
+      )}
       <Divider size="lg" />
       <Section
         title="Themes"
         showButton={currentMember.can(EDIT_SONGS)}
         button={
           <TouchableOpacity
+            style={styles.plusButton}
             onPress={() => onNavigateTo('Add Theme')}
             disabled={!isConnected}>
             <Icon
-              color={isConnected ? '#0969da' : '#d0d0d0'}
+              color={isConnected ? blue.text.color : text.disabled.color}
               size={20}
               name="plus"
             />
@@ -114,10 +161,11 @@ export default function SongDetailsTab({
         title="Genres"
         button={
           <TouchableOpacity
+            style={styles.plusButton}
             onPress={() => onNavigateTo('Add Genre')}
             disabled={!isConnected}>
             <Icon
-              color={isConnected ? '#0969da' : '#d0d0d0'}
+              color={isConnected ? blue.text.color : '#d0d0d0'}
               size={20}
               name="plus"
             />
@@ -165,6 +213,12 @@ export default function SongDetailsTab({
         onThemeRemoved={handleThemeRemoved}
         isConnected={isConnected}
       />
+      <AddTracksBottomSheet
+        visible={addTracksVisible}
+        onDismiss={() => setAddTracksVisible(false)}
+        song={song}
+        onTracksAdded={handleTracksAdded}
+      />
     </ScrollView>
   );
 }
@@ -184,11 +238,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   editButtonText: {
-    color: '#0969da',
     fontWeight: '600',
   },
-  addIcon: {},
-  disabledColor: {
-    color: '#d0d0d0',
+  plusButton: {
+    padding: 5,
   },
 });

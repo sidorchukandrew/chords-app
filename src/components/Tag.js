@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useTheme} from '../hooks/useTheme';
 
 export default function Tag({
   tag,
@@ -11,12 +12,14 @@ export default function Tag({
   inverse,
   size = 'md',
 }) {
+  const {lightBlue} = useTheme();
   return (
     <TouchableOpacity
       style={[
         styles.tagContainer,
         inverse && styles.inverseContainerColor,
         SIZES[size],
+        lightBlue.background,
         providedStyles,
       ]}
       onPress={onPress}>
@@ -25,6 +28,7 @@ export default function Tag({
           styles.tagText,
           inverse && styles.inverseTextColor,
           FONT_SIZES[size],
+          lightBlue.text,
           textStyle,
         ]}>
         {tag}
@@ -55,7 +59,6 @@ const FONT_SIZES = {
 
 const styles = StyleSheet.create({
   tagContainer: {
-    backgroundColor: '#ddf4ff',
     paddingVertical: 5,
     paddingHorizontal: 12,
     borderRadius: 12,

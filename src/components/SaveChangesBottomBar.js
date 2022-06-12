@@ -19,6 +19,7 @@ import {
   updateCapo,
 } from '../services/caposService';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SaveChangesBottomBar({song}) {
   const opacity = useRef(new Animated.Value(1)).current;
@@ -28,6 +29,7 @@ export default function SaveChangesBottomBar({song}) {
   const [sheetVisible, setSheetVisible] = useState(false);
   const [saving, setSaving] = useState(false);
   const {isConnected} = useNetInfo();
+  const {surface, blue} = useTheme();
 
   if (
     (isEmpty(formatEdits[`${song?.id}`]) &&
@@ -110,7 +112,7 @@ export default function SaveChangesBottomBar({song}) {
     <>
       <Animated.View
         style={{
-          backgroundColor: '#2464eb',
+          backgroundColor: blue.background.backgroundColor,
           paddingVertical: 1,
           opacity: opacity,
         }}>

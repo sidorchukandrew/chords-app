@@ -1,11 +1,13 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
-export default function Detail({title, children, border, data}) {
+export default function Detail({title, border, data}) {
+  const {text, border: borderColor} = useTheme();
   return (
-    <View style={[styles.detailContainer, border && styles.border]}>
-      <Text style={styles.title}>{title}</Text>
-      <Text>{data ? data : 'None yet'}</Text>
+    <View style={[styles.detailContainer, border && borderColor.primary]}>
+      <Text style={[styles.title, text.secondary]}>{title}</Text>
+      <Text style={text.primary}>{data || 'None yet'}</Text>
     </View>
   );
 }
@@ -21,7 +23,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eaeaea',
   },
   title: {
-    color: '#5f5f5f',
     marginBottom: 3,
     fontWeight: '500',
   },

@@ -11,6 +11,7 @@ import {
   updateSongOnScreen,
 } from '../redux/slices/performanceSlice';
 import {useDispatch} from 'react-redux';
+import {useTheme} from '../hooks/useTheme';
 
 export default function CapoBottomSheetScreen({route, navigation}) {
   const [song, setSong] = useState(route.params);
@@ -18,14 +19,17 @@ export default function CapoBottomSheetScreen({route, navigation}) {
     song.transposed_key || song.original_key,
   );
   const dispatch = useDispatch();
+  const {surface, text, blue, isDark} = useTheme();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      headerStyle: isDark ? surface.secondary : surface.primary,
+      headerTitleStyle: text.primary,
       headerRight: () => (
         <Toggle enabled={song.show_capo} onChange={handleToggle} />
       ),
     });
-  }, [navigation, song]);
+  }, [navigation, song, surface, text, isDark]);
 
   function handleChange(capoKey) {
     setSong(currentSong => {
@@ -66,7 +70,8 @@ export default function CapoBottomSheetScreen({route, navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, isDark ? surface.secondary : surface.primary]}>
       <ScrollView horizontal style={styles.capoOptions}>
         <CapoOption
           capo={{
@@ -74,7 +79,7 @@ export default function CapoBottomSheetScreen({route, navigation}) {
             capoKey: (
               <Icon
                 name="close-circle-outline"
-                color={song.capo ? '#505050' : 'white'}
+                color={song.capo ? text.secondary.color : 'white'}
                 size={30}
               />
             ),
@@ -106,7 +111,6 @@ export default function CapoBottomSheetScreen({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     padding: 10,
   },
   capoOptions: {

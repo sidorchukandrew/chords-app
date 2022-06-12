@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import KeyBadge from './KeyBadge';
 import {OpacityDecorator} from 'react-native-draggable-flatlist';
@@ -6,6 +6,7 @@ import React from 'react';
 import SwipeListDeleteButton from './SwipeListDeleteButton';
 import SwipeableItem from 'react-native-swipeable-item';
 import {hasAnyKeysSet} from '../utils/song';
+import {useTheme} from '../hooks/useTheme';
 
 export default function SetlistSongRowItem({
   item: song,
@@ -17,6 +18,8 @@ export default function SetlistSongRowItem({
   editable,
   isConnected,
 }) {
+  const {text, surface} = useTheme();
+
   return (
     <OpacityDecorator>
       <SwipeableItem
@@ -37,21 +40,22 @@ export default function SetlistSongRowItem({
           </View>
         )}
         snapPointsLeft={[75]}>
-        <TouchableHighlight
-          style={styles.row}
+        <TouchableOpacity
+          style={[styles.row, surface.primary]}
           onPress={() => onNavigateToSong(song)}
-          underlayColor="white"
           onLongPress={editable && isConnected ? drag : null}
           disabled={isActive}>
           <>
-            <Text style={styles.songName}>{song.name}</Text>
+            <Text style={[styles.songName, text.primary]} numberOfLines={1}>
+              {song.name}
+            </Text>
             {hasAnyKeysSet(song) && (
               <KeyBadge style={styles.keyBadge}>
                 {song.transposed_key || song.original_key}
               </KeyBadge>
             )}
           </>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </SwipeableItem>
     </OpacityDecorator>
   );
@@ -60,14 +64,12 @@ export default function SetlistSongRowItem({
 const styles = StyleSheet.create({
   songName: {
     fontSize: 17,
-    color: 'black',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 11,
     paddingHorizontal: 10,
-    backgroundColor: 'white',
   },
   keyBadge: {
     marginLeft: 10,

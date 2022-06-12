@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 import AccentButton from './AccentButton';
 import BottomSheet from './BottomSheet';
@@ -14,6 +15,7 @@ export default function SaveChangesBottomSheet({
   isConnected,
 }) {
   const sheetRef = useRef();
+  const {text} = useTheme();
 
   useEffect(() => {
     if (visible) sheetRef.current?.present();
@@ -29,7 +31,9 @@ export default function SaveChangesBottomSheet({
       dynamicHeight
       snapPoints={['CONTENT_HEIGHT']}>
       <View style={styles.container}>
-        <Text style={styles.title}>You have unsaved changes for this song</Text>
+        <Text style={[styles.title, text.primary]}>
+          You have unsaved changes for this song
+        </Text>
         <Button
           style={styles.saveButton}
           loading={saving}
@@ -47,7 +51,6 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '500',
     fontSize: 18,
-    color: 'black',
     marginBottom: 20,
   },
   container: {
