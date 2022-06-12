@@ -41,6 +41,7 @@
     "react-native-html-to-pdf": "^0.12.0",
     "react-native-image-picker": "^4.7.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-logs": "^4.0.1",
     "react-native-mmkv": "^1.6.2",
     "react-native-onesignal": "^4.3.7",
     "react-native-pdf": "^6.4.0",
