@@ -1,22 +1,12 @@
-import React, {useCallback, useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import React, {useCallback, useState, useRef} from 'react';
+import {ScrollView, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {
   clearEdits,
   selectSongOnScreen,
   updateSongOnScreen,
 } from '../redux/slices/performanceSlice';
-import {getPreferredKey, hasAnyKeysSet} from '../utils/song';
 import {useDispatch, useSelector} from 'react-redux';
 
-import Button from '../components/Button';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeyOptionsBottomSheet from '../components/KeyOptionsBottomSheet';
 import SaveChangesBottomBar from '../components/SaveChangesBottomBar';
 import SongAdjustmentsBottomSheet from '../components/SongAdjustmentsBottomSheet';
@@ -27,6 +17,10 @@ import Note from '../components/Note';
 import {useTheme} from '../hooks/useTheme';
 import {AvoidSoftInput} from 'react-native-avoid-softinput';
 import {useFocusEffect} from '@react-navigation/native';
+import PerformSongHeaderButtons from '../components/PerformSongHeaderButtons';
+import SongToolsBottomSheet from '../components/SongToolsBottomSheet';
+import {SPEEDS} from '../utils/autoscroll';
+import metronome from '../utils/metronome';
 
 export default function PerformSongScreen({navigation}) {
   const {width} = useWindowDimensions();
@@ -35,7 +29,11 @@ export default function PerformSongScreen({navigation}) {
   const dispatch = useDispatch();
   const [keyOptionsVisible, setKeyOptionsVisible] = useState(false);
   const [adjustmentsSheetVisible, setAdjustmentsSheetVisible] = useState(false);
-  const {surface, text, blue} = useTheme();
+  const [toolsSheetVisible, setToolsSheetVisible] = useState(false);
+  const {surface, text} = useTheme();
+  const scrollRef = useRef();
+  // const [scrollPositionY, setScrollPositionY] = useState(0);
+  const [scrollHeight, setScrollHeight] = useState(0);
 
   const onFocusEffect = useCallback(() => {
     AvoidSoftInput.setAdjustNothing();
@@ -53,34 +51,45 @@ export default function PerformSongScreen({navigation}) {
 
   useEffect(() => {
     dispatch(clearEdits());
-    let show_capo = song.capo;
-    let show_transposed = song.transposed_key;
+    let show_capo = !!song.capo;
+    let show_transposed = !!song.transposed_key;
 
     dispatch(updateSongOnScreen({show_capo, show_transposed}));
   }, [dispatch]);
+
+  useEffect(() => {
+    return () => metronome.stop();
+  }, []);
+
+  // useEffect(() => {
+  //   let {distance, interval} = SPEEDS[song.scroll_speed];
+  //   let id;
+  //   if (song.is_scrolling && scrollPositionY + distance < scrollHeight) {
+  //     id = setInterval(() => {
+  //       scrollRef.current.scrollTo({
+  //         x: 0,
+  //         y: scrollPositionY + distance,
+  //       });
+  //     }, interval);
+  //   }
+
+  //   return () => clearInterval(id);
+  // }, [song.is_scrolling, song.scroll_speed, scrollPositionY, scrollHeight]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: surface.primary,
       headerTitleStyle: text.primary,
       headerRight: () => (
-        <View style={styles.headerButtonsContainer}>
-          {hasAnyKeysSet(song) && (
-            <Button
-              style={styles.songKeyButton}
-              onPress={() => setKeyOptionsVisible(true)}>
-              {getPreferredKey(song)}
-            </Button>
-          )}
-          <TouchableOpacity
-            style={styles.adjustmentsButton}
-            onPress={() => setAdjustmentsSheetVisible(true)}>
-            <Icon name="tune-vertical" size={22} color={blue.text.color} />
-          </TouchableOpacity>
-        </View>
+        <PerformSongHeaderButtons
+          song={song}
+          toggleKeyOptionsVisible={setKeyOptionsVisible}
+          toggleAdjustmentsSheetVisible={setAdjustmentsSheetVisible}
+          toggleToolsSheetVisible={setToolsSheetVisible}
+        />
       ),
     });
-  }, [navigation, song, surface, blue, text]);
+  }, [navigation, song, surface, text]);
 
   function handleNoteChanged(noteId, changes) {
     let updatedNote = song.notes?.find(note => note.id === noteId);
@@ -98,12 +107,21 @@ export default function PerformSongScreen({navigation}) {
     dispatch(updateSongOnScreen({notes: updatedNotes}));
   }
 
+  // function handleScroll(e) {
+  //   // console.log(e.nativeEvent.contentOffset.y);
+  //   setScrollPositionY(e.nativeEvent.contentOffset.y);
+  // }
+
   return (
     <View style={[surface.primary, {flex: 1}]}>
       <ScrollView
+        ref={scrollRef}
+        // onScroll={handleScroll}
         style={[styles.container, surface.primary]}
+        scrollEventThrottle={6}
         pinchGestureEnabled
         maximumZoomScale={4}
+        onLayout={e => setScrollHeight(e.nativeEvent.layout.height)}
         minimumZoomScale={0.5}>
         <Roadmap roadmap={song.roadmap} song={song} />
         <View style={{position: 'relative'}}>
@@ -130,6 +148,10 @@ export default function PerformSongScreen({navigation}) {
         visible={adjustmentsSheetVisible}
         onDismiss={() => setAdjustmentsSheetVisible(false)}
       />
+      <SongToolsBottomSheet
+        visible={toolsSheetVisible}
+        onDismiss={() => setToolsSheetVisible(false)}
+      />
     </View>
   );
 }
@@ -138,21 +160,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-  },
-  headerButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: 100,
-  },
-  songKeyButton: {
-    marginRight: 15,
-    height: 35,
-    width: 35,
-    borderRadius: 8,
-  },
-  adjustmentsButton: {
-    padding: 3,
   },
   titleText: {
     fontWeight: '600',

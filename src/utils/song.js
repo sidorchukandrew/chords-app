@@ -24,7 +24,6 @@ export function getPreferredKey(song) {
 }
 
 export function buildContent(song, textStyles) {
-  console.log('Building');
   let content = song?.content;
   if (!content || !song?.format) return <Text />;
 
