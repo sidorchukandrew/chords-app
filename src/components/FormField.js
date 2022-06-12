@@ -9,6 +9,7 @@ export default function FormField({
   onChange,
   keyboardType = 'default',
   onPress,
+  clearable,
   ...remainingProps
 }) {
   const inputRef = useRef();

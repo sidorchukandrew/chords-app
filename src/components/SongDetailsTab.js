@@ -110,7 +110,7 @@ export default function SongDetailsTab({
                 onPress={() => setAddTracksVisible(true)}
                 disabled={!isConnected}>
                 <Icon
-                  color={isConnected ? blue.text.color : text.disabled}
+                  color={isConnected ? blue.text.color : text.disabled.color}
                   size={20}
                   name="plus"
                 />
@@ -139,7 +139,7 @@ export default function SongDetailsTab({
             onPress={() => onNavigateTo('Add Theme')}
             disabled={!isConnected}>
             <Icon
-              color={isConnected ? blue.text.color : text.disabled}
+              color={isConnected ? blue.text.color : text.disabled.color}
               size={20}
               name="plus"
             />

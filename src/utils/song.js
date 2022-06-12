@@ -42,6 +42,7 @@ export function buildContent(song, textStyles) {
     if (isNewLine(line))
       return (
         <Text
+          allowFontScaling={false}
           key={index}
           style={{
             height: song.format.font_size * 1.5,
@@ -53,6 +54,7 @@ export function buildContent(song, textStyles) {
     } else {
       return (
         <Text
+          allowFontScaling={false}
           key={index}
           style={[
             getStyles(song.format, line),

@@ -6129,6 +6129,11 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
+react-native-logs@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-logs/-/react-native-logs-4.0.1.tgz#96178ff899a462bc936582fac69b96fc31ff4e4d"
+  integrity sha512-SplLnxAbBOgzjVoIRcLIv7QO/wnmGhPwaGWUYu5FVg2LI9ZsBO3f3xjYH7Go2wZRhPG3BIkSgB/woBicBjwmLg==
+
 react-native-mmkv@^1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-1.6.2.tgz#2945203a3a8278f5c2cb935bf9bb789bbe5fa91e"
@@ -6237,6 +6242,11 @@ react-native-vector-icons@^9.0.0:
     lodash.template "^4.5.0"
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-wheely@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-wheely/-/react-native-wheely-0.4.1.tgz#f9dffcc73965825074c48bb69cb54b7d1850188a"
+  integrity sha512-fr4BTRy3YnnxmZeSHKGms4MPcvLC5rnGqfqes9lKDEYRmZTLwuCVOy5Lad/VH4MUI5VE+FM40AQ/JZldB2PFQw==
 
 react-native@0.66.3:
   version "0.66.3"

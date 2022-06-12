@@ -65,7 +65,7 @@ import TeamsApi from './src/api/teamsApi';
 import {setSubscription} from './src/redux/slices/subscriptionSlice';
 import * as Sentry from '@sentry/react-native';
 import {useTheme} from './src/hooks/useTheme';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, StatusBar} from 'react-native';
 import CalendarScreen from './src/screens/CalendarScreen';
 import OneSignal from 'react-native-onesignal';
 
@@ -77,8 +77,16 @@ export default function Routes() {
   const currentUser = useSelector(selectCurrentUser);
   const intervalRef = useRef();
   const {isConnected} = useNetInfo();
-  const {surface, text} = useTheme();
+  const {surface, text, isDark} = useTheme();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      StatusBar.setBarStyle(isDark ? 'light-content' : 'dark-content', true);
+    } else {
+      StatusBar.setBarStyle('dark-content');
+    }
+  }, [isDark, isLoggedIn]);
 
   useEffect(() => {
     async function scheduleRefresh() {
@@ -153,7 +161,6 @@ export default function Routes() {
   useEffect(() => {
     let timeoutId;
     if (!isConnected && isLoggedIn) {
-      console.log("Detected that there's no internet");
       timeoutId = setTimeout(() => {
         Snackbar.show({
           text: "No internet connection. Some functionality will not be available until you've reconnected.",

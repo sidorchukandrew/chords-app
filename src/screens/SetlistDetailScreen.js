@@ -31,6 +31,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useTheme} from '../hooks/useTheme';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
+import SessionsList from '../components/SessionsList';
 
 export default function SetlistDetailScreen({route, navigation}) {
   const {surface, text, blue} = useTheme();
@@ -44,6 +46,7 @@ export default function SetlistDetailScreen({route, navigation}) {
   const itemRefs = useRef(new Map());
   const currentMember = useSelector(selectCurrentMember);
   const {isConnected} = useNetInfo();
+  const currentSubscription = useSelector(selectCurrentSubscription);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -211,8 +214,10 @@ export default function SetlistDetailScreen({route, navigation}) {
           }
           onDragEnd={handleReorder}
           style={{height: '100%'}}
+          ListFooterComponent={<SessionsList setlist={setlist} />}
         />
       </Container>
+
       <AddSongsToSetlistBottomSheet
         visible={addSongsSheetVisible}
         onDismiss={() => setAddSongsSheetVisible(false)}

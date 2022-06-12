@@ -12,7 +12,6 @@ import {format, isPast, sortDates} from '../utils/date';
 import CircleButton from '../components/CircleButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import ItemSeparator from '../components/ItemSeparator';
 import LoadingIndicator from '../components/LoadingIndicator';
 import NoDataMessage from '../components/NoDataMessage';
 import SearchFilterBar from '../components/SearchFilterBar';
@@ -23,6 +22,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import Container from '../components/Container';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useTheme} from '../hooks/useTheme';
+import ContainedItemSeparator from '../components/ContainedItemSeparator';
 
 export default function SetlistsIndexScreen({navigation, route}) {
   const [setType, setSetType] = useState('Upcoming');
@@ -77,8 +77,16 @@ export default function SetlistsIndexScreen({navigation, route}) {
       sets?.forEach(set =>
         isPast(set.scheduled_date) ? past.push(set) : upcoming.push(set),
       );
-      setUpcomingSets(upcoming);
-      setPastSets(past);
+      setUpcomingSets(
+        upcoming.sort((setA, setB) =>
+          sortDates(setA.scheduled_date, setB.scheduled_date),
+        ),
+      );
+      setPastSets(
+        past.sort((setA, setB) =>
+          sortDates(setB.scheduled_date, setA.scheduled_date),
+        ),
+      );
     } catch (error) {
       reportError(error);
     } finally {
@@ -88,7 +96,7 @@ export default function SetlistsIndexScreen({navigation, route}) {
 
   function renderSetRow({item: set}) {
     return (
-      <View>
+      <Container size="lg">
         <TouchableOpacity
           style={styles.row}
           onPress={() => handleNavigateTo(set)}>
@@ -118,7 +126,7 @@ export default function SetlistsIndexScreen({navigation, route}) {
             </View>
           </View>
         </TouchableOpacity>
-      </View>
+      </Container>
     );
   }
 
@@ -144,48 +152,47 @@ export default function SetlistsIndexScreen({navigation, route}) {
 
   return (
     <View style={[styles.container, surface.primary]}>
-      <Container size="lg">
-        <FlatList
-          ListHeaderComponent={
-            <>
-              <SearchFilterBar
-                query={query}
-                onQueryChange={setQuery}
-                placeholder={`Search ${
-                  setType === 'Upcoming'
-                    ? filteredUpcomingSets().length
-                    : filteredPastSets().length
-                } sets`}
-              />
-              <View style={styles.typePicker}>
-                <SegmentedControl
-                  options={['Upcoming', 'Past']}
-                  selected={setType}
-                  onPress={setSetType}
-                  style={{maxWidth: 200}}
-                />
-              </View>
-            </>
-          }
-          data={
-            setType === 'Upcoming' ? filteredUpcomingSets() : filteredPastSets()
-          }
-          renderItem={renderSetRow}
-          refreshing={refreshing}
-          onRefresh={handleRefresh}
-          ListEmptyComponent={<NoDataMessage message={'No sets to show'} />}
-          ItemSeparatorComponent={ItemSeparator}
-          style={{height: '100%'}}
-          refreshControl={
-            <RefreshControl
-              onRefresh={handleRefresh}
-              refreshing={refreshing}
-              colors={['gray']}
-              tintColor="gray"
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <SearchFilterBar
+              query={query}
+              onQueryChange={setQuery}
+              placeholder={`Search ${
+                setType === 'Upcoming'
+                  ? filteredUpcomingSets().length
+                  : filteredPastSets().length
+              } sets`}
             />
-          }
-        />
-      </Container>
+            <View style={styles.typePicker}>
+              <SegmentedControl
+                options={['Upcoming', 'Past']}
+                selected={setType}
+                onPress={setSetType}
+                style={{maxWidth: 200}}
+              />
+            </View>
+          </>
+        }
+        data={
+          setType === 'Upcoming' ? filteredUpcomingSets() : filteredPastSets()
+        }
+        renderItem={renderSetRow}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+        ListEmptyComponent={<NoDataMessage message={'No sets to show'} />}
+        ItemSeparatorComponent={ContainedItemSeparator}
+        style={{height: '100%'}}
+        refreshControl={
+          <RefreshControl
+            onRefresh={handleRefresh}
+            refreshing={refreshing}
+            colors={['gray']}
+            tintColor="gray"
+          />
+        }
+      />
+
       <CircleButton
         style={styles.addButton}
         onPress={() => navigation.navigate('Create Setlist')}

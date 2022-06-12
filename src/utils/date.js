@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
 
 export function isPast(date) {
   if (!date) return false;
@@ -27,4 +29,30 @@ export function getTimeFromDate(date) {
   } else {
     return null;
   }
+}
+
+export function breakApartTime(timeText) {
+  let hour = timeText.split(':')?.[0];
+  let period = timeText.split(' ')?.[1];
+  let minutes = timeText.split(' ')?.[0]?.split?.(':')?.[1];
+  return {
+    hour,
+    minutes,
+    period,
+  };
+}
+
+export function combineDateAndTime(date, time) {
+  if (date && time) {
+    return dayjs(`${date} ${time}`, [
+      'YYYY-MM-DD h:mm A',
+      'YYYY-MM-DD hh:mm A',
+    ]).toDate();
+  } else {
+    return dayjs(date, 'YYYY-MM-DD').toDate();
+  }
+}
+
+export function subtractHours(hoursToSubtract, date) {
+  return dayjs(date).subtract(hoursToSubtract, 'hour');
 }

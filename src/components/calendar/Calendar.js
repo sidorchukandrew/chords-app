@@ -10,7 +10,7 @@ import CalendarHeader from './CalendarHeader';
 import MonthPlaceholder from './MonthPlaceholder';
 
 const TODAYS_MONTH = 24;
-export default function Calendar({events}) {
+export default function Calendar({events, onDeleted}) {
   const [currentMonthIndex, setCurrentMonthIndex] = useState(TODAYS_MONTH);
   const [monthItemHeight, setMonthItemHeight] = useState(0);
   const [monthRows, setMonthRows] = useState(() => getFourYearsOfMonths());
@@ -37,6 +37,7 @@ export default function Calendar({events}) {
           height={monthItemHeight}
           month={monthRow.month}
           events={eventsForMonth}
+          onDeleted={onDeleted}
         />
       );
     } else {
