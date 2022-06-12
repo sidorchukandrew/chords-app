@@ -194,6 +194,7 @@ export default function PerformSetlistScreen({navigation, route}) {
         sliderWidth={windowWidth}
         onSnapToItem={handleSwipedToSong}
         ref={carouselRef}
+        scrollEnabled={!disableSwipeInSetlist}
       />
       {showSetlistNavigation && (
         <SetlistNavigation
@@ -216,6 +217,7 @@ export default function PerformSetlistScreen({navigation, route}) {
         visible={toolsSheetVisible}
         onDismiss={() => setToolsSheetVisible(false)}
         sessionsEnabled={true}
+        setlistId={route.params.id}
       />
     </View>
   );

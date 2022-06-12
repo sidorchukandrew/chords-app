@@ -78,7 +78,7 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
     dispatch(setShowSetlistNavigation(shouldShow));
   }
 
-  function handleToggleDisableSwipeInSetlist(canwipe) {
+  function handleToggleDisableSwipeInSetlist(canSwipe) {
     dispatch(setDisableSwipeInSetlist(canSwipe));
   }
 
