@@ -3,10 +3,14 @@ import React from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import RectButton from '../components/RectButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useTheme} from '../hooks/useTheme';
+import {useSelector} from 'react-redux';
+import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
 
-export default function SongToolsBottomSheetScreen({navigation}) {
+export default function SongToolsBottomSheetScreen({navigation, route}) {
   const {blue, text} = useTheme();
+  const currentSubscription = useSelector(selectCurrentSubscription);
 
   return (
     <ScrollView contentContainerStyle={[styles.screen]}>
@@ -28,6 +32,21 @@ export default function SongToolsBottomSheetScreen({navigation}) {
         </View>
         <Icon name="chevron-right" size={18} color={text.primary.color} />
       </RectButton>
+      {route.params.sessionsEnabled && currentSubscription.isPro && (
+        <RectButton
+          styles={styles.toolButton}
+          onPress={() => navigation.push('Sessions')}>
+          <View style={styles.toolLeftContainer}>
+            <MaterialIcon
+              name="connect-without-contact"
+              size={22}
+              color={blue.text.color}
+            />
+            <Text style={[styles.buttonText, text.primary]}>Sessions</Text>
+          </View>
+          <Icon name="chevron-right" size={18} color={text.primary.color} />
+        </RectButton>
+      )}
     </ScrollView>
   );
 }

@@ -9,7 +9,11 @@ import AutoscrollBottomSheetScreen from '../screens/AutoscrollBottomSheetScreen'
 import MetronomeBottomSheetScreen from '../screens/MetronomeBottomSheetScreen';
 
 const Stack = createNativeStackNavigator();
-export default function SongToolsBottomSheet({visible, onDismiss}) {
+export default function SongToolsBottomSheet({
+  visible,
+  onDismiss,
+  sessionsEnabled,
+}) {
   const sheetRef = useRef();
   const {isDark, surface, text} = useTheme();
 
@@ -41,6 +45,7 @@ export default function SongToolsBottomSheet({visible, onDismiss}) {
             options={() => ({
               headerShown: false,
             })}
+            initialParams={{sessionsEnabled}}
           />
           <Stack.Screen
             name="Autoscroll"

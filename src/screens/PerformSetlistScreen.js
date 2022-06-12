@@ -216,6 +216,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       <SongToolsBottomSheet
         visible={toolsSheetVisible}
         onDismiss={() => setToolsSheetVisible(false)}
+        sessionsEnabled={true}
       />
     </View>
   );
