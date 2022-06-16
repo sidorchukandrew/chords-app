@@ -1,4 +1,5 @@
 import {useEffect, useContext} from 'react';
+import Snackbar from 'react-native-snackbar';
 
 import {useSelector} from 'react-redux';
 import {SessionConnectionContext} from '../contexts/SessionConnectionProvider';
@@ -31,6 +32,15 @@ export default function useSessionConnection(setlistId) {
   function joinSessionAsMember(session) {
     if (currentSubscription.isPro) {
       socket = joinSession(session.id, credentials);
+
+      socket.on('host ended session', () => {
+        setActiveSessionDetails({isHost: false, activeSession: null});
+        Snackbar.show({
+          duration: Snackbar.LENGTH_SHORT,
+          text: 'Host ended session',
+        });
+      });
+
       setActiveSessionDetails({isHost: false, activeSession: session});
     }
   }

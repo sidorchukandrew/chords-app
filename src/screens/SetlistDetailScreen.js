@@ -88,13 +88,17 @@ export default function SetlistDetailScreen({route, navigation}) {
       headerRight: () => (
         <>
           <TouchableOpacity
-            disabled={!isConnected}
+            disabled={!isConnected || !currentMember.can(EDIT_SETLISTS)}
             style={[styles.headerButton, surface.tertiary]}
             onPress={() => setAddSongsSheetVisible(true)}>
             <Icon
               name="plus"
               size={22}
-              color={isConnected ? blue.text.color : text.disabled.color}
+              color={
+                isConnected && currentMember.can(EDIT_SETLISTS)
+                  ? blue.text.color
+                  : text.disabled.color
+              }
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -106,7 +110,7 @@ export default function SetlistDetailScreen({route, navigation}) {
       ),
       headerStyle: surface.primary,
     });
-  }, [navigation, isConnected, surface, blue, text]);
+  }, [navigation, isConnected, surface, blue, text, currentMember]);
 
   function renderSongRow(params) {
     return (
