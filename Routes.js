@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import SessionConnectionProvider from './src/contexts/SessionConnectionProvider';
 import AccountScreen from './src/screens/AccountScreen';
 import AddGenreModal from './src/modals/AddGenreModal';
 import AddThemeModal from './src/modals/AddThemeModal';
@@ -69,6 +68,7 @@ import {useTheme} from './src/hooks/useTheme';
 import {SafeAreaView, StatusBar} from 'react-native';
 import CalendarScreen from './src/screens/CalendarScreen';
 import OneSignal from 'react-native-onesignal';
+import SessionConnectionProvider from './src/contexts/SessionConnectionProvider';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

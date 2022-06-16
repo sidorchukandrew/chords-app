@@ -36,6 +36,10 @@ const LIGHT = {
       color: '#2464eb',
     },
   },
+  red: {
+    background: {backgroundColor: '#ef4444'},
+    text: {color: '#ef4444'},
+  },
 };
 
 const DARK = {
@@ -73,5 +77,9 @@ const DARK = {
     text: {
       color: '#3b82f6',
     },
+  },
+  red: {
+    background: {backgroundColor: '#ef4444'},
+    text: {color: '#ef4444'},
   },
 };

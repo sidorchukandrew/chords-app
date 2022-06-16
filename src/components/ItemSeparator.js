@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTheme} from '../hooks/useTheme';
 
-export default function ItemSeparator() {
+export default function ItemSeparator({style: providedStyles}) {
   const {isDark, border} = useTheme();
   return (
     <View
@@ -13,6 +13,7 @@ export default function ItemSeparator() {
             ? border.secondary.borderColor
             : border.primary.borderColor,
         },
+        providedStyles,
       ]}
     />
   );

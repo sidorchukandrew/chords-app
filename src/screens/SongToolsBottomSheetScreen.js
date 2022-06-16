@@ -7,10 +7,12 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useTheme} from '../hooks/useTheme';
 import {useSelector} from 'react-redux';
 import {selectCurrentSubscription} from '../redux/slices/subscriptionSlice';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 export default function SongToolsBottomSheetScreen({navigation, route}) {
   const {blue, text} = useTheme();
   const currentSubscription = useSelector(selectCurrentSubscription);
+  const {isConnected} = useNetInfo();
 
   return (
     <ScrollView contentContainerStyle={[styles.screen]}>
@@ -35,14 +37,21 @@ export default function SongToolsBottomSheetScreen({navigation, route}) {
       {route.params.sessionsEnabled && currentSubscription.isPro && (
         <RectButton
           styles={styles.toolButton}
-          onPress={() => navigation.push('Sessions')}>
+          onPress={() => navigation.push('Sessions')}
+          disabled={!isConnected}>
           <View style={styles.toolLeftContainer}>
             <MaterialIcon
               name="connect-without-contact"
               size={22}
-              color={blue.text.color}
+              color={isConnected ? blue.text.color : text.disabled.color}
             />
-            <Text style={[styles.buttonText, text.primary]}>Sessions</Text>
+            <Text
+              style={[
+                styles.buttonText,
+                isConnected ? text.primary : text.disabled,
+              ]}>
+              Sessions
+            </Text>
           </View>
           <Icon name="chevron-right" size={18} color={text.primary.color} />
         </RectButton>

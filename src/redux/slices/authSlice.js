@@ -117,3 +117,9 @@ export const selectCurrentMember = state => {
 
 export const selectInitialLoadComplete = state =>
   state.auth?.initialLoadComplete;
+
+export const selectCredentials = state => ({
+  accessToken: state.auth?.accessToken,
+  client: state.auth?.client,
+  uid: state.auth?.uid,
+});

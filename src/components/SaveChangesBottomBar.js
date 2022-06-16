@@ -20,9 +20,9 @@ import {
 } from '../services/caposService';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useTheme} from '../hooks/useTheme';
+import Blink from './Blink';
 
 export default function SaveChangesBottomBar({song}) {
-  const opacity = useRef(new Animated.Value(1)).current;
   const formatEdits = useSelector(selectFormatEdits);
   const songEdits = useSelector(selectSongEdits);
   const dispatch = useDispatch();
@@ -37,21 +37,6 @@ export default function SaveChangesBottomBar({song}) {
     !song
   )
     return null;
-
-  Animated.loop(
-    Animated.sequence([
-      Animated.timing(opacity, {
-        toValue: 0.1,
-        duration: 1500,
-        useNativeDriver: false,
-      }),
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: false,
-      }),
-    ]),
-  ).start();
 
   function handleCancel() {
     dispatch(clearEditsForSong(song.id));
@@ -110,18 +95,13 @@ export default function SaveChangesBottomBar({song}) {
 
   return (
     <>
-      <Animated.View
-        style={{
-          backgroundColor: blue.background.backgroundColor,
-          paddingVertical: 1,
-          opacity: opacity,
-        }}>
-        <Pressable onPress={() => setSheetVisible(true)}>
-          <Text style={{textAlign: 'center', color: 'white', fontSize: 14}}>
-            Save changes
-          </Text>
-        </Pressable>
-      </Animated.View>
+      <Blink>
+        <View style={[blue.background, styles.buttonContainer]}>
+          <Pressable onPress={() => setSheetVisible(true)}>
+            <Text style={styles.saveChangesText}>Save changes</Text>
+          </Pressable>
+        </View>
+      </Blink>
       <SaveChangesBottomSheet
         visible={sheetVisible}
         onDismiss={() => setSheetVisible(false)}
@@ -134,4 +114,13 @@ export default function SaveChangesBottomBar({song}) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  buttonContainer: {
+    paddingVertical: 1,
+  },
+  saveChangesText: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 14,
+  },
+});

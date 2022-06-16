@@ -4,11 +4,10 @@ export const SessionConnectionContext = createContext();
 SessionConnectionContext.displayName = 'SessionConnectionContext';
 
 export default function SessionConnectionProvider({children}) {
-  const [activeSessionDetails, setActiveSessionDetails] = useState({
+  const [activeSessionDetails, setActiveSessionDetails] = useState(() => ({
     isHost: false,
     activeSession: null,
-    socket: null,
-  });
+  }));
 
   return (
     <SessionConnectionContext.Provider

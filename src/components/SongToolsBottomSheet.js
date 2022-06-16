@@ -8,7 +8,6 @@ import SongToolsBottomSheetScreen from '../screens/SongToolsBottomSheetScreen';
 import AutoscrollBottomSheetScreen from '../screens/AutoscrollBottomSheetScreen';
 import MetronomeBottomSheetScreen from '../screens/MetronomeBottomSheetScreen';
 import SessionsBottomSheetScreen from '../screens/SessionsBottomSheetScreen';
-import SessionConnectionProvider from '../contexts/SessionConnectionProvider';
 
 const Stack = createNativeStackNavigator();
 export default function SongToolsBottomSheet({
@@ -30,66 +29,63 @@ export default function SongToolsBottomSheet({
       onDismiss={onDismiss}
       ref={sheetRef}
       snapIndex={1}>
-      <SessionConnectionProvider>
-        <NavigationContainer
-          independent
-          theme={{
-            ...DefaultTheme,
-            colors: {
-              ...DefaultTheme.colors,
-              background: isDark
-                ? surface.secondary.backgroundColor
-                : surface.primary.backgroundColor,
-            },
-          }}>
-          <Stack.Navigator>
+      <NavigationContainer
+        theme={{
+          ...DefaultTheme,
+          colors: {
+            ...DefaultTheme.colors,
+            background: isDark
+              ? surface.secondary.backgroundColor
+              : surface.primary.backgroundColor,
+          },
+        }}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="SongTools Menu"
+            component={SongToolsBottomSheetScreen}
+            options={() => ({
+              headerShown: false,
+            })}
+            initialParams={{sessionsEnabled}}
+          />
+          <Stack.Screen
+            name="Autoscroll"
+            component={AutoscrollBottomSheetScreen}
+            options={() => ({
+              title: 'Font',
+              headerShadowVisible: false,
+              headerTitleAlign: 'left',
+              headerStyle: isDark ? surface.secondary : surface.primary,
+              headerTitleStyle: text.primary,
+            })}
+          />
+          <Stack.Screen
+            name="Metronome"
+            component={MetronomeBottomSheetScreen}
+            options={() => ({
+              title: '',
+              headerShadowVisible: false,
+              headerTitleAlign: 'left',
+              headerStyle: isDark ? surface.secondary : surface.primary,
+              headerTitleStyle: text.primary,
+            })}
+          />
+          {sessionsEnabled && (
             <Stack.Screen
-              name="SongTools Menu"
-              component={SongToolsBottomSheetScreen}
+              name="Sessions"
+              component={SessionsBottomSheetScreen}
               options={() => ({
-                headerShown: false,
-              })}
-              initialParams={{sessionsEnabled}}
-            />
-            <Stack.Screen
-              name="Autoscroll"
-              component={AutoscrollBottomSheetScreen}
-              options={() => ({
-                title: 'Font',
+                title: 'Sessions',
                 headerShadowVisible: false,
-                headerTitleAlign: 'left',
+                headerTitleAlign: 'center',
                 headerStyle: isDark ? surface.secondary : surface.primary,
                 headerTitleStyle: text.primary,
               })}
+              initialParams={{setlistId}}
             />
-            <Stack.Screen
-              name="Metronome"
-              component={MetronomeBottomSheetScreen}
-              options={() => ({
-                title: '',
-                headerShadowVisible: false,
-                headerTitleAlign: 'left',
-                headerStyle: isDark ? surface.secondary : surface.primary,
-                headerTitleStyle: text.primary,
-              })}
-            />
-            {sessionsEnabled && (
-              <Stack.Screen
-                name="Sessions"
-                component={SessionsBottomSheetScreen}
-                options={() => ({
-                  title: 'Sessions',
-                  headerShadowVisible: false,
-                  headerTitleAlign: 'center',
-                  headerStyle: isDark ? surface.secondary : surface.primary,
-                  headerTitleStyle: text.primary,
-                })}
-                initialParams={{setlistId}}
-              />
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SessionConnectionProvider>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
     </BottomSheet>
   );
 }

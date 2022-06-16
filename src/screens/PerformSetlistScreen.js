@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {
   clearEdits,
@@ -25,6 +31,11 @@ import {AvoidSoftInput} from 'react-native-avoid-softinput';
 import PerformSongHeaderButtons from '../components/PerformSongHeaderButtons';
 import SongToolsBottomSheet from '../components/SongToolsBottomSheet';
 import metronome from '../utils/metronome';
+import useSessionConnection, {
+  resetSocket,
+  socket,
+} from '../hooks/useSessionConnection';
+import ActiveSessionIndicator from '../components/ActiveSessionIndicator';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const {width} = useWindowDimensions();
@@ -47,6 +58,16 @@ export default function PerformSetlistScreen({navigation, route}) {
   const dispatch = useDispatch();
   const carouselRef = useRef();
   const {surface, text, blue} = useTheme();
+  const {activeSessionDetails, setActiveSessionDetails} =
+    useSessionConnection();
+  const scrollRefs = useRef(Array(route.params?.songs?.length));
+
+  function handleSwipedToSong(index) {
+    setSongIndex(index);
+    metronome.stop();
+    dispatch(setSongOnScreen(songs[index]));
+    carouselRef.current.snapToItem(index, true);
+  }
 
   const onFocusEffect = useCallback(() => {
     AvoidSoftInput.setAdjustNothing();
@@ -97,8 +118,47 @@ export default function PerformSetlistScreen({navigation, route}) {
   }, [navigation, songIndex, songs, surface, text, blue]);
 
   useEffect(() => {
-    return () => metronome.stop();
+    return () => {
+      setActiveSessionDetails({activeSession: null, isHost: false});
+      resetSocket();
+      metronome.stop();
+    };
   }, []);
+
+  useEffect(() => {
+    const {isHost, activeSession} = activeSessionDetails;
+    if (!isHost && activeSession && socket) {
+      socket.on('initial data', ({scrollTop, songIndex: newSongIndex}) => {
+        const ref = scrollRefs.current[newSongIndex];
+        ref.scrollTo({y: parseFloat(scrollTop), animated: false});
+        setSongIndex(newSongIndex);
+        metronome.stop();
+        dispatch(setSongOnScreen(songs[newSongIndex]));
+        carouselRef.current.snapToItem(newSongIndex, true);
+      });
+
+      socket.on('scroll to', scrollTop => {
+        const ref = scrollRefs.current[songIndex];
+        ref.scrollTo({y: scrollTop, animated: false});
+      });
+
+      socket.on('go to song', newSongIndex => {
+        setSongIndex(newSongIndex);
+        metronome.stop();
+        dispatch(setSongOnScreen(songs[newSongIndex]));
+        carouselRef.current.snapToItem(newSongIndex, true);
+
+        const ref = scrollRefs.current[newSongIndex];
+        ref.scrollTo({y: 0, animated: false});
+      });
+    }
+
+    return () => {
+      socket?.off('scroll to');
+      socket?.off('go to song');
+      socket?.off('initial data');
+    };
+  }, [activeSessionDetails, songIndex, dispatch, songs]);
 
   function renderSlide({item: song, index}) {
     if (!song) {
@@ -109,6 +169,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
+            ref={r => (scrollRefs.current[index] = r)}
             style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
             maximumZoomScale={4}
@@ -135,6 +196,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
+            ref={r => (scrollRefs.current[index] = r)}
             style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
             maximumZoomScale={4}
@@ -157,13 +219,6 @@ export default function PerformSetlistScreen({navigation, route}) {
         </>
       );
     }
-  }
-
-  function handleSwipedToSong(index) {
-    setSongIndex(index);
-    metronome.stop();
-    dispatch(setSongOnScreen(songs[index]));
-    carouselRef.current.snapToItem(index, true);
   }
 
   function handleNoteChanged(noteId, changes) {
@@ -204,6 +259,9 @@ export default function PerformSetlistScreen({navigation, route}) {
           onBack={() => handleSwipedToSong(songIndex - 1)}
         />
       )}
+      <ActiveSessionIndicator
+        showingSetlistNavigation={showSetlistNavigation}
+      />
       <KeyOptionsBottomSheet
         visible={keyOptionsSheetVisible}
         onDismiss={() => setKeyOptionsSheetVisible(false)}
