@@ -7,10 +7,9 @@ import NoDataMessage from './NoDataMessage';
 import Section from './Section';
 import SessionCard from './SessionCard';
 
-export default function SessionsList({setlist}) {
+export default function SessionsList({setlist, onJoinSession}) {
   const {
     data: sessions,
-    errored,
     resolved,
     loading,
     empty,
@@ -27,7 +26,12 @@ export default function SessionsList({setlist}) {
         {resolved && (
           <ScrollView horizontal={true}>
             {sessions.map(session => (
-              <SessionCard key={session.id} session={session} />
+              <SessionCard
+                key={session.id}
+                session={session}
+                disabled={setlist.songs?.length === 0}
+                onJoinSession={onJoinSession}
+              />
             ))}
           </ScrollView>
         )}

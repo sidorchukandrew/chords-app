@@ -32,6 +32,8 @@ import {useSelector} from 'react-redux';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useTheme} from '../hooks/useTheme';
 import SessionsList from '../components/SessionsList';
+import useSessionConnection from '../hooks/useSessionConnection';
+import Snackbar from 'react-native-snackbar';
 
 export default function SetlistDetailScreen({route, navigation}) {
   const {surface, text, blue} = useTheme();
@@ -45,6 +47,7 @@ export default function SetlistDetailScreen({route, navigation}) {
   const itemRefs = useRef(new Map());
   const currentMember = useSelector(selectCurrentMember);
   const {isConnected} = useNetInfo();
+  const {joinSessionAsMember} = useSessionConnection(route.params?.id);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -153,7 +156,7 @@ export default function SetlistDetailScreen({route, navigation}) {
           buttonTitle="Add songs"
           message="No songs in this set yet"
           onButtonPress={() => setAddSongsSheetVisible(true)}
-          showAddButton
+          showAddButton={currentMember.can(EDIT_SETLISTS)}
           disabled={!isConnected}
         />
       );
@@ -186,6 +189,15 @@ export default function SetlistDetailScreen({route, navigation}) {
     }
   }
 
+  function handleJoinSession(session) {
+    joinSessionAsMember(session);
+    Snackbar.show({
+      duration: Snackbar.LENGTH_SHORT,
+      text: 'Connected to session!',
+    });
+    navigation.navigate('Perform Setlist', setlist);
+  }
+
   return (
     <View style={[styles.container, surface.primary]}>
       <Container size="lg">
@@ -212,7 +224,9 @@ export default function SetlistDetailScreen({route, navigation}) {
           }
           onDragEnd={handleReorder}
           style={{height: '100%'}}
-          ListFooterComponent={<SessionsList setlist={setlist} />}
+          ListFooterComponent={
+            <SessionsList setlist={setlist} onJoinSession={handleJoinSession} />
+          }
         />
       </Container>
 

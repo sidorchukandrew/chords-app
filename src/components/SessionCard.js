@@ -10,6 +10,7 @@ export default function SessionCard({
   onJoinSession,
   connected,
   onLeaveSession,
+  disabled,
 }) {
   const {surface, text, red} = useTheme();
 
@@ -30,13 +31,17 @@ export default function SessionCard({
       </View>
       {connected ? (
         <Button
+          disabled={disabled}
           full={false}
           style={[styles.button, red.background]}
           onPress={() => onLeaveSession?.(session)}>
           Leave
         </Button>
       ) : (
-        <Button style={styles.button} onPress={() => onJoinSession(session)}>
+        <Button
+          style={styles.button}
+          onPress={() => onJoinSession(session)}
+          disabled={disabled}>
           Join session
         </Button>
       )}
