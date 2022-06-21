@@ -7,15 +7,15 @@ import Button from './Button';
 
 export default function SessionCard({
   session,
-  onJoinSession,
-  connected,
-  onLeaveSession,
   disabled,
+  buttonText,
+  onButtonPress,
+  connected,
+  style: providedStyles,
 }) {
   const {surface, text, red} = useTheme();
-
   return (
-    <View style={[styles.card, surface.tertiary]}>
+    <View style={[styles.card, surface.tertiary, providedStyles]}>
       <View style={styles.topContainer}>
         <View style={styles.nameImageContainer}>
           <ProfilePicture
@@ -29,22 +29,14 @@ export default function SessionCard({
           </View>
         </View>
       </View>
-      {connected ? (
-        <Button
-          disabled={disabled}
-          full={false}
-          style={[styles.button, red.background]}
-          onPress={() => onLeaveSession?.(session)}>
-          Leave
-        </Button>
-      ) : (
-        <Button
-          style={styles.button}
-          onPress={() => onJoinSession(session)}
-          disabled={disabled}>
-          Join session
-        </Button>
-      )}
+
+      <Button
+        disabled={disabled}
+        full={false}
+        style={[styles.button, connected && red.background]}
+        onPress={() => onButtonPress?.(session)}>
+        {buttonText}
+      </Button>
     </View>
   );
 }

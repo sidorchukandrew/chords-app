@@ -27,6 +27,8 @@ export const DELETE_SETLISTS = 'Delete sets';
 export const EDIT_SETLISTS = 'Edit sets';
 export const PUBLISH_SETLISTS = 'Publish sets';
 
+export const START_SESSIONS = 'Start sessions';
+
 export const EDIT_TEAM = 'Edit team';
 export const DELETE_TEAM = 'Delete team';
 

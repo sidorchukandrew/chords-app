@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {
   clearEdits,
@@ -35,7 +29,7 @@ import useSessionConnection, {
   resetSocket,
   socket,
 } from '../hooks/useSessionConnection';
-import ActiveSessionIndicator from '../components/ActiveSessionIndicator';
+import ConnectedSessionIndicator from '../components/ConnectedSessionIndicator';
 
 export default function PerformSetlistScreen({navigation, route}) {
   const {width} = useWindowDimensions();
@@ -58,11 +52,20 @@ export default function PerformSetlistScreen({navigation, route}) {
   const dispatch = useDispatch();
   const carouselRef = useRef();
   const {surface, text, blue} = useTheme();
-  const {activeSessionDetails, setActiveSessionDetails} =
-    useSessionConnection();
+  const {
+    emitSongChange,
+    emitScroll,
+    setActiveSession,
+    setHostedSession,
+    isMemberOfActiveSession,
+    isHost,
+  } = useSessionConnection(route.params.id, {initializeHostedIfExists: true});
   const scrollRefs = useRef(Array(route.params?.songs?.length));
 
   function handleSwipedToSong(index) {
+    if (isHost) {
+      emitSongChange(index);
+    }
     setSongIndex(index);
     metronome.stop();
     dispatch(setSongOnScreen(songs[index]));
@@ -119,15 +122,15 @@ export default function PerformSetlistScreen({navigation, route}) {
 
   useEffect(() => {
     return () => {
-      setActiveSessionDetails({activeSession: null, isHost: false});
+      setActiveSession(null);
+      setHostedSession(null);
       resetSocket();
       metronome.stop();
     };
-  }, []);
+  }, [setActiveSession, setHostedSession]);
 
   useEffect(() => {
-    const {isHost, activeSession} = activeSessionDetails;
-    if (!isHost && activeSession && socket) {
+    if (isMemberOfActiveSession) {
       socket.on('initial data', ({scrollTop, songIndex: newSongIndex}) => {
         const ref = scrollRefs.current[newSongIndex];
         ref.scrollTo({y: parseFloat(scrollTop), animated: false});
@@ -158,7 +161,7 @@ export default function PerformSetlistScreen({navigation, route}) {
       socket?.off('go to song');
       socket?.off('initial data');
     };
-  }, [activeSessionDetails, songIndex, dispatch, songs]);
+  }, [isMemberOfActiveSession, songIndex, dispatch, songs]);
 
   function renderSlide({item: song, index}) {
     if (!song) {
@@ -169,6 +172,8 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
+            onScroll={e => isHost && emitScroll(e)}
+            scrollEventThrottle={10}
             ref={r => (scrollRefs.current[index] = r)}
             style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
@@ -196,6 +201,8 @@ export default function PerformSetlistScreen({navigation, route}) {
       return (
         <>
           <ScrollView
+            onScroll={e => isHost && emitScroll(e)}
+            scrollEventThrottle={10}
             ref={r => (scrollRefs.current[index] = r)}
             style={[styles.slideContainer, surface.primary]}
             pinchGestureEnabled
@@ -259,7 +266,7 @@ export default function PerformSetlistScreen({navigation, route}) {
           onBack={() => handleSwipedToSong(songIndex - 1)}
         />
       )}
-      <ActiveSessionIndicator
+      <ConnectedSessionIndicator
         showingSetlistNavigation={showSetlistNavigation}
       />
       <KeyOptionsBottomSheet
