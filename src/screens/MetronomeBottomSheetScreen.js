@@ -16,6 +16,7 @@ import TapTempo from '../components/TapTempo';
 
 export default function MetronomeBottomSheetScreen() {
   const song = useSelector(selectSongOnScreen);
+  const [songBpm, setSongBpm] = useState(song.bpm || 90);
   const {text, blue} = useTheme();
   const dispatch = useDispatch();
   const currentMember = useSelector(selectCurrentMember);
@@ -29,7 +30,7 @@ export default function MetronomeBottomSheetScreen() {
 
   function updateSong(newBpm) {
     dispatch(updateSongOnScreen({bpm: newBpm}));
-
+    setSongBpm(newBpm);
     if (currentMember.can(EDIT_SONGS)) {
       let edits = {
         songId: song.id,
@@ -45,7 +46,7 @@ export default function MetronomeBottomSheetScreen() {
     let shouldPlay = !isPlaying;
 
     if (shouldPlay) {
-      metronome.setBpm(song.bpm);
+      metronome.setBpm(songBpm);
     }
 
     setIsPlaying(shouldPlay);
@@ -54,12 +55,12 @@ export default function MetronomeBottomSheetScreen() {
 
   return (
     <View style={styles.sheet}>
-      <Text style={[styles.bpmText, text.primary]}>{song.bpm}</Text>
+      <Text style={[styles.bpmText, text.primary]}>{songBpm}</Text>
 
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={styles.incrementButton}
-          onPress={() => handleBpmChange(song.bpm - 1)}>
+          onPress={() => handleBpmChange(songBpm - 1)}>
           <Icon name="minus" size={35} color={text.secondary.color} />
         </TouchableOpacity>
 
@@ -71,7 +72,7 @@ export default function MetronomeBottomSheetScreen() {
 
         <TouchableOpacity
           style={styles.incrementButton}
-          onPress={() => handleBpmChange(song.bpm + 1)}>
+          onPress={() => handleBpmChange(songBpm + 1)}>
           <Icon name="plus" size={35} color={text.secondary.color} />
         </TouchableOpacity>
       </View>
@@ -83,7 +84,7 @@ export default function MetronomeBottomSheetScreen() {
           min={1}
           max={250}
           step={1}
-          values={[song.bpm]}
+          values={[songBpm]}
           onValuesChange={([newBpm]) => handleBpmChange(newBpm)}
           sliderLength={sliderWidth}
           containerStyle={{height: 30, marginTop: 10}}
