@@ -7,9 +7,14 @@ import * as Transposer from 'chord-transposer';
 
 import React from 'react';
 import {Text} from 'react-native';
+import ChordLine from '../components/song/ChordLine';
+import LyricLine from '../components/song/LyricLine';
+import NewLine from '../components/song/NewLine';
 
 export function hasAnyKeysSet(song) {
-  if (!song) return false;
+  if (!song) {
+    return false;
+  }
   return song.original_key || song.transposed_key || song.capo?.capo_key;
 }
 
@@ -25,10 +30,13 @@ export function getPreferredKey(song) {
 
 export function buildContent(song, textStyles) {
   let content = song?.content;
-  if (!content || !song?.format) return <Text />;
+  if (!content || !song?.format) {
+    return <Text />;
+  }
 
-  if (song.roadmap?.length > 0 && song.show_roadmap)
+  if (song.roadmap?.length > 0 && song.show_roadmap) {
     content = fromRoadmap(song);
+  }
 
   // if (isChordPro(content)) content = formatChordPro(content);
 
@@ -39,39 +47,34 @@ export function buildContent(song, textStyles) {
   let linesOfSong = content.split(/\r\n|\r|\n/);
 
   let textLines = linesOfSong.map((line, index) => {
-    if (isNewLine(line))
+    if (isNewLine(line)) {
+      return <NewLine format={song.format} key={index} />;
+    }
+
+    if (isChordLine(line)) {
       return (
-        <Text
-          allowFontScaling={false}
+        <ChordLine
+          line={line}
+          format={song.format}
+          style={textStyles}
           key={index}
-          style={{
-            height: song.format.font_size * 1.5,
-          }}
         />
       );
-    else if (isChordLine(line) && song.format.chords_hidden) {
-      return null;
-    } else {
-      return (
-        <Text
-          allowFontScaling={false}
-          key={index}
-          style={[
-            getStyles(song.format, line),
-            {
-              lineHeight: song.format.font_size * 1.5,
-            },
-            textStyles,
-          ]}>
-          {line}
-        </Text>
-      );
     }
+
+    return (
+      <LyricLine
+        line={line}
+        format={song.format}
+        style={textStyles}
+        key={index}
+      />
+    );
   });
   return textLines;
 }
 
-function getStyles(format, line) {
+export function getStyles(format, line) {
   return isChordLine(line) ? getChordStyles(format) : getLyricStyles(format);
 }
 
@@ -86,13 +89,24 @@ function getLyricStyles(format) {
 function getChordStyles(format) {
   let styles = {fontSize: format.font_size};
 
-  if (format.bold_chords && format.italic_chords)
+  if (format.bold_chords && format.italic_chords) {
     styles.fontFamily = FONTS[format.font].boldItalic;
-  else if (format.bold_chords) styles.fontFamily = FONTS[format.font].bold;
-  else if (format.italic_chords) styles.fontFamily = FONTS[format.font].italic;
-  else {
+  } else if (format.bold_chords) {
+    styles.fontFamily = FONTS[format.font].bold;
+  } else if (format.italic_chords) {
+    styles.fontFamily = FONTS[format.font].italic;
+  } else {
     styles.fontFamily = FONTS[format.font].regular;
   }
+
+  if (format.chord_color) {
+    styles.color = format.chord_color;
+  }
+
+  if (format.highlight_color) {
+    styles.backgroundColor = format.highlight_color;
+  }
+
   return styles;
 }
 
@@ -160,7 +174,9 @@ function fromRoadmap(song) {
     );
     if (matchedSectionTitle) {
       let sectionToAppend = `${roadmapSection}\n${sections[matchedSectionTitle]}`;
-      if (!sectionToAppend.endsWith('\n\n')) sectionToAppend += '\n';
+      if (!sectionToAppend.endsWith('\n\n')) {
+        sectionToAppend += '\n';
+      }
       expandedContent += sectionToAppend;
     }
   });
@@ -212,7 +228,7 @@ export function isNewLine(line) {
   return line === '';
 }
 
-function isChord(potentialChord) {
+export function isChord(potentialChord) {
   try {
     Transposer.Chord.parse(potentialChord);
     return true;

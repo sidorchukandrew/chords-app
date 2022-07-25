@@ -1,4 +1,4 @@
-import {isChordLine, isNewLine, transpose} from './song';
+import {isChord, isChordLine, isNewLine, transpose} from './song';
 
 const CHORD_PRO_REGEX = new RegExp(/[[].*[\]]/);
 const LINES_REGEX = new RegExp(/\r\n|\r|\n/);
@@ -8,10 +8,13 @@ const SECTION_TITLE_REGEX = new RegExp(
 
 export function buildPdfContent(song) {
   let content = song?.content;
-  if (!content || !song?.format) return '<p></p>';
+  if (!content || !song?.format) {
+    return '<p></p>';
+  }
 
-  if (song.roadmap?.length > 0 && song.show_roadmap)
+  if (song.roadmap?.length > 0 && song.show_roadmap) {
     content = fromRoadmap(song);
+  }
 
   // if (isChordPro(content)) content = formatChordPro(content);
 
@@ -22,9 +25,10 @@ export function buildPdfContent(song) {
   let linesOfSong = content.split(/\r\n|\r|\n/);
 
   let textLines = linesOfSong.map((line, index) => {
-    if (isNewLine(line)) return '<br/>';
-    else if (isChordLine(line) && song.format.chords_hidden) {
-      return '';
+    if (isNewLine(line)) {
+      return '<br/>';
+    } else if (isChordLine(line)) {
+      return buildChordLine(line, song.format);
     } else {
       return `<p style="color: black; white-space: pre; line-height: .3; ${getStyles(
         song.format,
@@ -46,6 +50,30 @@ export function buildPdfContent(song) {
   `;
 }
 
+function buildChordLine(line, format) {
+  if (format.chords_hidden) {
+    return '';
+  }
+
+  let chordLineStyles = `"color: black; white-space: pre; line-height: .3; ${getStyles(
+    format,
+    line,
+  )}"`;
+
+  if (format.highlight_color) {
+    let tokens = line.split(/(\s+)/);
+    tokens = tokens.map(token =>
+      isChord(token)
+        ? `<span style="position: relative;">${token}<span style="position: absolute; background-color: ${format.highlight_color}; top: 0; left: -4px; z-index: -1; bottom: 0; right: -4px;"></span></span>`
+        : token,
+    );
+
+    line = tokens.join('');
+  }
+
+  return `<p style=${chordLineStyles}>${line}</p>\n`;
+}
+
 function getStyles(format, line) {
   return isChordLine(line) ? getChordStyles(format) : getLyricStyles(format);
 }
@@ -58,8 +86,16 @@ function getLyricStyles(format) {
 function getChordStyles(format) {
   let styles = ` font-size: ${format.font_size};`;
 
-  if (format.bold_chords) styles += ' font-weight: 600;';
-  if (format.italic_chords) styles += ' font-style: italic;';
+  if (format.bold_chords) {
+    styles += ' font-weight: 600;';
+  }
+  if (format.italic_chords) {
+    styles += ' font-style: italic;';
+  }
+  if (format.chord_color) {
+    styles += ` color: ${format.chord_color};`;
+  }
+
   return styles;
 }
 
@@ -80,7 +116,9 @@ function fromRoadmap(song) {
     );
     if (matchedSectionTitle) {
       let sectionToAppend = `${roadmapSection}\n${sections[matchedSectionTitle]}`;
-      if (!sectionToAppend.endsWith('\n\n')) sectionToAppend += '\n';
+      if (!sectionToAppend.endsWith('\n\n')) {
+        sectionToAppend += '\n';
+      }
       expandedContent += sectionToAppend;
     }
   });

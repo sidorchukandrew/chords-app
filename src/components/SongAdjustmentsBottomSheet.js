@@ -7,13 +7,17 @@ import FontSizeBottomSheetScreen from '../screens/FontSizeBottomSheetScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTheme} from '../hooks/useTheme';
+import ChordColorBottomSheetScreen from './ChordColorBottomSheetScreen';
+import HighlightColorBottomSheetScreen from './HighlightColorBottomSheetScreen';
 
 const Stack = createNativeStackNavigator();
 export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
   const sheetRef = useRef();
   const {isDark, surface, text} = useTheme();
   useEffect(() => {
-    if (visible) sheetRef.current?.present();
+    if (visible) {
+      sheetRef.current?.present();
+    }
   }, [visible, sheetRef]);
 
   return (
@@ -48,6 +52,28 @@ export default function SongAdjustmentsBottomSheet({visible, onDismiss}) {
             component={FontSizeBottomSheetScreen}
             options={() => ({
               title: 'Size',
+              headerShadowVisible: false,
+              headerStyle: isDark ? surface.secondary : surface.primary,
+              headerTitleStyle: text.primary,
+            })}
+          />
+
+          <Stack.Screen
+            name="SongAdjustments ChordColor"
+            component={ChordColorBottomSheetScreen}
+            options={() => ({
+              title: 'Chord Color',
+              headerShadowVisible: false,
+              headerStyle: isDark ? surface.secondary : surface.primary,
+              headerTitleStyle: text.primary,
+            })}
+          />
+
+          <Stack.Screen
+            name="SongAdjustments HighlightColor"
+            component={HighlightColorBottomSheetScreen}
+            options={() => ({
+              title: 'Highlight Color',
               headerShadowVisible: false,
               headerStyle: isDark ? surface.secondary : surface.primary,
               headerTitleStyle: text.primary,

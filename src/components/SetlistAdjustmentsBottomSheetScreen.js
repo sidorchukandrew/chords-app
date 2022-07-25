@@ -121,6 +121,30 @@ export default function SetlistAdjustmentsBottomSheetScreen({navigation}) {
         onChange={newValue => handleUpdateFormat('italic_chords', newValue)}
         style={styles.field}
       />
+      <FormatDetailButton
+        label="Chord color"
+        onPress={() => navigation.navigate('SongAdjustments ChordColor')}
+        detail={
+          <View
+            style={[
+              styles.colorBlock,
+              {backgroundColor: song.format?.chord_color},
+            ]}
+          />
+        }
+      />
+      <FormatDetailButton
+        label="Highlight color"
+        detail={
+          <View
+            style={[
+              styles.colorBlock,
+              {backgroundColor: song.format.highlight_color},
+            ]}
+          />
+        }
+        onPress={() => navigation.navigate('SongAdjustments HighlightColor')}
+      />
       <Divider size="sm" style={{flexGrow: 0}} />
       <ToggleField label="Show bottom navigation" style={styles.field} />
       {currentSubscription.isPro && (
@@ -177,5 +201,9 @@ const styles = StyleSheet.create({
   actionButtonLeftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  colorBlock: {
+    height: 30,
+    width: 30,
   },
 });

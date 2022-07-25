@@ -52,6 +52,7 @@
     "react-native-screens": "^3.10.0",
     "react-native-snackbar": "^2.4.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-svg": "^12.4.0",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-swipeable-item": "^2.0.2",
